@@ -1,0 +1,42 @@
+meta {
+title: "Mary Had a Little Lamb"
+composer: "Traditional (OmniScore Arrangement)"
+}
+
+group "Piano" symbol=brace {
+def rh "Melody (Right Hand)" style=standard clef=treble
+def lh "Chords (Left Hand)"  style=standard clef=bass
+}
+// Time Signature: 4 beats per measure (4/4 time)
+// Tempo: 100 beats per minute (Moderato)
+meta { time: 4/4, tempo: 100 }
+
+// --- SECTION A ---
+// Mary had a little lamb
+measure 1
+rh: e4:4 d4:4 c4:4 d4:4 |  // E-D-C-D (Quarter notes)
+lh: c3:1                |  // C Major chord root (Whole note)
+measure 2
+rh: e4:4 e4:4 e4:2 r:2  |  // E-E-E (Quarter notes, followed by a rest)
+lh: c3:1                |  // C Major chord root (Whole note)
+measure 3
+rh: d4:4 d4:4 d4:2 r:2  |  // D-D-D (Quarter notes, followed by a rest)
+lh: g3:1                |  // G Major chord root (Whole note)
+measure 4
+rh: e4:4 g4:4 g4:2 r:2  |  // E-G-G (Quarter notes, followed by a rest)
+lh: c3:1                |  // C Major chord root (Whole note)
+
+// --- SECTION B ---
+// Its fleece was white as snow
+measure 5
+rh: e4:4 d4:4 c4:4 d4:4 |  // E-D-C-D (Quarter notes)
+lh: c3:1                |  // C Major chord root (Whole note)
+measure 6
+rh: e4:4 e4:4 e4:4 e4:4 |  // E-E-E-E (Four Quarter notes)
+lh: f3:1                |  // F Major chord root (Whole note)
+measure 7
+rh: d4:4 d4:4 e4:4 d4:4 |  // D-D-E-D (Quarter notes)
+lh: g3:1                |  // G Major chord root (Whole note)
+measure 8
+rh: c4:1                |  // C (Whole note - the end!)
+lh: c3:1                |  // C Major chord root (Whole note)
