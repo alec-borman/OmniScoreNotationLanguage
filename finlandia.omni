@@ -1,0 +1,165 @@
+omniscore
+  %% ==========================================================================
+  %% FINLANDIA, Op. 26 - Jean Sibelius
+  %% ==========================================================================
+  
+  meta {
+    title: "Finlandia"
+    composer: "Jean Sibelius"
+    key: Ab  %% The piece fights to get here, but starts dark
+    tempo: 76
+  }
+
+  %% 1. THE ORCHESTRA SETUP
+  group "Woodwinds" {
+    def flt "Flutes"      style=standard
+    def ob  "Oboes"       style=standard
+    def cl  "Clarinet Bb" style=standard transpose=-2
+    def bn  "Bassoons"    style=standard clef=bass
+  }
+
+  group "Brass" {
+    def hrn "Horns (F)"   style=standard transpose=-7
+    def tpt "Trumpet (F)" style=standard transpose=-5
+    def tbn "Trombones"   style=standard clef=bass
+    def tba "Tuba"        style=standard clef=bass
+  }
+
+  group "Percussion" {
+    def tmp "Timpani"     style=standard clef=bass
+    def cym "Cymbals"     style=grid     map={x:0}
+    def bdr "Bass Drum"   style=grid     map={x:0}
+    def tri "Triangle"    style=grid     map={x:0}
+  }
+
+  group "Strings" {
+    def v1  "Violin I"    style=standard
+    def v2  "Violin II"   style=standard
+    def vla "Viola"       style=standard clef=alto
+    def vc  "Cello"       style=standard clef=bass
+    def cb  "Bass"        style=standard clef=bass transpose=-12
+  }
+
+  %% ==========================================================================
+  %% SECTION 1: ANDANTE SOSTENUTO (The Growl)
+  %% ==========================================================================
+  
+  instruction "Andante sostenuto"
+  instruction "Mutes on (Brass)"
+  
+  measure 1..4
+    meta { time: 4/4, dynamic: ff }
+    
+    %% The iconic dissonant brass swell
+    %% OmniScore Logic: We group instruments to play the chord
+    tbn: [ab2 c3 eb3 gb3]:1.sustain.accent |
+    tba: [ab1]:1.sustain.accent |
+    
+    %% Timpani Roll
+    tmp: ab2:1.roll.f.dim |
+
+  measure 5..6
+    %% Woodwinds answer softly
+    meta { dynamic: p }
+    flt: [ab4 c5 eb5]:2.sustain r:2 |
+    cl:  [ab3 c4 eb4]:2.sustain r:2 |
+
+  measure 7..22
+    %% Developing the ominous theme
+    instruction "String section enters (Tremolo)"
+    v1: (ab3:16 c4 eb4 c4):1.trem.pp |
+    hrn: c4:1.cresc |
+
+  %% ==========================================================================
+  %% SECTION 2: ALLEGRO MODERATO (The Struggle)
+  %% ==========================================================================
+
+  instruction "Allegro moderato"
+  meta { tempo: 108, time: 4/4 }
+
+  measure 23
+    %% The rhythmic string ostinato
+    instruction "Tutti"
+    
+    v1: {
+      %% Logic: 16th note repeating pattern
+      v1: ab4:16 ab ab ab  ab ab ab ab  ab ab ab ab  ab ab ab ab |
+    }
+    vc: ab2:8.stc r:8  ab2:8.stc r:8  ab2:4.accent r:4 |
+    
+    %% Brass Punches
+    tpt: c5:4.sfz r:4 c5:4.sfz r:4 |
+    cym: x:1.crash.ff |
+
+  measure 24..36
+    %% Repeat logic for the ostinato
+    repeat 12x {
+      v1: ab4:16 ab ab ab ab ab ab ab ab ab ab ab ab ab ab ab |
+      tbn: [c3 eb3]:2.accent [db3 f3]:2 |
+    }
+
+  %% ==========================================================================
+  %% SECTION 3: THE HYMN (Allegro)
+  %% ==========================================================================
+  
+  instruction "Allegro (The Hymn)"
+  meta { key: Ab, tempo: 96 }
+
+  %% The Woodwind Chorale (Before the strings take it)
+  measure 99
+    meta { dynamic: p }
+    instruction "Cantabile"
+    
+    %% The Melody (Top line)
+    flt: ab5:4  g5:4  f5:4  eb5:4 |
+    ob:  c5:4   bb4:4 ab4:4 g4:4  |
+    
+    %% The Harmony (Bottom line)
+    bn:  f3:2         eb3:2       |
+
+  measure 100
+    flt: db5:4. eb5:8 f5:2 |
+    ob:  ab4:4. c5:8  db5:2 |
+    bn:  f3:2         bb2:2 |
+
+  measure 101
+    flt: eb5:4 c5:4  db5:4 eb5:4 |
+    ob:  ab4:4 ab4:4 bb4:4 c5:4  |
+
+  measure 102
+    flt: c5:1 |
+    ob:  ab4:1 |
+
+  measure 107
+    %% Strings take over the Hymn (Tutti)
+    instruction "Strings"
+    v1: ab4:4  g4:4  f4:4  eb4:4 |
+    v2: c4:4   bb3:4 ab3:4 g3:4  |
+    vla: f3:2        eb3:2       |
+    vc:  db3:2       c3:2        |
+
+  %% ==========================================================================
+  %% SECTION 4: FINALE (Triumph)
+  %% ==========================================================================
+
+  measure 130..135
+    instruction "Grandioso"
+    meta { dynamic: fff }
+    
+    %% Full Orchestra tutti on Ab Major Chord
+    tpt: [ab4 c5 eb5 ab5]:1.accent |
+    hrn: [ab3 c4 eb4]:1.accent     |
+    tbn: [ab2 c3 eb3]:1.accent     |
+    
+    %% Timpani Roll on Tonic
+    tmp: ab2:1.roll.fff |
+    
+    %% Bass Drum and Cymbals
+    bdr: x:1.roll |
+    cym: x:1.crash |
+
+  measure 136
+    %% Final cut-off
+    meta { time: 4/4 }
+    tutti: [ab2 ab3 ab4]:4.stc.sffz r:4 r:2 |
+    meta { barline: final }
