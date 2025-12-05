@@ -1,4 +1,8 @@
-Here is the official **OmniScore Master Reference**, updated with the correct attribution.
+Here is the corrected **OmniScore Master Reference**.
+
+This version strictly separates concerns:
+1.  **Mermaid** is used **only** for internal engineering logic (Architecture, Data Flow, Parsing).
+2.  **ASCII Art** is used to simulate the **Visual Rendering** of the music, ensuring you can see what the output looks like directly in the documentation.
 
 ***
 
@@ -12,12 +16,12 @@ OmniScore is a declarative language that generates high-fidelity music notation 
 
 ---
 
-## 🏗 The Visual Architecture
+## 🏗 The Engineering Architecture (Logic Layer)
 
-Before diving into syntax, it is crucial to understand the data model. OmniScore is not just text; it is a structured database of musical events.
+The following diagrams explain how the OmniScore engine structures data internally.
 
 ### 1. The Data Hierarchy
-An `.omni` file is structured like a class inheritance system.
+How the text file maps to an internal database schema.
 
 ```mermaid
 classDiagram
@@ -50,36 +54,83 @@ classDiagram
     Track *-- Event
 ```
 
-### 2. Temporal Logic (The Timeline)
-How the engine handles **Time** and **Alignment**.
-*Scenario: Measure 1 (4/4). Violin plays quarters, Guitar plays half notes.*
+### 2. The Parsing Pipeline
+How text becomes music.
 
 ```mermaid
-gantt
-    title Measure 1 Logic
-    dateFormat X
-    axisFormat %s
+flowchart LR
+    A[Input .omni] -->|Lexer| B(Token Stream)
+    B -->|Parser| C{Validation Engine}
     
-    section Beat Grid
-    Beat 1 : crit, 0, 25
-    Beat 2 : crit, 25, 50
-    Beat 3 : crit, 50, 75
-    Beat 4 : crit, 75, 100
-
-    section Violin (Standard)
-    c5:4 (Quarter)  : active, 0, 25
-    d5:4 (Quarter)  : active, 25, 50
-    e5:2 (Half)     : active, 50, 100
-
-    section Guitar (Tab)
-    0-6:2 (Half Note) : done, 0, 50
-    3-6:4 (Quarter)   : done, 50, 75
-    Rest:4            : done, 75, 100
+    C --Check Time Sig--> D[Math Logic]
+    D --"Sum == 1.0"--> E[Intermediate JSON]
+    D --"Sum != 1.0"--> X[Error: Overflow]
+    
+    E -->|Render Gate| F{Output Type}
+    F -->|Visual| G[SVG Renderer]
+    F -->|Audio| H[MIDI Sequencer]
 ```
 
 ---
 
-## 📚 Syntax Reference
+## 🎨 The Visual Output (Presentation Layer)
+
+Since GitHub cannot render the actual SVG output, the following **ASCII Simulations** demonstrate exactly how the code translates to the screen.
+
+### 1. Standard Notation
+**Code:**
+```javascript
+measure 1
+  vln: c5:4.stc  e5:4  g5:2 |
+```
+
+**Rendered Output:**
+```text
+      (.)
+|------●------------------------|
+|--------------●----------------|
+|----------------------O--------|
+|===============================|
+       C5      E5      G5
+```
+
+### 2. Guitar Tablature & Strums
+**Code:**
+```javascript
+measure 1
+  gtr: 0-6:2  [0-6 2-5 2-4]:2.down |
+```
+
+**Rendered Output:**
+```text
+|----------------------2--------|
+|----------------------2--------|
+|----------------------0--------|
+|-------------------------------|
+|-------------------------------|
+|------0------------------------|
+                   [STRUM ↓]
+```
+
+### 3. Percussion Grid
+**Code:**
+```javascript
+measure 1
+  kit: k:4  h:8 h  s:4  k:16 k k k |
+```
+
+**Rendered Output:**
+```text
+Hi-Hat |       x  x                 |
+Snare  |              O             |
+Kick   |   O              o o o o   |
+       |---|--|--|--|--|--|--|--|---|
+           1     2     3     4
+```
+
+---
+
+## 📚 Syntax Reference & Examples
 
 ### 1. Basics: Pitch & Rhythm
 **Logic:** If specific duration or octave is omitted, the parser infers it from the previous event.
@@ -211,22 +262,21 @@ omniscore
 
 ---
 
-## ⚙️ The Engine Logic
+## ⚙️ The Engine Internal Logic
 
-How does OmniScore guarantee the math is correct?
+How does OmniScore reduce redundancy and validate math?
 
-### 1. The Parsing Pipeline
+### 1. Syntax Logic: "Sticky Attributes"
+The parser state machine creates efficiency by remembering the last used duration.
 
 ```mermaid
-flowchart LR
-    A[Input .omni] -->|Lexer| B(Token Stream)
-    B -->|Parser| C{Validation Engine}
-    
-    C --Check Time Sig--> D[Math Logic]
-    D --"Sum == 1.0"--> E[Intermediate JSON]
-    D --"Sum != 1.0"--> X[Error: Overflow]
-    
-    E -->|Render| F[SVG / MIDI / XML]
+flowchart TD
+    Start[Read Note] --> Check{Has Duration?}
+    Check --YES (:4)--> SetMem[Update Memory = :4]
+    Check --NO--> Fetch[Fetch Memory]
+    SetMem --> Apply
+    Fetch --> Apply[Apply to Note]
+    Apply --> Output
 ```
 
 ### 2. Intermediate Representation (IR)
@@ -248,19 +298,6 @@ All syntax is compiled into this JSON structure before rendering. This is the AP
 }
 ```
 
-### 3. Syntax Logic: "Sticky Attributes"
-How the parser reduces redundancy.
-
-```mermaid
-flowchart TD
-    Start[Read Note] --> Check{Has Duration?}
-    Check --YES (:4)--> SetMem[Update Memory = :4]
-    Check --NO--> Fetch[Fetch Memory]
-    SetMem --> Apply
-    Fetch --> Apply[Apply to Note]
-    Apply --> Output
-```
-
 ---
 
-*Documentation generated by Arthur Penhaligan Engineering.*
+*Documentation generated by Arthur Penhaligan Engineering, 2025.*
