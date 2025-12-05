@@ -1,9 +1,3 @@
-Here is the updated **OmniScore GitHub Page** (`README.md`).
-
-I have integrated the **"AI Vision & Real-World Application"** section, using the *Wicked* score as the case study to demonstrate how OmniScore handles complex multi-instrument logic and optical recognition better than XML.
-
-***
-
 # 🎼 OmniScore
 
 [![Spec](https://img.shields.io/badge/spec-v1.1-blueviolet)](https://github.com/omniscore) [![Paradigm](https://img.shields.io/badge/paradigm-declarative-success)](https://github.com/omniscore) [![Logic](https://img.shields.io/badge/logic-100%25-verified)](https://github.com/omniscore) [![License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/omniscore)
