@@ -1,13 +1,3 @@
-Here is the OmniScore specification formatted as a production-ready README.md. You can copy-paste the raw code block below directly into GitHub.
-
-Raw Markdown Code
-code
-Markdown
-download
-content_copy
-expand_less
-# 🎼 OmniScore
-
 ![Version](https://img.shields.io/badge/spec-v1.0-blueviolet) ![Type](https://img.shields.io/badge/paradigm-declarative-success) ![License](https://img.shields.io/badge/license-MIT-blue)
 
 **The Universal Music Notation Standard.**  
