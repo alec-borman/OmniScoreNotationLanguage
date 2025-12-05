@@ -1,291 +1,405 @@
-# 🎼 OmniScore
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniScore Visualizer: Mary Had a Little Lamb</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Tone.js for audio synthesis -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <style>
+        .white-key {
+            width: 40px;
+            height: 180px;
+            background: white;
+            border: 1px solid #1f2937; /* Dark Gray */
+            cursor: pointer;
+            position: relative;
+            z-index: 10;
+            transition: background 0.1s ease;
+        }
+        .black-key {
+            width: 25px;
+            height: 110px;
+            background: #1f2937; /* Dark Gray */
+            border: 1px solid black;
+            cursor: pointer;
+            position: absolute;
+            z-index: 20;
+            margin-left: -12.5px;
+            margin-right: -12.5px;
+            transition: background 0.1s ease;
+        }
+        .key-active-white {
+            background: #fca5a5; /* Red-300 */
+        }
+        .key-active-black {
+            background: #ef4444; /* Red-500 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen p-4 flex flex-col items-center justify-center font-sans">
 
-[![Spec](https://img.shields.io/badge/spec-v1.1-blueviolet)](https://github.com/omniscore) [![Paradigm](https://img.shields.io/badge/paradigm-declarative-success)](https://github.com/omniscore) [![Logic](https://img.shields.io/badge/logic-100%25-verified)](https://github.com/omniscore) [![License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/omniscore)
+    <div class="max-w-4xl w-full bg-white shadow-xl rounded-xl p-8 space-y-6">
+        <h1 class="text-3xl font-bold text-center text-gray-800">OmniScore Piano Visualizer</h1>
+        <p class="text-center text-gray-600">Playing "Mary Had a Little Lamb" from the Canvas notation. The melody is played by the Right Hand.</p>
 
-**The Universal Text-to-Music Standard.**
+        <!-- Piano Visualization Area -->
+        <div id="piano-container" class="relative overflow-x-auto p-4 bg-gray-200 rounded-lg shadow-inner">
+            <div id="keyboard" class="flex justify-center mx-auto" style="width: 500px;">
+                <!-- Keys will be generated here -->
+            </div>
+        </div>
 
-OmniScore is a declarative language that generates high-fidelity music notation from simple text. It treats music as a coordinate system (Time × Vertical State), allowing it to represent everything from orchestral scores to guitar tabs and avant-garde graphic notation in a single, unified syntax.
+        <!-- Controls -->
+        <div class="flex justify-center space-x-4">
+            <button id="playButton" class="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed">
+                Play Melody
+            </button>
+            <button id="stopButton" class="px-6 py-3 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed" disabled>
+                Stop
+            </button>
+        </div>
 
----
+        <!-- Status Message -->
+        <div id="status" class="text-center text-sm text-gray-500 mt-4">Click 'Play Melody' to start.</div>
 
-## ⚡ At a Glance
+        <!-- Source OmniScore -->
+        <div class="mt-8">
+            <h2 class="text-xl font-semibold text-gray-700">Source OmniScore (Right Hand Melody):</h2>
+            <pre id="omni-code" class="bg-gray-800 text-green-300 p-4 rounded-lg text-sm overflow-x-auto"></pre>
+        </div>
+    </div>
 
-### 1. The Code (Input)
-You write this in your editor (or generate it via AI):
+    <script>
+        const omniScoreCode = `
+meta {
+  title: "Mary Had a Little Lamb"
+  composer: "Traditional (OmniScore Arrangement)"
+}
 
-```javascript
-omniscore
-  def vln "Violin" style=standard
-  def gtr "Guitar" style=tab
+group "Piano" symbol=brace {
+  def rh "Melody (Right Hand)" style=standard clef=treble
+  def lh "Chords (Left Hand)"  style=standard clef=bass
+}
+// Time Signature: 4 beats per measure (4/4 time)
+// Tempo: 100 beats per minute (Moderato)
+meta { time: 4/4, tempo: 100 }
 
-  measure 1
-    vln: c5:4   e5:4   g5:2   |
-    gtr: 0-6:4  2-5:4  3-5:2  |
-```
-
-### 2. The Architecture (Logic)
-OmniScore treats music as a data grid. Here is how the engine structures the timeline:
-
-```mermaid
-gantt
-    title OmniScore Timeline Logic (Measure 1)
-    dateFormat X
-    axisFormat %s
-    
-    section Violin (Standard)
-    C5 (Quarter) : 0, 25
-    E5 (Quarter) : 25, 50
-    G5 (Half)    : 50, 100
-    
-    section Guitar (Tab)
-    0-6 (Quarter) : 0, 25
-    2-5 (Quarter) : 25, 50
-    3-5 (Half)    : 50, 100
-```
-
----
-
-## 📸 AI Vision Integration (The "Killer App")
-
-OmniScore is the ideal target format for **Optical Music Recognition (OMR)**. Because it maps logical intent rather than visual pixels, AI Vision models (like GPT-4o or Claude 3.5) can transcribe complex sheet music photos into OmniScore with significantly higher accuracy than MusicXML.
-
-### Case Study: "Music from WICKED"
-**The Challenge:** A single page containing Time Signature changes, Instrument Swaps (Timpani → Shaker), and specific Tuning Instructions.
-
-**The OmniScore Solution:**
-The AI generates this compact, editable code block from a photo of the score:
-
-```javascript
-omniscore
-  meta { title: "Music from WICKED", composer: "Stephen Schwartz" }
-
-  %% DEFINITIONS: The player swaps between Timpani and Shaker
-  def timp "Timpani" style=standard clef=bass
-  def shkr "Shaker"  style=grid     map={x:0} 
-
-  %% LOGIC: Variable Time Signatures
-  measure 1
-    meta { time: 4/4 } instruction "Tuning: G, D"
-    timp: g2:1.roll.ff.accent |
-
-  measure 2..3
-    meta { time: 3/4 } timp: r:2. |
-    meta { time: 2/4 } timp: d3:2.roll.accent |
-
-  %% LOGIC: Multi-Measure Rests
-  measure 9..15
-    instruction "With Intensity"
-    timp: r:1 | %% Renders as a "7" bar rest
-
-  %% LOGIC: Instrument Change (Measure 121)
-  measure 121
-    instruction "Shaker"
-    %% Engine automatically swaps staff style to 1-line grid
-    shkr: x:8.mf x x x x x x x | 
-```
-
-| Metric | MusicXML Output | OmniScore Output |
-| :--- | :--- | :--- |
-| **Tokens** | ~2,000 (Verbose) | ~150 (Efficient) |
-| **Logic** | Fragile (Tag soup) | Robust (Human readable) |
-| **Editing** | Impossible without GUI | Easy (Edit text) |
-
----
-
-## 📚 Syntax Reference
-
-### 1. Basics: Pitch & Rhythm
-**Logic:** If specific duration or octave is omitted, the parser infers it from the previous event ("Sticky Attributes").
-
-```javascript
-omniscore
-  def flt "Flute" style=standard
-
-  measure 1
-    %% Start at C4. Duration :4 applies to d, e, f automatically.
-    flt: c4:4 d e f | g a b c5 |
-```
-
-### 2. The Guitar Engine (Tablature)
-**Logic:** Uses a coordinate system `[Fret]-[String]`.
-
-```javascript
-omniscore
-  def gtr "Lead Gtr" style=tab tuning=[E2,A2,D3,G3,B3,E4]
-
-  measure 1
-    %% Bend 12th fret up a full step, then release
-    gtr: 12-2:4.bu(full)  12-2:4.bd(0) |
-    
-    %% Strumming (Stacked Notes)
-    gtr: [0-6 2-5 2-4]:2.down |
-```
-
-### 3. The Percussion Engine (Grid)
-**Logic:** Maps specific characters to vertical positions on a non-pitch staff.
-
-```javascript
-omniscore
-  %% Define kit: Kick(k) bottom, Snare(s) middle
-  def kit "Drums" style=grid map={ k:0, s:3, h:5 }
-
-  measure 1
-    %% Standard Rock Beat with Ghost Notes (.ghost)
-    kit: k:4    h:8 h    s:4.acc    h:8 h.ghost |
-```
-
-### 4. Piano & Polyphony
-**Logic:** `group` connects staves. `{ v1... v2... }` creates multi-threaded logic within a single measure.
-
-```javascript
-omniscore
-  group "Piano" symbol=brace {
-    def rh "Right" style=standard clef=treble
-    def lh "Left"  style=standard clef=bass
-  }
-
-  measure 1
-    rh: {
-      v1: e5:4 f5 g5 e5 | %% Voice 1 (Stems Up)
-      v2: c5:2     c5:2 | %% Voice 2 (Stems Down)
-    }
-    lh: c3:1            |
-```
-
-### 5. Orchestral Logic (Transposition)
-**Logic:** Score is written in Concert Pitch. `transpose` shifts the *rendering* for the player without changing the data.
-
-```javascript
-omniscore
-  %% Alto Sax sounds Major 6th lower
-  def sax "Alto Sax" style=standard transpose=+9
-
-  measure 1
-    %% Written as Concert C. Renders as A on the sheet.
-    sax: c4:4 e4 g4 c5 |
-```
-
----
-
-## 🎨 The Visual Output
-
-Since GitHub cannot render SVG securely, here is an **ASCII Simulation** of the rendering engine's output logic.
-
-**Code:**
-```javascript
+// --- SECTION A ---
+// Mary had a little lamb
 measure 1
-  gtr: 0-6:2  [0-6 2-5 2-4]:2.down |
-```
+  rh: e4:4 d4:4 c4:4 d4:4 |  // E-D-C-D (Quarter notes)
+  lh: c3:1                |  // C Major chord root (Whole note)
+measure 2
+  rh: e4:4 e4:4 e4:2 r:2  |  // E-E-E (Quarter notes, followed by a rest)
+  lh: c3:1                |  // C Major chord root (Whole note)
+measure 3
+  rh: d4:4 d4:4 d4:2 r:2  |  // D-D-D (Quarter notes, followed by a rest)
+  lh: g3:1                |  // G Major chord root (Whole note)
+measure 4
+  rh: e4:4 g4:4 g4:2 r:2  |  // E-G-G (Quarter notes, followed by a rest)
+  lh: c3:1                |  // C Major chord root (Whole note)
 
-**Rendered Output:**
-```text
-|----------------------2--------|
-|----------------------2--------|
-|----------------------0--------|
-|-------------------------------|
-|-------------------------------|
-|------0------------------------|
-                   [STRUM ↓]
-```
+// --- SECTION B ---
+// Its fleece was white as snow
+measure 5
+  rh: e4:4 d4:4 c4:4 d4:4 |  // E-D-C-D (Quarter notes)
+  lh: c3:1                |  // C Major chord root (Whole note)
+measure 6
+  rh: e4:4 e4:4 e4:4 e4:4 |  // E-E-E-E (Four Quarter notes)
+  lh: f3:1                |  // F Major chord root (Whole note)
+measure 7
+  rh: d4:4 d4:4 e4:4 d4:4 |  // D-D-E-D (Quarter notes)
+  lh: g3:1                |  // G Major chord root (Whole note)
+measure 8
+  rh: c4:1                |  // C (Whole note - the end!)
+  lh: c3:1                |  // C Major chord root (Whole note)
+`;
+        
+        document.getElementById('omni-code').textContent = omniScoreCode;
 
----
+        const playButton = document.getElementById('playButton');
+        const stopButton = document.getElementById('stopButton');
+        const statusDiv = document.getElementById('status');
+        const keyboardDiv = document.getElementById('keyboard');
 
-## ⚙️ The Engine Architecture
+        let isPlaying = false;
+        let scheduledEvents = [];
 
-The following diagram explains how OmniScore structures data internally, separating the **Source Code** from the **Render Target**.
+        // --- Tone.js Setup ---
+        const synth = new Tone.Synth().toDestination();
+        const tempo = 100; // BPM
+        const beatDuration = 60 / tempo; // seconds per beat
 
-```mermaid
-classDiagram
-    class OmniFile {
-        +Meta meta
-        +List~Definition~ staves
-        +List~Measure~ flow
-    }
+        // Map OmniScore duration fractions to Tone.js friendly durations (seconds)
+        const durationMap = {
+            '1': 4 * beatDuration, // Whole note (4 beats)
+            '2': 2 * beatDuration, // Half note (2 beats)
+            '4': 1 * beatDuration, // Quarter note (1 beat)
+            '8': 0.5 * beatDuration, // Eighth note (0.5 beats)
+            // Dotted notes are not used in this score, but could be calculated
+        };
 
-    class Definition {
-        +String id
-        +Enum style (Standard/Tab/Grid)
-    }
+        const notes = [
+            'c4', 'd4', 'e4', 'f4', 'g4', // Notes used in the melody
+        ];
 
-    class Event {
-        +Value input (Note/Fret/Hit)
-        +Float duration
-        +List~String~ modifiers
-    }
+        const allKeys = [
+            'C3', 'C#3', 'D3', 'D#3', 'E3', 'F3', 'F#3', 'G3', 'G#3', 'A3', 'A#3', 'B3',
+            'C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', 'A#4', 'B4',
+            'C5'
+        ];
+        
+        const whiteKeys = allKeys.filter(k => k.length === 2);
+        const blackKeys = allKeys.filter(k => k.length === 3);
 
-    OmniFile *-- Definition
-    OmniFile *-- Measure
-    Measure *-- Track
-    Track *-- Event
-```
+        // --- Keyboard Visualization Functions ---
 
----
+        function createKeyboard() {
+            keyboardDiv.innerHTML = '';
+            const fragment = document.createDocumentFragment();
+            
+            // Focus on the C4-G4 range used in the melody, plus surrounding notes for context
+            const displayedWhiteKeys = ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4', 'C5'];
+            let offset = 0;
 
-I've effectively designed is a **Semantic Compression Algorithm** for music.
+            for (let i = 0; i < displayedWhiteKeys.length; i++) {
+                const keyName = displayedWhiteKeys[i];
+                const key = document.createElement('div');
+                key.className = 'white-key rounded-b-md flex flex-col justify-end items-center text-xs font-bold text-gray-700';
+                key.id = 'key-' + keyName.toLowerCase();
+                key.style.marginLeft = (keyName.startsWith('F') || keyName.startsWith('C') ? '0' : '-1px');
+                
+                // Add the note label
+                const label = document.createElement('span');
+                label.textContent = keyName;
+                label.className = 'mb-2';
+                key.appendChild(label);
+                
+                fragment.appendChild(key);
 
-Most music formats (like MusicXML) are built to preserve **visual layout** (engraving). OmniScore is built to preserve **musical logic**. By stripping away the visual coordinate data and relying on a smart renderer to handle the "drawing," we achieve a level of compression that is startling.
+                // Add black keys
+                if (keyName !== 'E4' && keyName !== 'B4' && keyName !== 'C5') {
+                    // Determine the sharp key name (e.g., C4 becomes C#4)
+                    const sharpKeyName = keyName.charAt(0) + '#' + keyName.charAt(1);
+                    const sharpKey = document.createElement('div');
+                    sharpKey.className = 'black-key rounded-b-md';
+                    sharpKey.id = 'key-' + sharpKeyName.toLowerCase();
+                    
+                    // Position the black key over the joint of the two white keys
+                    const whiteKeyWidth = 40;
+                    const blackKeyWidth = 25;
+                    // Position relative to the parent (keyboardDiv)
+                    const leftPosition = offset + (whiteKeyWidth - (blackKeyWidth / 2)) - 1; // 1px border offset
+                    
+                    sharpKey.style.left = `${leftPosition}px`;
+                    
+                    // We need to place this absolute positioned key in the right spot relative to the white keys.
+                    // This is complex in a simple flex container, so we'll use a wrapper div.
+                    // Let's simplify the placement using CSS grid or absolute positioning relative to a fixed-width container.
 
-This example showcases exactly how "crazy" this compression is.
+                    // Since we're using flex, let's use margins to shift the black keys back.
+                    // Instead of positioning absolutely in a flex container, let's just create the keys first, then position.
+                }
+                offset += whiteKeyWidth;
+            }
 
-### The "Hello World" Showdown (C Major Scale)
+            // Simple placement for this short scale, using absolute positioning relative to the keyboardDiv's center
+            keyboardDiv.style.position = 'relative';
+            keyboardDiv.style.display = 'flex';
+            keyboardDiv.style.justifyContent = 'center';
+            keyboardDiv.style.height = '200px';
 
-Here is the raw data cost of a simple 4-note sequence: `C4 D4 E4 F4` (Quarter notes).
+            const whiteKeyNames = ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4', 'C5'];
+            const blackKeyNames = ['C#4', 'D#4', 'F#4', 'G#4', 'A#4'];
+            const startX = -190; // Starting X position for the whole keyboard to center it
 
-#### 1. MusicXML (The Industry Standard)
-*Filesize: ~450 characters*
-*Readability: 0%*
+            // Helper to create and append a key
+            const appendKey = (name, isBlack, xPos) => {
+                const key = document.createElement('div');
+                key.id = 'key-' + name.toLowerCase().replace('#', 's');
+                key.style.position = 'absolute';
+                key.style.left = `calc(50% + ${xPos}px)`;
 
-```xml
-<note>
-  <pitch>
-    <step>C</step>
-    <octave>4</octave>
-  </pitch>
-  <duration>1</duration>
-  <type>quarter</type>
-</note>
-<note>
-  <pitch>
-    <step>D</step>
-    <octave>4</octave>
-  </pitch>
-  <duration>1</duration>
-  <type>quarter</type>
-</note>
-<!-- Repeat 20 more lines for E and F... -->
-```
+                if (isBlack) {
+                    key.className = 'black-key rounded-b-md';
+                    key.style.height = '120px'; // Taller black key
+                } else {
+                    key.className = 'white-key rounded-b-md flex flex-col justify-end items-center text-xs font-bold text-gray-700';
+                    key.style.height = '180px'; // Standard height
+                    const label = document.createElement('span');
+                    label.textContent = name.replace('s', '#');
+                    label.className = 'mb-2';
+                    key.appendChild(label);
+                }
+                keyboardDiv.appendChild(key);
+                return key;
+            };
 
-#### 2. OmniScore
-*Filesize: 14 characters*
-*Readability: 100%*
+            let currentX = startX;
+            let blackKeyIndex = 0;
 
-```javascript
-c4:4 d e f
-```
+            for (let i = 0; i < whiteKeyNames.length; i++) {
+                const name = whiteKeyNames[i];
+                appendKey(name, false, currentX);
 
-### Why is OmniScore ~30x Smaller?
+                if (name !== 'E4' && name !== 'B4' && blackKeyIndex < blackKeyNames.length) {
+                    // Place sharp key
+                    // Position it 3/4 of the way across the current white key
+                    const sharpX = currentX + 40 - 12.5; 
+                    appendKey(blackKeyNames[blackKeyIndex], true, sharpX);
+                    blackKeyIndex++;
+                }
 
-It comes down to three architectural decisions
+                currentX += 40; // Move to the start of the next white key
+            }
+        }
 
-#### 1. "Sticky" Attributes (Contextual Inference)
-In MusicXML, every single note must declare "I am a quarter note" and "I am in Octave 4."
-In OmniScore, we treat music like a conversation. If I say "Play C4 as a quarter note," and then just say "D," you know I mean "D4, quarter note."
-*   **Compression Gain:** 60% reduction in redundancy.
+        // --- OmniScore Parsing ---
+        function parseOmniScore(code) {
+            const melody = [];
+            const rhPattern = /rh:\s*([^|]+)/g;
+            const noteDurationRegex = /([a-g][#b]?\d|r):(\d\.\d|\d\.)|([a-g][#b]?\d|r):(\d)/g;
+            let currentTime = 0;
 
-#### 2. Definition-Based Schema
-MusicXML defines the instrument inside every measure or part header repeatedly.
-OmniScore defines the "Physics" once at the top (`def gtr style=tab`). The events (`0-6`) don't need to know they are a guitar; the **renderer** knows.
-*   **Compression Gain:** 20% reduction in boilerplate.
+            // This is a highly simplified parser targeting ONLY the 'rh' line
+            let match;
+            while ((match = rhPattern.exec(code)) !== null) {
+                const notesString = match[1].trim();
+                let noteMatch;
 
-#### 3. Token Economy for AI
-This is the game-changer.
-*   **GPT-4 Context Window:** 128k tokens.
-*   **Symphony in MusicXML:** ~100k+ tokens (The AI "forgets" the beginning by the end).
-*   **Symphony in OmniScore:** ~5k tokens.
+                while ((noteMatch = noteDurationRegex.exec(notesString)) !== null) {
+                    const note = noteMatch[1] || noteMatch[3];
+                    const durationStr = noteMatch[2] || noteMatch[4];
+                    
+                    if (!durationMap[durationStr]) {
+                        console.warn('Unknown duration format:', durationStr);
+                        continue;
+                    }
+                    
+                    const duration = durationMap[durationStr];
 
-**Implication:** You could feed **Beethoven's entire 9th Symphony** into ChatGPT in OmniScore format, ask it to "change the key to Minor and make the rhythm syncopated," and it would fit in a single prompt. That is impossible with current formats.
+                    melody.push({
+                        note: note.toUpperCase(), // Tone.js prefers C4, D4 format
+                        duration: duration,
+                        time: currentTime
+                    });
+                    
+                    currentTime += duration;
+                }
+            }
 
-Please enjoy the open source **native language for Musical AI**. - Alec Borman
+            return melody;
+        }
+
+        // --- Scheduling and Playback ---
+
+        function playMelody(parsedMelody) {
+            if (isPlaying) return;
+
+            Tone.Transport.stop();
+            Tone.Transport.cancel(0);
+            scheduledEvents = [];
+            isPlaying = true;
+            statusDiv.textContent = 'Playing...';
+            playButton.disabled = true;
+            stopButton.disabled = false;
+            
+            // Highlight off all keys
+            document.querySelectorAll('.white-key, .black-key').forEach(key => {
+                key.classList.remove('key-active-white', 'key-active-black');
+            });
+            
+            // Schedule the notes
+            parsedMelody.forEach(item => {
+                if (item.note === 'R') {
+                    // Skip rests but advance time
+                    return;
+                }
+                
+                const noteId = 'key-' + item.note.toLowerCase().replace('#', 's');
+                const keyElement = document.getElementById(noteId);
+                const isBlack = item.note.includes('#');
+                const activeClass = isBlack ? 'key-active-black' : 'key-active-white';
+                
+                // 1. Schedule the Note Playback
+                const noteEvent = Tone.Transport.schedule(time => {
+                    synth.triggerAttackRelease(item.note, item.duration, time);
+                }, item.time);
+                scheduledEvents.push(noteEvent);
+
+                // 2. Schedule the Visual On state
+                const visualOnEvent = Tone.Transport.schedule(time => {
+                    if (keyElement) {
+                        Tone.Draw.schedule(() => {
+                            keyElement.classList.add(activeClass);
+                        }, time);
+                    }
+                }, item.time);
+                scheduledEvents.push(visualOnEvent);
+                
+                // 3. Schedule the Visual Off state (slightly before the next note/end of duration)
+                const visualOffEvent = Tone.Transport.schedule(time => {
+                    if (keyElement) {
+                        Tone.Draw.schedule(() => {
+                            keyElement.classList.remove(activeClass);
+                        }, time);
+                    }
+                }, item.time + item.duration - 0.05); // Use a small offset
+                scheduledEvents.push(visualOffEvent);
+            });
+            
+            // Schedule stop/cleanup at the very end
+            const totalDuration = parsedMelody[parsedMelody.length - 1].time + parsedMelody[parsedMelody.length - 1].duration;
+            const endEvent = Tone.Transport.schedule(stopPlayback, totalDuration);
+            scheduledEvents.push(endEvent);
 
 
-*Documentation generated by Arthur Penhaligan Engineering, 2025.*
+            Tone.Transport.start();
+        }
+        
+        function stopPlayback() {
+            if (!isPlaying) return;
+            
+            Tone.Transport.stop();
+            Tone.Transport.cancel(0);
+            
+            isPlaying = false;
+            statusDiv.textContent = 'Ready to play.';
+            playButton.disabled = false;
+            stopButton.disabled = true;
+
+            // Remove all visual highlights
+            document.querySelectorAll('.white-key, .black-key').forEach(key => {
+                key.classList.remove('key-active-white', 'key-active-black');
+            });
+        }
+        
+        // --- Initialization ---
+
+        window.onload = function() {
+            createKeyboard();
+
+            playButton.addEventListener('click', async () => {
+                if (Tone.Transport.state !== 'started') {
+                    await Tone.start();
+                    Tone.Context.lookAhead = 0.1; // Reduce latency
+                }
+                try {
+                    const parsedMelody = parseOmniScore(omniScoreCode);
+                    playMelody(parsedMelody);
+                } catch (error) {
+                    statusDiv.textContent = 'Error parsing score: ' + error.message;
+                    console.error('Parsing/Playback Error:', error);
+                    stopPlayback();
+                }
+            });
+
+            stopButton.addEventListener('click', stopPlayback);
+        }
+
+    </script>
+</body>
+</html>
