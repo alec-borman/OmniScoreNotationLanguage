@@ -286,5 +286,172 @@ This is the game-changer.
 **Implication:** You could feed **Beethoven's entire 9th Symphony** into ChatGPT in OmniScore format, ask it to "change the key to Minor and make the rhythm syncopated," and it would fit in a single prompt. That is impossible with current formats.
 
 Please enjoy the open source **native language for Musical AI**. - Alec Borman
+<svg viewBox="0 0 800 650" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  
+  <!-- CSS STYLES (The OmniScore Theme) -->
+  <style>
+    .staff-line { stroke: #E1E4E8; stroke-width: 2px; }
+    .bar-line { stroke: #D1D5DA; stroke-width: 2px; }
+    .stem { stroke: #24292E; stroke-width: 2px; fill: none; }
+    .beam { fill: #24292E; }
+    .notehead { fill: #24292E; }
+    .half-note { fill: white; stroke: #24292E; stroke-width: 2px; }
+    .meta-blue { fill: #0366D6; font-weight: bold; font-size: 12px; }
+    .meta-tempo { fill: #24292E; font-weight: bold; font-size: 12px; }
+    .inst-label { fill: #586069; font-size: 12px; text-anchor: end; font-family: monospace; }
+    .grid-line { stroke: #E1E4E8; stroke-width: 1px; }
+    .brace-brass { stroke: #d73a49; stroke-width: 4px; stroke-linecap: round; }
+    .brace-str { stroke: #6f42c1; stroke-width: 4px; stroke-linecap: round; }
+    .brace-ww { stroke: #28a745; stroke-width: 4px; stroke-linecap: round; }
+    .section-header { font-size: 18px; font-weight: bold; fill: #24292E; }
+    .sustain-line { stroke: #0366D6; stroke-width: 2px; stroke-dasharray: 4; }
+  </style>
+
+  <!-- BACKGROUND -->
+  <rect width="800" height="650" fill="white"/>
+
+  <!-- TITLE -->
+  <text x="40" y="40" font-size="28" font-weight="bold" fill="#24292E">FINLANDIA (Op. 26)</text>
+  <text x="40" y="65" font-size="14" fill="#586069">Jean Sibelius • Key: Ab • OmniScore Render</text>
+
+  <!-- ======================================================= -->
+  <!-- SECTION 1: THE GROWL (Measures 1-4) -->
+  <!-- ======================================================= -->
+  <g transform="translate(0, 100)">
+    <text x="40" y="0" class="section-header">I. Andante Sostenuto</text>
+    <text x="250" y="0" class="meta-blue">Brass (Mutes)</text>
+    
+    <!-- BRACE -->
+    <line x1="30" y1="20" x2="30" y2="180" class="brace-brass"/>
+
+    <!-- TROMBONE (Standard) -->
+    <g transform="translate(60, 20)">
+      <text x="-15" y="25" class="inst-label">Tbn</text>
+      <!-- Staff Lines -->
+      <line x1="0" y1="0" x2="700" y2="0" class="staff-line"/><line x1="0" y1="10" x2="700" y2="10" class="staff-line"/><line x1="0" y1="20" x2="700" y2="20" class="staff-line"/><line x1="0" y1="30" x2="700" y2="30" class="staff-line"/><line x1="0" y1="40" x2="700" y2="40" class="staff-line"/>
+      
+      <!-- The CHORD: [Ab2 C3 Eb3 Gb3] Whole Note -->
+      <g transform="translate(40, 0)">
+         <ellipse cx="0" cy="50" rx="6" ry="4" class="half-note"/> <!-- Ab2 -->
+         <ellipse cx="0" cy="40" rx="6" ry="4" class="half-note"/> <!-- C3 -->
+         <ellipse cx="0" cy="30" rx="6" ry="4" class="half-note"/> <!-- Eb3 -->
+         <ellipse cx="0" cy="20" rx="6" ry="4" class="half-note"/> <!-- Gb3 -->
+         <!-- Sustain Line -->
+         <line x1="15" y1="35" x2="150" y2="35" class="sustain-line"/>
+         <text x="10" y="-10" class="meta-blue">ff .sustain</text>
+      </g>
+      <line x1="350" y1="0" x2="350" y2="40" class="bar-line"/>
+    </g>
+
+    <!-- TIMPANI (Standard Bass) -->
+    <g transform="translate(60, 100)">
+      <text x="-15" y="25" class="inst-label">Tmp</text>
+      <line x1="0" y1="0" x2="700" y2="0" class="staff-line"/><line x1="0" y1="10" x2="700" y2="10" class="staff-line"/><line x1="0" y1="20" x2="700" y2="20" class="staff-line"/><line x1="0" y1="30" x2="700" y2="30" class="staff-line"/><line x1="0" y1="40" x2="700" y2="40" class="staff-line"/>
+      
+      <!-- Ab2 Roll -->
+      <g transform="translate(40, 0)">
+        <ellipse cx="0" cy="50" rx="6" ry="4" class="half-note"/>
+        <line x1="-5" y1="65" x2="5" y2="60" stroke="#24292E" stroke-width="2"/>
+        <line x1="-5" y1="70" x2="5" y2="65" stroke="#24292E" stroke-width="2"/>
+        <line x1="-5" y1="75" x2="5" y2="70" stroke="#24292E" stroke-width="2"/>
+        <text x="10" y="-10" class="meta-blue">.roll</text>
+      </g>
+      <line x1="350" y1="0" x2="350" y2="40" class="bar-line"/>
+    </g>
+  </g>
+
+
+  <!-- ======================================================= -->
+  <!-- SECTION 2: THE STRUGGLE (Measure 23) -->
+  <!-- ======================================================= -->
+  <g transform="translate(0, 300)">
+    <text x="40" y="0" class="section-header">II. Allegro Moderato</text>
+    <text x="250" y="0" class="meta-tempo">108 BPM</text>
+
+    <line x1="30" y1="20" x2="30" y2="180" class="brace-str"/>
+
+    <!-- VIOLIN (Standard) -->
+    <g transform="translate(60, 20)">
+      <text x="-15" y="25" class="inst-label">Vln I</text>
+      <line x1="0" y1="0" x2="700" y2="0" class="staff-line"/><line x1="0" y1="10" x2="700" y2="10" class="staff-line"/><line x1="0" y1="20" x2="700" y2="20" class="staff-line"/><line x1="0" y1="30" x2="700" y2="30" class="staff-line"/><line x1="0" y1="40" x2="700" y2="40" class="staff-line"/>
+
+      <!-- 16th Note Ostinato (Schematic) -->
+      <!-- Group 1 -->
+      <g transform="translate(40, 0)">
+        <rect x="0" y="15" width="60" height="8" class="beam"/> <!-- Thick Beam -->
+        <line x1="0" y1="15" x2="0" y2="40" class="stem"/> <ellipse cx="0" cy="40" rx="5" ry="4" class="notehead"/>
+        <line x1="20" y1="15" x2="20" y2="40" class="stem"/> <ellipse cx="20" cy="40" rx="5" ry="4" class="notehead"/>
+        <line x1="40" y1="15" x2="40" y2="40" class="stem"/> <ellipse cx="40" cy="40" rx="5" ry="4" class="notehead"/>
+        <line x1="60" y1="15" x2="60" y2="40" class="stem"/> <ellipse cx="60" cy="40" rx="5" ry="4" class="notehead"/>
+      </g>
+      <!-- Group 2 -->
+      <g transform="translate(120, 0)">
+        <rect x="0" y="15" width="60" height="8" class="beam"/>
+        <line x1="0" y1="15" x2="0" y2="40" class="stem"/> <ellipse cx="0" cy="40" rx="5" ry="4" class="notehead"/>
+        <line x1="20" y1="15" x2="20" y2="40" class="stem"/> <ellipse cx="20" cy="40" rx="5" ry="4" class="notehead"/>
+        <line x1="40" y1="15" x2="40" y2="40" class="stem"/> <ellipse cx="40" cy="40" rx="5" ry="4" class="notehead"/>
+        <line x1="60" y1="15" x2="60" y2="40" class="stem"/> <ellipse cx="60" cy="40" rx="5" ry="4" class="notehead"/>
+      </g>
+      <text x="200" y="-10" class="meta-blue">sim.</text>
+      <line x1="350" y1="0" x2="350" y2="40" class="bar-line"/>
+    </g>
+
+    <!-- CYMBALS (Grid) -->
+    <g transform="translate(60, 100)">
+      <text x="-15" y="25" class="inst-label">Cym</text>
+      <line x1="0" y1="20" x2="700" y2="20" class="grid-line"/>
+      
+      <!-- Crash on 1 -->
+      <g transform="translate(40, 20)">
+        <path d="M-5 -5 L5 5 M5 -5 L-5 5" stroke="#24292E" stroke-width="3"/>
+        <text x="10" y="-10" class="meta-blue">ff .crash</text>
+      </g>
+      <line x1="350" y1="0" x2="350" y2="40" class="bar-line"/>
+    </g>
+  </g>
+
+  <!-- ======================================================= -->
+  <!-- SECTION 3: THE HYMN (Measure 99) -->
+  <!-- ======================================================= -->
+  <g transform="translate(0, 500)">
+    <text x="40" y="0" class="section-header">III. The Hymn (Allegro)</text>
+    <text x="250" y="0" class="meta-blue">Cantabile</text>
+
+    <line x1="30" y1="20" x2="30" y2="100" class="brace-ww"/>
+
+    <!-- FLUTE (Melody) -->
+    <g transform="translate(60, 20)">
+      <text x="-15" y="25" class="inst-label">Flt</text>
+      <line x1="0" y1="0" x2="700" y2="0" class="staff-line"/><line x1="0" y1="10" x2="700" y2="10" class="staff-line"/><line x1="0" y1="20" x2="700" y2="20" class="staff-line"/><line x1="0" y1="30" x2="700" y2="30" class="staff-line"/><line x1="0" y1="40" x2="700" y2="40" class="staff-line"/>
+
+      <!-- Ab5 G5 F5 Eb5 -->
+      <!-- Ab5 -->
+      <ellipse cx="40" cy="-5" rx="5" ry="4" class="notehead"/> <line x1="35" y1="-5" x2="35" y2="25" class="stem"/>
+      <!-- G5 -->
+      <ellipse cx="120" cy="0" rx="5" ry="4" class="notehead"/> <line x1="115" y1="0" x2="115" y2="30" class="stem"/>
+      <!-- F5 -->
+      <ellipse cx="200" cy="5" rx="5" ry="4" class="notehead"/> <line x1="195" y1="5" x2="195" y2="35" class="stem"/>
+      <!-- Eb5 -->
+      <ellipse cx="280" cy="10" rx="5" ry="4" class="notehead"/> <line x1="275" y1="10" x2="275" y2="40" class="stem"/>
+
+      <line x1="350" y1="0" x2="350" y2="40" class="bar-line"/>
+    </g>
+
+    <!-- BASSOON (Bass Clef) -->
+    <g transform="translate(60, 80)">
+      <text x="-15" y="25" class="inst-label">Bn</text>
+      <line x1="0" y1="0" x2="700" y2="0" class="staff-line"/><line x1="0" y1="10" x2="700" y2="10" class="staff-line"/><line x1="0" y1="20" x2="700" y2="20" class="staff-line"/><line x1="0" y1="30" x2="700" y2="30" class="staff-line"/><line x1="0" y1="40" x2="700" y2="40" class="staff-line"/>
+
+      <!-- F3 (Half Note) -->
+      <ellipse cx="40" cy="10" rx="5" ry="4" class="half-note"/> <line x1="45" y1="10" x2="45" y2="-20" class="stem"/>
+      <!-- Eb3 (Half Note) -->
+      <ellipse cx="200" cy="15" rx="5" ry="4" class="half-note"/> <line x1="205" y1="15" x2="205" y2="-15" class="stem"/>
+
+      <line x1="350" y1="0" x2="350" y2="40" class="bar-line"/>
+    </g>
+
+  </g>
+
+</svg>
 
 *Documentation generated by Arthur Penhaligan Engineering, 2025.*
