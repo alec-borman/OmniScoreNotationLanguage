@@ -1,0 +1,134 @@
+Here is a step-by-step guide to writing OmniScore, designed for a beginner just learning music.
+
+-----
+
+## 🎹 Step 1: Set Up the Music File
+
+First, we need to create a header that tells the computer what this piece is called and who wrote it.
+
+  * You start with the word `meta` and use curly brackets `{}` like a folder to hold your information.
+
+<!-- end list -->
+
+```
+meta {
+  title: "My First Song"
+  composer: "My Name"
+}
+```
+
+  * You then define the instruments. Since we are using a **Piano**, we define the two hands (the voices) that will play the music.
+
+<!-- end list -->
+
+```
+group "Piano" symbol=brace {
+  def rh "Right Hand" style=standard clef=treble  // Higher notes
+  def lh "Left Hand"  style=standard clef=bass   // Lower notes
+}
+```
+
+-----
+
+## 🎶 Step 2: Define the Starting Rules
+
+Before the first measure, we need to set the time. This is like telling a runner when to start and how long the track is.
+
+  * The **time** tells you how many beats are in each measure (like $4/4$ time means 4 beats).
+  * The **tempo** tells you how fast those beats are (like 60 beats per minute).
+
+<!-- end list -->
+
+```
+meta { time: 4/4, tempo: 120 }
+```
+
+-----
+
+## 🎵 Step 3: Write the Notes (Pitch and Octave)
+
+Every note you write needs two things: **the letter** (A, B, C, D, E, F, G) and **the octave** (which "level" of the piano the note is on).
+
+  * **Pitch/Octave Naming:** We use the system where **Middle C** (the C closest to the middle of the piano) is always called `c4`.
+      * Notes below it (like the next C down) are `c3`.
+      * Notes above it (like the next C up) are `c5`.
+  * **Sharps and Flats:** Use a `#` right after the note letter for a sharp (e.g., `f#4`). Use a `b` for a flat (e.g., `eb4`).
+
+| Note Name | Location on Piano |
+| :--- | :--- |
+| `c3` | C below middle C |
+| `c4` | Middle C (the center) |
+| `c5` | C above middle C |
+| `f#4` | F-sharp above middle C |
+
+-----
+
+## ⏱️ Step 4: Define the Rhythm (Duration)
+
+After every note, you must use a colon `:` followed by a number to tell the computer **how long** to hold that note. This is the note's duration.
+
+| Note Name | Code | Beats (in 4/4 time) |
+| :--- | :--- | :--- |
+| **Whole Note** | `:1` | 4 beats |
+| **Half Note** | `:2` | 2 beats |
+| **Quarter Note** | `:4` | 1 beat |
+| **Eighth Note** | `:8` | $1/2$ beat |
+| **Dotted Note** | `:4.` | 1.5 beats (add a dot `.`) |
+
+-----
+
+## 🎼 Step 5: Write the Measures
+
+Now we put everything together, measure by measure. Each measure must start with the keyword `measure` and use a pipe `|` at the end to close the measure.
+
+### A. Single Notes (Melody)
+
+In this example, we'll write a simple melody in the **Right Hand (rh)**: four quarter notes (C-D-E-F) followed by a half note (G).
+
+```
+measure 1
+  rh: c4:4 d4:4 e4:4 f4:4 |  // C, D, E, F (all 1 beat)
+  lh: r:1                 |  // The Left Hand rests for the whole measure (r:1)
+measure 2
+  rh: g4:2 c4:2 |  // G (2 beats) and C (2 beats)
+  lh: r:1       |
+```
+
+### B. Chords (Multiple Notes at Once)
+
+To play notes at the same time (a chord), you put them inside **square brackets** `[]`.
+
+In this example, the **Left Hand (lh)** plays a C-major chord (`c3, e3, g3`) for two beats while the Right Hand rests.
+
+```
+measure 3
+  rh: r:2                 |
+  lh: [c3 e3 g3]:2 [c3]:2 | // Left Hand plays C-E-G (2 beats), then just C (2 beats)
+```
+
+-----
+
+## 🎹 Full Example (Combining Steps)
+
+Here is a small, complete piece using all the elements:
+
+```
+meta {
+  title: "OmniScore Practice"
+  composer: "Learner"
+}
+group "Piano" symbol=brace {
+  def rh "Right Hand" style=standard clef=treble
+  def lh "Left Hand"  style=standard clef=bass
+}
+meta { time: 4/4, tempo: 80 }
+
+measure 1
+  rh: c4:4 e4:4 g4:4 c5:4 | // RH plays C-E-G-C (4 quarter notes)
+  lh: c2:1                | // LH plays C an octave down (Whole Note)
+measure 2
+  rh: d5:2 f5:2 |          // RH plays D and F (two half notes)
+  lh: g2:1      |          // LH plays G (Whole Note)
+```
+
+**Your next step is always determined by the last measure you wrote.** Just keep adding measures until your song is finished\!
