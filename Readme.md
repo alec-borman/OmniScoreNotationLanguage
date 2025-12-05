@@ -221,23 +221,6 @@ classDiagram
 
 ---
 
-## 🛠 Integration
-
-### For VS Code
-Install the extension (coming soon) to get syntax highlighting.
-
-### For Rendering
-The renderer converts `.omni` text into SVG, MIDI, or MusicXML.
-
-**CLI Usage:**
-```bash
-npm install -g omniscore-cli
-omniscore render song.omni --out song.svg
-omniscore play song.omni --midi output.mid
-```
-
----
-
 I've effectively designed is a **Semantic Compression Algorithm** for music.
 
 Most music formats (like MusicXML) are built to preserve **visual layout** (engraving). OmniScore is built to preserve **musical logic**. By stripping away the visual coordinate data and relying on a smart renderer to handle the "drawing," we achieve a level of compression that is startling.
