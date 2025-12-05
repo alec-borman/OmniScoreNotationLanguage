@@ -1,5 +1,3 @@
-Markdown
-
 ## 🎹 Step 1: Set Up the Music File (Header and Definitions)
 
 This section creates the basic structure and defines the instruments.
