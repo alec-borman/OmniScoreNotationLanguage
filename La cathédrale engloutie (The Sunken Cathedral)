@@ -1,0 +1,139 @@
+meta { 
+  title: "La cathédrale engloutie (The Sunken Cathedral)"
+  composer: "Claude Debussy" 
+}
+
+%% --- DEFINITIONS ---
+group "Piano" symbol=brace {
+  def rh "Right Hand" style=standard clef=treble
+  def lh "Left Hand"  style=standard clef=bass
+}
+
+%% --- I. SUBMERGED BELLS (Measures 1-15) ---
+instruction "Profondément calme; Dans une brume doucement sonore"
+meta { tempo: 60, time: 6/4 }
+
+measure 1
+  rh: [e4 g4 c5]:1. |
+  lh: [c2 c3]:1.    | 
+measure 2
+  rh: [d4 a4 d5]:1. |
+  lh: [d2 d3]:1.    |
+measure 3
+  rh: [e4 g4 c5]:1. |
+  lh: [c2 c3]:1.    |
+measure 4
+  rh: [d4 g4 c5]:1. |
+  lh: [c2 c3]:1.    |
+
+measure 5
+  meta { time: 3/2 } instruction "pp"
+  rh: [c4 f4 a4]:2 [d4 g4 b4]:2 |
+  lh: [c2 c3]:1                 |
+measure 6
+  rh: [e4 g4 c5]:2 [d4 g4 c5]:2 |
+  lh: [e2 e3]:1                |
+measure 7
+  meta { time: 4/4 } instruction "Un peu moins lent"
+  rh: [f4 a4 d5]:2 [g4 b4 e5]:2 |
+  lh: [a2 a3]:2. [g2 g3]:2.   |
+
+measure 8
+  meta { time: 6/4 }
+  rh: [c5]:4 [b4]:4 [c5]:4 [e5]:4 | 
+  lh: c3:1. |
+measure 9
+  rh: [e5]:4 [f5]:4 [g5]:4 [c5]:4 |
+  lh: g2:1. |
+measure 10
+  rh: [g4]:4 [a4]:4 [b4]:4 [d5]:4 |
+  lh: d3:1. |
+measure 11
+  rh: [c5]:4 [b4]:4 [c5]:4 [e5]:4 |
+  lh: c3:1. |
+measure 12..15
+  rh: r:1 | 
+  lh: r:1 | 
+
+%% --- II. CATHEDRAL RISES (Measures 16-46, showing peak texture) ---
+measure 16
+  instruction "peu à peu sortant de la brume"
+  rh: [c5 e5 g5 c6]:1. |
+  lh: [c3 c4]:1.       |
+measure 17
+  rh: [d5 f#5 a5 d6]:1. |
+  lh: [d3 d4]:1.        |
+measure 18
+  rh: [e5 g5 b5 e6]:1. |
+  lh: [e3 e4]:1.       |
+measure 19
+  rh: [f5 a5 c6 f6]:1. |
+  lh: [f3 f4]:1.       |
+measure 20
+  rh: [g5 b5 d6 g6]:1. |
+  lh: [g3 g4]:1.       |
+measure 21
+  instruction "Marquez ces doubles croches"
+  rh: g5:16 f5 e5 d5 c5 b4 a4 g4 | 
+  lh: c4:1. |
+
+measure 22
+  meta { time: 3/4 } instruction "Sonore sans dureté ff"
+  rh: [a4 c5 e5 a5]:4 [g4 b4 d5 g5]:4 [a4 c5 e5 a5]:4 |
+  lh: [a3 a4]:4 [g3 g4]:4 [a3 a4]:4                   |
+measure 23
+  rh: [b4 d5 f5 b5]:4 [a4 c5 e5 a5]:4 [b4 d5 f5 b5]:4 |
+  lh: [b3 b4]:4 [a3 a4]:4 [b3 b4]:4                   |
+measure 24
+  rh: [c5 e5 g5 c6]:4 [b4 d5 f5 b5]:4 [c5 e5 g5 c6]:4 |
+  lh: [c4 c5]:4 [b3 b4]:4 [c4 c5]:4                   |
+measure 25
+  instruction "fff"
+  rh: [d5 f5 a5 d6]:4 [c5 e5 g5 c6]:4 [d5 f5 a5 d6]:4 |
+  lh: [d4 d5]:4 [c4 c5]:4 [d4 d5]:4                   |
+measure 26
+  rh: [e5 g5 b5 e6]:4 [d5 f5 a5 d6]:4 [e5 g5 b5 e6]:4 |
+  lh: [e4 e5]:4 [d4 d5]:4 [e4 e5]:4                   |
+measure 27..22 | %% ... Measures 27-46 contain descending arpeggios and block chords ...
+  rh: r:1 |
+  lh: r:1 | 
+
+
+%% --- III. RETURN TO THE DEPTHS (Measures 67-89) ---
+measure 67
+  meta { time: 6/4 } instruction "Retrouvez le Mouvement du début"
+  rh: [e4 g4 c5]:1. |
+  lh: [c2 c3]:1.    |
+measure 68
+  rh: [d4 a4 d5]:1. |
+  lh: [d2 d3]:1.    |
+measure 69
+  rh: [e4 g4 c5]:1. |
+  lh: [c2 c3]:1.    |
+measure 70
+  rh: [d4 g4 c5]:1. |
+  lh: [c2 c3]:1.    |
+measure 71
+  meta { time: 3/2 } instruction "pp"
+  rh: [c4 f4 a4]:2 [d4 g4 b4]:2 |
+  lh: [c2 c3]:1                 |
+
+measure 84
+  instruction "Très lent ppp (pianississimo)"
+  rh: [e4 g4 c5]:1. |
+  lh: [c2 c3]:1.    |
+measure 85
+  rh: [e4 g4 c5]:1. |
+  lh: [c2 c3]:1.    |
+measure 86
+  rh: [c4 e4 g4]:1. |
+  lh: [c2 c3]:1.    |
+measure 87
+  rh: [c4 e4 g4]:1. |
+  lh: [c2 c3]:1.    |
+measure 88
+  rh: [c4 e4 g4]:1. |
+  lh: [c2 c3]:1.    |
+measure 89
+  rh: [c4 e4 g4]:1. |
+  lh: [c2 c3]:1. |
