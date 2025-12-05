@@ -372,3 +372,211 @@ graph TD
     E -->|Renderer B| G[MIDI / Audio]
     E -->|Renderer C| H[ASCII Tab]
 ```
+This is the **visual architecture** of OmniScore.
+
+By using Mermaid diagrams, we can define the **Data Structure**, **Temporal Logic**, **Parsing Pipeline**, and **Syntax Rules** without writing paragraphs of text.
+
+***
+
+# 📊 OmniScore: Visual Architecture
+
+## 1. The Data Hierarchy
+How an `.omni` file is structured internally. It treats a song like a database schema.
+
+```mermaid
+classDiagram
+    class OmniFile {
+        +Meta meta
+        +List~Definition~ staves
+        +List~Measure~ flow
+    }
+
+    class Meta {
+        +String title
+        +String composer
+        +Fraction timeSig
+        +Integer tempo
+    }
+
+    class Definition {
+        +String id
+        +String name
+        +Enum style
+        +Object config
+    }
+
+    class Measure {
+        +Integer number
+        +List~Track~ tracks
+    }
+
+    class Track {
+        +String instrumentId
+        +List~Event~ events
+    }
+
+    class Event {
+        +Value input
+        +Float duration
+        +List~String~ modifiers
+    }
+
+    OmniFile *-- Meta
+    OmniFile *-- Definition
+    OmniFile *-- Measure
+    Measure *-- Track
+    Track *-- Event
+```
+
+---
+
+## 2. Temporal Logic (The Timeline)
+How OmniScore handles **Time**, **Rhythm**, and **Alignment**.
+*Scenario: A Violin playing quarter notes vs. a Guitar playing a half note.*
+
+```mermaid
+gantt
+    title Measure 1 (4/4 Time Signature)
+    dateFormat X
+    axisFormat %s
+    
+    section Grid (Beats)
+    Beat 1 : crit, 0, 25
+    Beat 2 : crit, 25, 50
+    Beat 3 : crit, 50, 75
+    Beat 4 : crit, 75, 100
+
+    section Violin (Standard)
+    c5:4 (Quarter)  : active, 0, 25
+    d5:4 (Quarter)  : active, 25, 50
+    e5:2 (Half)     : active, 50, 100
+
+    section Guitar (Tab)
+    0-6:2 (Half Note) : done, 0, 50
+    3-6:4 (Quarter)   : done, 50, 75
+    Rest:4            : done, 75, 100
+```
+
+---
+
+## 3. The Parsing Pipeline
+How the engine turns Text into Music.
+
+```mermaid
+flowchart LR
+    A[Input .omni Text] -->|Lexer| B(Token Stream)
+    B -->|Parser| C{Validation Engine}
+    
+    C --Check Time Sig--> D[Math Logic]
+    D --"Sum(durations) == 1.0"--> E[Intermediate JSON]
+    D --"Sum != 1.0"--> X[Error: Measure Overflow]
+    
+    E -->|Render Gate| F{Output Type}
+    
+    F -->|Visual| G[SVG Renderer]
+    F -->|Audio| H[MIDI Sequencer]
+    F -->|Code| I[MusicXML Export]
+    
+    G --> J[Browser View]
+```
+
+---
+
+## 4. Syntax Logic: "Sticky Duration"
+How the parser infers duration when the user omits it (e.g., `c4:4 d e f`).
+
+```mermaid
+flowchart TD
+    Start[Read Next Note] --> Check{Has Duration?}
+    
+    Check --YES (:4)--> SetMem[Update 'LastDuration' = :4]
+    SetMem --> Apply[Apply :4 to Note]
+    
+    Check --NO--> Fetch[Fetch 'LastDuration' from Memory]
+    Fetch --> Apply
+    
+    Apply --> Output[Add to Event List]
+    Output --> Start
+```
+
+---
+
+## 5. Instrument Inheritance System
+How OmniScore handles "Universal" instrument types using a unified coordinate system.
+
+```mermaid
+classDiagram
+    class Staff {
+        +y_axis_map(input)
+        +render_glyph()
+    }
+
+    class Standard {
+        %% Y-Axis = Diatonic Scale
+        +clef: Treble/Bass
+        +render: Notehead
+    }
+
+    class Tablature {
+        %% Y-Axis = Strings
+        +tuning: [E,A,D...]
+        +render: Number
+    }
+
+    class Grid {
+        %% Y-Axis = Mapped Keys
+        +map: {k:0, s:2...}
+        +render: Shape
+    }
+
+    Staff <|-- Standard
+    Staff <|-- Tablature
+    Staff <|-- Grid
+```
+
+---
+
+## 6. The "Measure" State Machine
+How the engine validates a single measure block during writing.
+
+```mermaid
+stateDiagram-v2
+    [*] --> EmptyMeasure
+    
+    EmptyMeasure --> Accumulating : Add Event
+    Accumulating --> Accumulating : Add Event
+    
+    Accumulating --> Full : Duration Sum == TimeSig
+    Accumulating --> Overflow : Duration Sum > TimeSig
+    
+    Full --> [*] : Render
+    Overflow --> Error : Throw Exception
+```
+
+---
+
+## 7. Polyphony Logic (Multithreading)
+How the parser handles `{ v1: ... v2: ... }` blocks (multiple voices).
+
+```mermaid
+sequenceDiagram
+    participant P as Parser
+    participant V1 as Voice 1
+    participant V2 as Voice 2
+    participant M as Measure
+    
+    P->>M: Enter Polyphony Block
+    
+    par Process Voice 1
+        P->>V1: Parse Notes
+        V1->>V1: Check Sum (4/4)
+        V1-->>M: Return Event Stream A
+    and Process Voice 2
+        P->>V2: Parse Notes
+        V2->>V2: Check Sum (4/4)
+        V2-->>M: Return Event Stream B
+    end
+    
+    M->>M: Merge A + B (Same Timeline)
+    M-->>P: Continue
+```
