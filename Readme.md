@@ -3,51 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OmniScore Visualizer: Mary Had a Little Lamb</title>
+    <title>OmniScore Visualizer: Custom Editor</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Load Tone.js for audio synthesis -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
     <style>
+        /* General key styling */
+        .white-key, .black-key {
+            cursor: pointer;
+            position: absolute;
+            transition: background 0.1s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        /* White key specifics */
         .white-key {
             width: 40px;
             height: 180px;
             background: white;
             border: 1px solid #1f2937; /* Dark Gray */
-            cursor: pointer;
-            position: relative;
             z-index: 10;
-            transition: background 0.1s ease;
         }
+        /* Black key specifics */
         .black-key {
             width: 25px;
-            height: 110px;
+            height: 120px;
             background: #1f2937; /* Dark Gray */
-            border: 1px solid black;
-            cursor: pointer;
-            position: absolute;
             z-index: 20;
-            margin-left: -12.5px;
-            margin-right: -12.5px;
-            transition: background 0.1s ease;
+            /* Black keys are centered over the join of the two white keys */
         }
+        /* Active states for highlighting */
         .key-active-white {
             background: #fca5a5; /* Red-300 */
+            box-shadow: 0 0 10px #f87171;
         }
         .key-active-black {
             background: #ef4444; /* Red-500 */
+            box-shadow: 0 0 10px #ef4444;
         }
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen p-4 flex flex-col items-center justify-center font-sans">
 
     <div class="max-w-4xl w-full bg-white shadow-xl rounded-xl p-8 space-y-6">
-        <h1 class="text-3xl font-bold text-center text-gray-800">OmniScore Piano Visualizer</h1>
-        <p class="text-center text-gray-600">Playing "Mary Had a Little Lamb" from the Canvas notation. The melody is played by the Right Hand.</p>
+        <h1 class="text-3xl font-bold text-center text-gray-800">OmniScore Piano Visualizer & Editor (C3 to C6)</h1>
+        <p class="text-center text-gray-600">The keyboard now spans 3 octaves (C3 to C6) and uses a more realistic piano sound.</p>
 
-        <!-- Piano Visualization Area -->
+        <!-- Piano Visualization Area - Wider for C3 to C6 -->
         <div id="piano-container" class="relative overflow-x-auto p-4 bg-gray-200 rounded-lg shadow-inner">
-            <div id="keyboard" class="flex justify-center mx-auto" style="width: 500px;">
+            <div id="keyboard" class="relative mx-auto" style="height: 200px;">
                 <!-- Keys will be generated here -->
             </div>
         </div>
@@ -55,7 +59,7 @@
         <!-- Controls -->
         <div class="flex justify-center space-x-4">
             <button id="playButton" class="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed">
-                Play Melody
+                Play Full Score
             </button>
             <button id="stopButton" class="px-6 py-3 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed" disabled>
                 Stop
@@ -63,17 +67,18 @@
         </div>
 
         <!-- Status Message -->
-        <div id="status" class="text-center text-sm text-gray-500 mt-4">Click 'Play Melody' to start.</div>
+        <div id="status" class="text-center text-sm text-gray-500 mt-4 h-6">Click 'Play Full Score' to start.</div>
 
-        <!-- Source OmniScore -->
+        <!-- Editable OmniScore Input -->
         <div class="mt-8">
-            <h2 class="text-xl font-semibold text-gray-700">Source OmniScore (Right Hand Melody):</h2>
-            <pre id="omni-code" class="bg-gray-800 text-green-300 p-4 rounded-lg text-sm overflow-x-auto"></pre>
+            <h2 class="text-xl font-semibold text-gray-700 mb-2">Edit Your OmniScore Here:</h2>
+            <textarea id="omni-input" class="w-full h-64 bg-gray-800 text-green-300 p-4 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-y"></textarea>
         </div>
     </div>
 
     <script>
-        const omniScoreCode = `
+        // Initial score is defined here to populate the textarea
+        const initialOmniScoreCode = `
 meta {
   title: "Mary Had a Little Lamb"
   composer: "Traditional (OmniScore Arrangement)"
@@ -90,47 +95,56 @@ meta { time: 4/4, tempo: 100 }
 // --- SECTION A ---
 // Mary had a little lamb
 measure 1
-  rh: e4:4 d4:4 c4:4 d4:4 |  // E-D-C-D (Quarter notes)
-  lh: c3:1                |  // C Major chord root (Whole note)
+  rh: e4:4 d4:4 c4:4 d4:4 |  // E-D-C-D (4 Quarter notes = 4 beats)
+  lh: c3:1                |  // C Major chord root (Whole note = 4 beats)
 measure 2
-  rh: e4:4 e4:4 e4:2 r:2  |  // E-E-E (Quarter notes, followed by a rest)
+  rh: e4:4 e4:4 e4:2      |  // E-E-E (Quarter, Quarter, Half = 4 beats)
   lh: c3:1                |  // C Major chord root (Whole note)
 measure 3
-  rh: d4:4 d4:4 d4:2 r:2  |  // D-D-D (Quarter notes, followed by a rest)
+  rh: d4:4 d4:4 d4:2      |  // D-D-D (Quarter, Quarter, Half = 4 beats)
   lh: g3:1                |  // G Major chord root (Whole note)
 measure 4
-  rh: e4:4 g4:4 g4:2 r:2  |  // E-G-G (Quarter notes, followed by a rest)
+  rh: e4:4 g4:4 g4:2      |  // E-G-G (Quarter, Quarter, Half = 4 beats)
   lh: c3:1                |  // C Major chord root (Whole note)
 
 // --- SECTION B ---
 // Its fleece was white as snow
 measure 5
-  rh: e4:4 d4:4 c4:4 d4:4 |  // E-D-C-D (Quarter notes)
+  rh: e4:4 d4:4 c4:4 d4:4 |  // E-D-C-D (4 Quarter notes)
   lh: c3:1                |  // C Major chord root (Whole note)
 measure 6
   rh: e4:4 e4:4 e4:4 e4:4 |  // E-E-E-E (Four Quarter notes)
   lh: f3:1                |  // F Major chord root (Whole note)
 measure 7
-  rh: d4:4 d4:4 e4:4 d4:4 |  // D-D-E-D (Quarter notes)
+  rh: d4:4 d4:4 e4:4 d4:4 |  // D-D-E-D (Four Quarter notes)
   lh: g3:1                |  // G Major chord root (Whole note)
 measure 8
   rh: c4:1                |  // C (Whole note - the end!)
   lh: c3:1                |  // C Major chord root (Whole note)
 `;
         
-        document.getElementById('omni-code').textContent = omniScoreCode;
-
         const playButton = document.getElementById('playButton');
         const stopButton = document.getElementById('stopButton');
         const statusDiv = document.getElementById('status');
         const keyboardDiv = document.getElementById('keyboard');
+        const omniInput = document.getElementById('omni-input'); // Reference to the textarea
 
         let isPlaying = false;
         let scheduledEvents = [];
 
         // --- Tone.js Setup ---
-        const synth = new Tone.Synth().toDestination();
-        const tempo = 100; // BPM
+        // Changed to Tone.PolySynth and adjusted envelope for a more piano-like, percussive sound
+        const synth = new Tone.PolySynth(Tone.Synth, {
+            oscillator: { type: "sawtooth" }, // Richer waveform than triangle
+            envelope: {
+                attack: 0.002, // Very fast attack
+                decay: 0.4,    // Medium decay
+                sustain: 0.05, // Very low sustain (quickly fades)
+                release: 0.8   // Longer release
+            }
+        }).toDestination();
+        
+        const tempo = 100; // BPM 
         const beatDuration = 60 / tempo; // seconds per beat
 
         // Map OmniScore duration fractions to Tone.js friendly durations (seconds)
@@ -139,171 +153,142 @@ measure 8
             '2': 2 * beatDuration, // Half note (2 beats)
             '4': 1 * beatDuration, // Quarter note (1 beat)
             '8': 0.5 * beatDuration, // Eighth note (0.5 beats)
-            // Dotted notes are not used in this score, but could be calculated
         };
-
-        const notes = [
-            'c4', 'd4', 'e4', 'f4', 'g4', // Notes used in the melody
-        ];
-
-        const allKeys = [
-            'C3', 'C#3', 'D3', 'D#3', 'E3', 'F3', 'F#3', 'G3', 'G#3', 'A3', 'A#3', 'B3',
-            'C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', 'A#4', 'B4',
-            'C5'
-        ];
-        
-        const whiteKeys = allKeys.filter(k => k.length === 2);
-        const blackKeys = allKeys.filter(k => k.length === 3);
 
         // --- Keyboard Visualization Functions ---
 
         function createKeyboard() {
-            keyboardDiv.innerHTML = '';
-            const fragment = document.createDocumentFragment();
+            // EXPANDED: Displayed range is now 3 octaves: C3 to C6
+            const whiteKeyNames = [
+                'C3', 'D3', 'E3', 'F3', 'G3', 'A3', 'B3',
+                'C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4',
+                'C5', 'D5', 'E5', 'F5', 'G5', 'A5', 'B5',
+                'C6' 
+            ];
+            const blackKeyNames = [
+                'C#3', 'D#3', 'F#3', 'G#3', 'A#3',
+                'C#4', 'D#4', 'F#4', 'G#4', 'A#4',
+                'C#5', 'D#5', 'F#5', 'G#5', 'A#5'
+            ];
             
-            // Focus on the C4-G4 range used in the melody, plus surrounding notes for context
-            const displayedWhiteKeys = ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4', 'C5'];
-            let offset = 0;
+            const whiteKeyWidth = 40;
+            const keyboardWidth = whiteKeyNames.length * whiteKeyWidth; // 22 * 40 = 880px
+            const blackKeyWidth = 25;
 
-            for (let i = 0; i < displayedWhiteKeys.length; i++) {
-                const keyName = displayedWhiteKeys[i];
-                const key = document.createElement('div');
-                key.className = 'white-key rounded-b-md flex flex-col justify-end items-center text-xs font-bold text-gray-700';
-                key.id = 'key-' + keyName.toLowerCase();
-                key.style.marginLeft = (keyName.startsWith('F') || keyName.startsWith('C') ? '0' : '-1px');
-                
-                // Add the note label
-                const label = document.createElement('span');
-                label.textContent = keyName;
-                label.className = 'mb-2';
-                key.appendChild(label);
-                
-                fragment.appendChild(key);
+            keyboardDiv.style.width = `${keyboardWidth}px`; // Set explicit width
+            keyboardDiv.innerHTML = ''; // Clear existing content
 
-                // Add black keys
-                if (keyName !== 'E4' && keyName !== 'B4' && keyName !== 'C5') {
-                    // Determine the sharp key name (e.g., C4 becomes C#4)
-                    const sharpKeyName = keyName.charAt(0) + '#' + keyName.charAt(1);
-                    const sharpKey = document.createElement('div');
-                    sharpKey.className = 'black-key rounded-b-md';
-                    sharpKey.id = 'key-' + sharpKeyName.toLowerCase();
-                    
-                    // Position the black key over the joint of the two white keys
-                    const whiteKeyWidth = 40;
-                    const blackKeyWidth = 25;
-                    // Position relative to the parent (keyboardDiv)
-                    const leftPosition = offset + (whiteKeyWidth - (blackKeyWidth / 2)) - 1; // 1px border offset
-                    
-                    sharpKey.style.left = `${leftPosition}px`;
-                    
-                    // We need to place this absolute positioned key in the right spot relative to the white keys.
-                    // This is complex in a simple flex container, so we'll use a wrapper div.
-                    // Let's simplify the placement using CSS grid or absolute positioning relative to a fixed-width container.
-
-                    // Since we're using flex, let's use margins to shift the black keys back.
-                    // Instead of positioning absolutely in a flex container, let's just create the keys first, then position.
-                }
-                offset += whiteKeyWidth;
-            }
-
-            // Simple placement for this short scale, using absolute positioning relative to the keyboardDiv's center
-            keyboardDiv.style.position = 'relative';
-            keyboardDiv.style.display = 'flex';
-            keyboardDiv.style.justifyContent = 'center';
-            keyboardDiv.style.height = '200px';
-
-            const whiteKeyNames = ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4', 'C5'];
-            const blackKeyNames = ['C#4', 'D#4', 'F#4', 'G#4', 'A#4'];
-            const startX = -190; // Starting X position for the whole keyboard to center it
+            let currentX = 0; // Start at 0
+            let blackKeyIndex = 0;
 
             // Helper to create and append a key
             const appendKey = (name, isBlack, xPos) => {
                 const key = document.createElement('div');
+                // Use 's' for sharp as a safe ID character (e.g., C#4 -> Cs4)
                 key.id = 'key-' + name.toLowerCase().replace('#', 's');
                 key.style.position = 'absolute';
-                key.style.left = `calc(50% + ${xPos}px)`;
+                key.style.left = `${xPos}px`;
+                key.style.zIndex = isBlack ? 20 : 10;
 
                 if (isBlack) {
                     key.className = 'black-key rounded-b-md';
-                    key.style.height = '120px'; // Taller black key
                 } else {
                     key.className = 'white-key rounded-b-md flex flex-col justify-end items-center text-xs font-bold text-gray-700';
-                    key.style.height = '180px'; // Standard height
                     const label = document.createElement('span');
-                    label.textContent = name.replace('s', '#');
+                    label.textContent = name;
                     label.className = 'mb-2';
                     key.appendChild(label);
                 }
                 keyboardDiv.appendChild(key);
-                return key;
             };
-
-            let currentX = startX;
-            let blackKeyIndex = 0;
 
             for (let i = 0; i < whiteKeyNames.length; i++) {
                 const name = whiteKeyNames[i];
+                
+                // 1. Append White Key
                 appendKey(name, false, currentX);
 
-                if (name !== 'E4' && name !== 'B4' && blackKeyIndex < blackKeyNames.length) {
-                    // Place sharp key
-                    // Position it 3/4 of the way across the current white key
-                    const sharpX = currentX + 40 - 12.5; 
-                    appendKey(blackKeyNames[blackKeyIndex], true, sharpX);
-                    blackKeyIndex++;
+                // 2. Append Black Key (if applicable)
+                // Black keys exist between C-D, D-E, F-G, G-A, A-B
+                if (name.includes('C') || name.includes('D') || name.includes('F') || name.includes('G') || name.includes('A')) {
+                    // Check if we still have sharp keys to append in the blackKeyNames array
+                    if (blackKeyIndex < blackKeyNames.length) {
+                        // Position the sharp key centered over the split
+                        const sharpX = currentX + (whiteKeyWidth - (blackKeyWidth / 2)); 
+                        appendKey(blackKeyNames[blackKeyIndex], true, sharpX);
+                        blackKeyIndex++;
+                    }
                 }
 
-                currentX += 40; // Move to the start of the next white key
+                currentX += whiteKeyWidth; // Move to the start of the next white key
             }
         }
 
         // --- OmniScore Parsing ---
         function parseOmniScore(code) {
-            const melody = [];
-            const rhPattern = /rh:\s*([^|]+)/g;
+            const events = [];
+            // Target both Right Hand (rh) and Left Hand (lh)
+            const parts = [
+                { hand: 'RH', pattern: /rh:\s*([^|]+)/g },
+                { hand: 'LH', pattern: /lh:\s*([^|]+)/g }, 
+            ];
+            
+            // Regex to capture Note/Rest (e.g., e4 or r) and Duration (e.g., 4 or 1)
+            // It handles fractional durations (group 2) OR integer durations (group 4)
             const noteDurationRegex = /([a-g][#b]?\d|r):(\d\.\d|\d\.)|([a-g][#b]?\d|r):(\d)/g;
-            let currentTime = 0;
 
-            // This is a highly simplified parser targeting ONLY the 'rh' line
-            let match;
-            while ((match = rhPattern.exec(code)) !== null) {
-                const notesString = match[1].trim();
-                let noteMatch;
+            parts.forEach(part => {
+                let currentTime = 0;
+                // Reset regex position before reuse
+                part.pattern.lastIndex = 0; 
+                
+                let measureMatch;
+                while ((measureMatch = part.pattern.exec(code)) !== null) {
+                    const notesString = measureMatch[1].trim();
+                    let noteMatch;
 
-                while ((noteMatch = noteDurationRegex.exec(notesString)) !== null) {
-                    const note = noteMatch[1] || noteMatch[3];
-                    const durationStr = noteMatch[2] || noteMatch[4];
-                    
-                    if (!durationMap[durationStr]) {
-                        console.warn('Unknown duration format:', durationStr);
-                        continue;
+                    // Reset regex position before reuse for inner loop
+                    noteDurationRegex.lastIndex = 0;
+
+                    while ((noteMatch = noteDurationRegex.exec(notesString)) !== null) {
+                        const note = noteMatch[1] || noteMatch[3]; // Note or Rest (r)
+                        const durationStr = noteMatch[2] || noteMatch[4]; // Duration string (e.g., '4' or '1')
+                        
+                        const duration = durationMap[durationStr];
+                        if (!duration) {
+                            // Throw error for user-visible feedback on invalid input
+                            throw new Error(`Invalid duration '${durationStr}' found for note ${note}. Please use '1', '2', '4', or '8'.`);
+                        }
+
+                        events.push({
+                            note: note.toUpperCase(), // Tone.js prefers C4, D4 format
+                            duration: duration,
+                            time: currentTime,
+                            hand: part.hand
+                        });
+                        
+                        currentTime += duration;
                     }
-                    
-                    const duration = durationMap[durationStr];
-
-                    melody.push({
-                        note: note.toUpperCase(), // Tone.js prefers C4, D4 format
-                        duration: duration,
-                        time: currentTime
-                    });
-                    
-                    currentTime += duration;
                 }
-            }
+            });
 
-            return melody;
+            // CRITICAL: Sort events chronologically to interleave RH and LH notes correctly
+            events.sort((a, b) => a.time - b.time);
+
+            return events;
         }
 
         // --- Scheduling and Playback ---
 
-        function playMelody(parsedMelody) {
+        function playScore(parsedEvents) {
             if (isPlaying) return;
 
             Tone.Transport.stop();
             Tone.Transport.cancel(0);
             scheduledEvents = [];
             isPlaying = true;
-            statusDiv.textContent = 'Playing...';
+            statusDiv.className = 'text-center text-sm text-blue-600 mt-4 h-6';
+            statusDiv.textContent = 'Playing Full Score...';
             playButton.disabled = true;
             stopButton.disabled = false;
             
@@ -313,12 +298,12 @@ measure 8
             });
             
             // Schedule the notes
-            parsedMelody.forEach(item => {
+            parsedEvents.forEach(item => {
                 if (item.note === 'R') {
-                    // Skip rests but advance time
-                    return;
+                    return; // Skip rests
                 }
                 
+                // Get the consistent key ID (C#4 becomes Cs4)
                 const noteId = 'key-' + item.note.toLowerCase().replace('#', 's');
                 const keyElement = document.getElementById(noteId);
                 const isBlack = item.note.includes('#');
@@ -347,12 +332,18 @@ measure 8
                             keyElement.classList.remove(activeClass);
                         }, time);
                     }
-                }, item.time + item.duration - 0.05); // Use a small offset
+                }, item.time + item.duration - 0.05); 
                 scheduledEvents.push(visualOffEvent);
             });
             
             // Schedule stop/cleanup at the very end
-            const totalDuration = parsedMelody[parsedMelody.length - 1].time + parsedMelody[parsedMelody.length - 1].duration;
+            const lastEvent = parsedEvents[parsedEvents.length - 1];
+            let totalDuration = 0;
+            if (lastEvent) {
+                // Determine the end time of the score
+                totalDuration = lastEvent.time + lastEvent.duration;
+            }
+            
             const endEvent = Tone.Transport.schedule(stopPlayback, totalDuration);
             scheduledEvents.push(endEvent);
 
@@ -367,6 +358,7 @@ measure 8
             Tone.Transport.cancel(0);
             
             isPlaying = false;
+            statusDiv.className = 'text-center text-sm text-gray-500 mt-4 h-6';
             statusDiv.textContent = 'Ready to play.';
             playButton.disabled = false;
             stopButton.disabled = true;
@@ -380,20 +372,45 @@ measure 8
         // --- Initialization ---
 
         window.onload = function() {
+            // 1. Populate the editor with the initial score
+            omniInput.value = initialOmniScoreCode.trim();
+
+            // 2. Build the keyboard
             createKeyboard();
 
+            // 3. Attach event listeners
             playButton.addEventListener('click', async () => {
+                // Read score from the editor
+                const currentOmniScoreCode = omniInput.value;
+
+                // Initialize Tone.js only if necessary
                 if (Tone.Transport.state !== 'started') {
                     await Tone.start();
                     Tone.Context.lookAhead = 0.1; // Reduce latency
                 }
+                
+                // Stop any previous playback
+                stopPlayback(); 
+
                 try {
-                    const parsedMelody = parseOmniScore(omniScoreCode);
-                    playMelody(parsedMelody);
+                    // Attempt to parse the user's input
+                    const parsedEvents = parseOmniScore(currentOmniScoreCode);
+                    
+                    if (parsedEvents.length === 0) {
+                        statusDiv.className = 'text-center text-sm text-orange-600 mt-4 h-6';
+                        statusDiv.textContent = 'Warning: No musical notes found in the score.';
+                        return;
+                    }
+                    
+                    // If parsing succeeds, play the score
+                    playScore(parsedEvents);
+
                 } catch (error) {
-                    statusDiv.textContent = 'Error parsing score: ' + error.message;
+                    // Show parsing errors to the user
+                    statusDiv.className = 'text-center text-sm text-red-600 mt-4 h-6';
+                    statusDiv.textContent = 'Parsing Error: ' + error.message;
                     console.error('Parsing/Playback Error:', error);
-                    stopPlayback();
+                    stopPlayback(); // Ensure everything is stopped on error
                 }
             });
 
