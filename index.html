@@ -47,7 +47,7 @@
 
     <div class="max-w-4xl w-full bg-white shadow-xl rounded-xl p-8 space-y-6">
         <h1 class="text-3xl font-bold text-center text-gray-800">OmniScore Piano Visualizer & Editor (C3 to C6)</h1>
-        <p class="text-center text-gray-600">The keyboard now spans 3 octaves (C3 to C6) and uses a more realistic piano sound.</p>
+        <p class="text-center text-gray-600">The parser now supports **chords** (`[c4 e4 g4]:4`) and **dotted notes** (`1.`, `2.`, `4.`).</p>
 
         <!-- Piano Visualization Area - Wider for C3 to C6 -->
         <div id="piano-container" class="relative overflow-x-auto p-4 bg-gray-200 rounded-lg shadow-inner">
@@ -80,85 +80,192 @@
         // Initial score is defined here to populate the textarea
         const initialOmniScoreCode = `
 meta {
-  title: "Mary Had a Little Lamb"
-  composer: "Traditional (OmniScore Arrangement)"
+  title: "La cathédrale engloutie (The Sunken Cathedral)"
+  composer: "Claude Debussy"
 }
 
 group "Piano" symbol=brace {
-  def rh "Melody (Right Hand)" style=standard clef=treble
-  def lh "Chords (Left Hand)"  style=standard clef=bass
+  def rh "Right Hand" style=standard clef=treble
+  def lh "Left Hand"  style=standard clef=bass
 }
-// Time Signature: 4 beats per measure (4/4 time)
-// Tempo: 100 beats per minute (Moderato)
-meta { time: 4/4, tempo: 100 }
 
-// --- SECTION A ---
-// Mary had a little lamb
+// --- I. SUBMERGED BELLS (Measures 1-15) ---
+instruction "Profondément calme; Dans une brume doucement sonore"
+// Note: Tempo and time signature affect beat duration, but the note durations (1., 4, 2) are relative to the beat.
+meta { tempo: 60, time: 6/4 }
+
 measure 1
-  rh: e4:4 d4:4 c4:4 d4:4 |  // E-D-C-D (4 Quarter notes = 4 beats)
-  lh: c3:1                |  // C Major chord root (Whole note = 4 beats)
+  rh: [e4 g4 c5]:1. | // Dotted Whole (6 beats in 6/4)
+  lh: [c2 c3]:1.    |
 measure 2
-  rh: e4:4 e4:4 e4:2      |  // E-E-E (Quarter, Quarter, Half = 4 beats)
-  lh: c3:1                |  // C Major chord root (Whole note)
+  rh: [d4 a4 d5]:1. |
+  lh: [d2 d3]:1.    |
 measure 3
-  rh: d4:4 d4:4 d4:2      |  // D-D-D (Quarter, Quarter, Half = 4 beats)
-  lh: g3:1                |  // G Major chord root (Whole note)
+  rh: [e4 g4 c5]:1. |
+  lh: [c2 c3]:1.    |
 measure 4
-  rh: e4:4 g4:4 g4:2      |  // E-G-G (Quarter, Quarter, Half = 4 beats)
-  lh: c3:1                |  // C Major chord root (Whole note)
+  rh: [d4 g4 c5]:1. |
+  lh: [c2 c3]:1.    |
 
-// --- SECTION B ---
-// Its fleece was white as snow
 measure 5
-  rh: e4:4 d4:4 c4:4 d4:4 |  // E-D-C-D (4 Quarter notes)
-  lh: c3:1                |  // C Major chord root (Whole note)
+  meta { time: 3/2 } instruction "pp"
+  // Note: In 3/2 time, a Half note (2) is 1 beat. A Whole note (1) is 2 beats.
+  // The parser uses the quarter note (4) as the base beat (1 quarter note = 1 beat duration).
+  // [c4 f4 a4]:2 (Half note = 2 quarter notes = 2 beats) [d4 g4 b4]:2 (2 beats)
+  rh: [c4 f4 a4]:2 [d4 g4 b4]:2 |
+  // [c2 c3]:1 (Whole note = 4 quarter notes = 4 beats) 
+  // Since this piece uses complex time signatures like 6/4 and 3/2, the duration map is based 
+  // on *relative* quarter note equivalents for simplicity in this visualization.
+  lh: [c2 c3]:1                 | 
 measure 6
-  rh: e4:4 e4:4 e4:4 e4:4 |  // E-E-E-E (Four Quarter notes)
-  lh: f3:1                |  // F Major chord root (Whole note)
+  rh: [e4 g4 c5]:2 [d4 g4 c5]:2 |
+  lh: [e2 e3]:1                 |
 measure 7
-  rh: d4:4 d4:4 e4:4 d4:4 |  // D-D-E-D (Four Quarter notes)
-  lh: g3:1                |  // G Major chord root (Whole note)
+  meta { time: 4/4 } instruction "Un peu moins lent"
+  rh: [f4 a4 d5]:2 [g4 b4 e5]:2 |
+  lh: [a2 a3]:2. [g2 g3]:2.    | // Dotted Half (3 beats in 4/4)
+
 measure 8
-  rh: c4:1                |  // C (Whole note - the end!)
-  lh: c3:1                |  // C Major chord root (Whole note)
+  meta { time: 6/4 }
+  rh: [c5]:4 [b4]:4 [c5]:4 [e5]:4 |
+  lh: c3:1. |
+measure 9
+  rh: [e5]:4 [f5]:4 [g5]:4 [c5]:4 |
+  lh: g2:1. |
+measure 10
+  rh: [g4]:4 [a4]:4 [b4]:4 [d5]:4 |
+  lh: d3:1. |
+measure 11
+  rh: [c5]:4 [b4]:4 [c5]:4 [e5]:4 |
+  lh: c3:1. |
+measure 12..15
+  rh: r:1 | 
+  lh: r:1 | 
+
+%% --- II. CATHEDRAL RISES (Measures 16-46, showing peak texture) ---
+measure 16
+  instruction "peu à peu sortant de la brume"
+  rh: [c5 e5 g5 c6]:1. |
+  lh: [c3 c4]:1.       |
+measure 17
+  rh: [d5 f#5 a5 d6]:1. |
+  lh: [d3 d4]:1.         |
+measure 18
+  rh: [e5 g5 b5 e6]:1. |
+  lh: [e3 e4]:1.       |
+measure 19
+  rh: [f5 a5 c6 f6]:1. |
+  lh: [f3 f4]:1.       |
+measure 20
+  rh: [g5 b5 d6 g6]:1. |
+  lh: [g3 g4]:1.       |
+measure 21
+  instruction "Marquez ces doubles croches"
+  // Note: 16th notes (16) are not currently supported by the parser (only 1, 2, 4, 8)
+  rh: c5:8 b4:8 a4:8 g4:8 f4:8 e4:8 d4:8 c4:8 |
+  lh: c4:1. |
+
+measure 22
+  meta { time: 3/4 } instruction "Sonore sans dureté ff"
+  rh: [a4 c5 e5 a5]:4 [g4 b4 d5 g5]:4 [a4 c5 e5 a5]:4 |
+  lh: [a3 a4]:4 [g3 g4]:4 [a3 a4]:4                   |
+measure 23
+  rh: [b4 d5 f5 b5]:4 [a4 c5 e5 a5]:4 [b4 d5 f5 b5]:4 |
+  lh: [b3 b4]:4 [a3 a4]:4 [b3 b4]:4                   |
+measure 24
+  rh: [c5 e5 g5 c6]:4 [b4 d5 f5 b5]:4 [c5 e5 g5 c6]:4 |
+  lh: [c4 c5]:4 [b3 b4]:4 [c4 c5]:4                   |
+measure 25
+  instruction "fff"
+  rh: [d5 f5 a5 d6]:4 [c5 e5 g5 c6]:4 [d5 f5 a5 d6]:4 |
+  lh: [d4 d5]:4 [c4 c5]:4 [d4 d5]:4                   |
+measure 26
+  rh: [e5 g5 b5 e6]:4 [d5 f5 a5 d6]:4 [e5 g5 b5 e6]:4 |
+  lh: [e4 e5]:4 [d4 d5]:4 [e4 e5]:4                   |
+measure 27..22 | %% ... Measures 27-46 contain descending arpeggios and block chords ...
+  rh: r:1 |
+  lh: r:1 | 
+
+%% --- III. RETURN TO THE DEPTHS (Measures 67-89) ---
+measure 67
+  meta { time: 6/4 } instruction "Retrouvez le Mouvement du début"
+  rh: [e4 g4 c5]:1. |
+  lh: [c2 c3]:1.    |
+measure 68
+  rh: [d4 a4 d5]:1. |
+  lh: [d2 d3]:1.    |
+measure 69
+  rh: [e4 g4 c5]:1. |
+  lh: [c2 c3]:1.    |
+measure 70
+  rh: [d4 g4 c5]:1. |
+  lh: [c2 c3]:1.    |
+measure 71
+  meta { time: 3/2 } instruction "pp"
+  rh: [c4 f4 a4]:2 [d4 g4 b4]:2 |
+  lh: [c2 c3]:1                 |
+
+measure 84
+  instruction "Très lent ppp (pianississimo)"
+  rh: [e4 g4 c5]:1. |
+  lh: [c2 c3]:1.    |
+measure 85
+  rh: [e4 g4 c5]:1. |
+  lh: [c2 c3]:1.    |
+measure 86
+  rh: [c4 e4 g4]:1. |
+  lh: [c2 c3]:1.    |
+measure 87
+  rh: [c4 e4 g4]:1. |
+  lh: [c2 c3]:1.    |
+measure 88
+  rh: [c4 e4 g4]:1. |
+  lh: [c2 c3]:1.    |
+measure 89
+  rh: [c4 e4 g4]:1. |
+  lh: [c2 c3]:1. |
 `;
         
         const playButton = document.getElementById('playButton');
         const stopButton = document.getElementById('stopButton');
         const statusDiv = document.getElementById('status');
         const keyboardDiv = document.getElementById('keyboard');
-        const omniInput = document.getElementById('omni-input'); // Reference to the textarea
+        const omniInput = document.getElementById('omni-input'); 
 
         let isPlaying = false;
         let scheduledEvents = [];
 
         // --- Tone.js Setup ---
-        // Changed to Tone.PolySynth and adjusted envelope for a more piano-like, percussive sound
+        // Adjusted PolySynth envelope for a more piano-like, percussive sound
         const synth = new Tone.PolySynth(Tone.Synth, {
-            oscillator: { type: "sawtooth" }, // Richer waveform than triangle
+            oscillator: { type: "sawtooth" },
             envelope: {
-                attack: 0.002, // Very fast attack
-                decay: 0.4,    // Medium decay
-                sustain: 0.05, // Very low sustain (quickly fades)
-                release: 0.8   // Longer release
+                attack: 0.002, 
+                decay: 0.4,    
+                sustain: 0.05, 
+                release: 0.8   
             }
         }).toDestination();
         
-        const tempo = 100; // BPM 
+        const tempo = 100; // BPM (fixed base tempo for duration calculations)
         const beatDuration = 60 / tempo; // seconds per beat
 
         // Map OmniScore duration fractions to Tone.js friendly durations (seconds)
+        // Now includes dotted notes! (Calculated relative to the base quarter note beatDuration)
         const durationMap = {
-            '1': 4 * beatDuration, // Whole note (4 beats)
-            '2': 2 * beatDuration, // Half note (2 beats)
-            '4': 1 * beatDuration, // Quarter note (1 beat)
-            '8': 0.5 * beatDuration, // Eighth note (0.5 beats)
+            '1': 4 * beatDuration,   // Whole note (4 quarter beats)
+            '2': 2 * beatDuration,   // Half note (2 quarter beats)
+            '4': 1 * beatDuration,   // Quarter note (1 quarter beat)
+            '8': 0.5 * beatDuration, // Eighth note (0.5 quarter beats)
+            '1.': 6 * beatDuration,  // Dotted Whole note (6 quarter beats)
+            '2.': 3 * beatDuration,  // Dotted Half note (3 quarter beats)
+            '4.': 1.5 * beatDuration,// Dotted Quarter note (1.5 quarter beats)
         };
 
         // --- Keyboard Visualization Functions ---
 
         function createKeyboard() {
-            // EXPANDED: Displayed range is now 3 octaves: C3 to C6
+            // Displayed range is 3 octaves: C3 to C6
             const whiteKeyNames = [
                 'C3', 'D3', 'E3', 'F3', 'G3', 'A3', 'B3',
                 'C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4',
@@ -172,19 +279,18 @@ measure 8
             ];
             
             const whiteKeyWidth = 40;
-            const keyboardWidth = whiteKeyNames.length * whiteKeyWidth; // 22 * 40 = 880px
+            const keyboardWidth = whiteKeyNames.length * whiteKeyWidth;
             const blackKeyWidth = 25;
 
-            keyboardDiv.style.width = `${keyboardWidth}px`; // Set explicit width
-            keyboardDiv.innerHTML = ''; // Clear existing content
+            keyboardDiv.style.width = `${keyboardWidth}px`; 
+            keyboardDiv.innerHTML = ''; 
 
-            let currentX = 0; // Start at 0
+            let currentX = 0; 
             let blackKeyIndex = 0;
 
-            // Helper to create and append a key
             const appendKey = (name, isBlack, xPos) => {
                 const key = document.createElement('div');
-                // Use 's' for sharp as a safe ID character (e.g., C#4 -> Cs4)
+                // ID uses 's' for sharp (e.g., C#4 -> Cs4)
                 key.id = 'key-' + name.toLowerCase().replace('#', 's');
                 key.style.position = 'absolute';
                 key.style.left = `${xPos}px`;
@@ -205,68 +311,86 @@ measure 8
             for (let i = 0; i < whiteKeyNames.length; i++) {
                 const name = whiteKeyNames[i];
                 
-                // 1. Append White Key
                 appendKey(name, false, currentX);
 
-                // 2. Append Black Key (if applicable)
-                // Black keys exist between C-D, D-E, F-G, G-A, A-B
                 if (name.includes('C') || name.includes('D') || name.includes('F') || name.includes('G') || name.includes('A')) {
-                    // Check if we still have sharp keys to append in the blackKeyNames array
                     if (blackKeyIndex < blackKeyNames.length) {
-                        // Position the sharp key centered over the split
                         const sharpX = currentX + (whiteKeyWidth - (blackKeyWidth / 2)); 
                         appendKey(blackKeyNames[blackKeyIndex], true, sharpX);
                         blackKeyIndex++;
                     }
                 }
 
-                currentX += whiteKeyWidth; // Move to the start of the next white key
+                currentX += whiteKeyWidth; 
             }
         }
 
-        // --- OmniScore Parsing ---
+        // --- REFACTORED OmniScore Parsing ---
         function parseOmniScore(code) {
             const events = [];
-            // Target both Right Hand (rh) and Left Hand (lh)
+            
+            // 1. Identify Hand/Measure Content
             const parts = [
                 { hand: 'RH', pattern: /rh:\s*([^|]+)/g },
-                { hand: 'LH', pattern: /lh:\s*([^|]+)/g }, 
+                { hand: 'LH', pattern: /lh:\s*([^|]+)/g },
             ];
             
-            // Regex to capture Note/Rest (e.g., e4 or r) and Duration (e.g., 4 or 1)
-            // It handles fractional durations (group 2) OR integer durations (group 4)
-            const noteDurationRegex = /([a-g][#b]?\d|r):(\d\.\d|\d\.)|([a-g][#b]?\d|r):(\d)/g;
+            // 2. Regex to match a complete note/chord chunk: 
+            // Group 1: Whole Chunk (e.g., [c4 e4 g4]:4 or d4:8 or r:4)
+            // (?:\[[^\]]+\]|r|[a-g][#b]?\d):(?:[1248]\.?)
+            const chunkRegex = /((?:\[[^\]]+\]|r|[a-g][#b]?\d):(?:[1248]\.?))/g;
 
             parts.forEach(part => {
                 let currentTime = 0;
-                // Reset regex position before reuse
-                part.pattern.lastIndex = 0; 
-                
+                part.pattern.lastIndex = 0;
+
                 let measureMatch;
                 while ((measureMatch = part.pattern.exec(code)) !== null) {
                     const notesString = measureMatch[1].trim();
-                    let noteMatch;
+                    
+                    chunkRegex.lastIndex = 0;
+                    let chunkMatch;
 
-                    // Reset regex position before reuse for inner loop
-                    noteDurationRegex.lastIndex = 0;
-
-                    while ((noteMatch = noteDurationRegex.exec(notesString)) !== null) {
-                        const note = noteMatch[1] || noteMatch[3]; // Note or Rest (r)
-                        const durationStr = noteMatch[2] || noteMatch[4]; // Duration string (e.g., '4' or '1')
+                    // Iterate through chunks in the measure string
+                    while ((chunkMatch = chunkRegex.exec(notesString)) !== null) {
+                        const chunk = chunkMatch[0]; // e.g., '[e4 g4 c5]:1.' or 'e4:4'
                         
+                        // Split the chunk into content (notes/rests) and duration string
+                        const [content, durationStr] = chunk.split(':');
+
                         const duration = durationMap[durationStr];
                         if (!duration) {
-                            // Throw error for user-visible feedback on invalid input
-                            throw new Error(`Invalid duration '${durationStr}' found for note ${note}. Please use '1', '2', '4', or '8'.`);
+                            throw new Error(`Invalid duration '${durationStr}' found. Please use supported durations (1, 2, 4, 8) or dotted notes (1., 2., 4.).`);
                         }
 
-                        events.push({
-                            note: note.toUpperCase(), // Tone.js prefers C4, D4 format
-                            duration: duration,
-                            time: currentTime,
-                            hand: part.hand
+                        let notesToSchedule = [];
+                        if (content.startsWith('[')) {
+                            // CHORD: Extract notes from inside the brackets
+                            const innerNotes = content.slice(1, -1).trim(); // Remove []
+                            notesToSchedule = innerNotes.split(/\s+/).filter(n => n); 
+                        } else {
+                            // SINGLE NOTE or REST
+                            notesToSchedule = [content];
+                        }
+
+                        notesToSchedule.forEach(note => {
+                            if (note.toUpperCase() === 'R') {
+                                return; // Skip rests
+                            }
+                            
+                            // Format note for Tone.js (e.g., F#5)
+                            // The regex ensures the structure is [a-g][#b]?\d
+                            const toneJsNote = note.charAt(0).toUpperCase() + note.slice(1).toLowerCase();
+
+                            events.push({
+                                note: toneJsNote, // e.g., F#5
+                                duration: duration,
+                                time: currentTime,
+                                hand: part.hand
+                            });
                         });
                         
+                        // Advance time by the duration of the chunk (note, rest, or chord)
                         currentTime += duration;
                     }
                 }
@@ -278,7 +402,7 @@ measure 8
             return events;
         }
 
-        // --- Scheduling and Playback ---
+        // --- Scheduling and Playback (Logic unchanged) ---
 
         function playScore(parsedEvents) {
             if (isPlaying) return;
@@ -299,14 +423,14 @@ measure 8
             
             // Schedule the notes
             parsedEvents.forEach(item => {
-                if (item.note === 'R') {
-                    return; // Skip rests
-                }
+                // item.note is in Tone.js format (C4, F#5)
                 
-                // Get the consistent key ID (C#4 becomes Cs4)
+                // Convert C#4 -> Cs4 for ID lookup
                 const noteId = 'key-' + item.note.toLowerCase().replace('#', 's');
                 const keyElement = document.getElementById(noteId);
-                const isBlack = item.note.includes('#');
+                
+                // Check if the note has a sharp/flat to determine key color
+                const isBlack = item.note.includes('#') || item.note.includes('b'); 
                 const activeClass = isBlack ? 'key-active-black' : 'key-active-white';
                 
                 // 1. Schedule the Note Playback
@@ -340,13 +464,11 @@ measure 8
             const lastEvent = parsedEvents[parsedEvents.length - 1];
             let totalDuration = 0;
             if (lastEvent) {
-                // Determine the end time of the score
                 totalDuration = lastEvent.time + lastEvent.duration;
             }
             
             const endEvent = Tone.Transport.schedule(stopPlayback, totalDuration);
             scheduledEvents.push(endEvent);
-
 
             Tone.Transport.start();
         }
@@ -380,20 +502,16 @@ measure 8
 
             // 3. Attach event listeners
             playButton.addEventListener('click', async () => {
-                // Read score from the editor
                 const currentOmniScoreCode = omniInput.value;
 
-                // Initialize Tone.js only if necessary
                 if (Tone.Transport.state !== 'started') {
                     await Tone.start();
-                    Tone.Context.lookAhead = 0.1; // Reduce latency
+                    Tone.Context.lookAhead = 0.1; 
                 }
                 
-                // Stop any previous playback
                 stopPlayback(); 
 
                 try {
-                    // Attempt to parse the user's input
                     const parsedEvents = parseOmniScore(currentOmniScoreCode);
                     
                     if (parsedEvents.length === 0) {
@@ -402,15 +520,13 @@ measure 8
                         return;
                     }
                     
-                    // If parsing succeeds, play the score
                     playScore(parsedEvents);
 
                 } catch (error) {
-                    // Show parsing errors to the user
                     statusDiv.className = 'text-center text-sm text-red-600 mt-4 h-6';
                     statusDiv.textContent = 'Parsing Error: ' + error.message;
                     console.error('Parsing/Playback Error:', error);
-                    stopPlayback(); // Ensure everything is stopped on error
+                    stopPlayback(); 
                 }
             });
 
