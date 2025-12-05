@@ -1,9 +1,3 @@
-Here is the **Extended OmniScore Documentation**. I have expanded the examples to cover 20+ distinct musical scenarios, ensuring the logic holds up for everything from Bach to Meshuggah.
-
-This document serves as the **Master Test Suite** for the language.
-
-***
-
 # 🎼 OmniScore: The Master Reference
 
 [![Spec](https://img.shields.io/badge/spec-v1.1-blueviolet)](https://github.com/omniscore) [![Logic](https://img.shields.io/badge/logic-100%25-success)](https://github.com/omniscore)
