@@ -1,387 +1,23 @@
-# 🎼 OmniScore: The Master Reference
-
-[![Spec](https://img.shields.io/badge/spec-v1.1-blueviolet)](https://github.com/omniscore) [![Logic](https://img.shields.io/badge/logic-100%25-success)](https://github.com/omniscore)
-
-**The Universal Text-to-Music Standard.**
-This document contains comprehensive examples demonstrating the robustness of the OmniScore syntax across all musical disciplines.
-
----
-
-## 📚 Table of Contents
-
-1.  [Basics: Pitch & Rhythm](#1-basics-pitch--rhythm)
-2.  [The Guitar Engine (Tablature)](#2-the-guitar-engine)
-3.  [The Percussion Engine (Grid)](#3-the-percussion-engine)
-4.  [Piano & Polyphony](#4-piano--polyphony)
-5.  [Vocal & Lyrical Syntax](#5-vocal--lyrical-syntax)
-6.  [Orchestral Logic](#6-orchestral-logic)
-7.  [Complex Time & Tuplets](#7-complex-time--tuplets)
-8.  [Flow Control (Repeats/Coda)](#8-flow-control)
-9.  [Experimental & Microtonal](#9-experimental--microtonal)
-10. [The Rendering Logic](#10-the-rendering-logic)
-
----
-
-## 1. Basics: Pitch & Rhythm
-
-### Example 1.1: The Scale (Inference Logic)
-*Logic Check:* If octave is omitted, OmniScore selects the pitch closest to the previous note (within a 4th).
-
-```javascript
-omniscore
-  def flt "Flute" style=standard
-
-  measure 1
-    %% Start at C4. Subsequent notes find closest neighbor.
-    flt: c4:4 d e f | g a b c5 |
-  
-  measure 2
-    %% Jumping intervals requires explicit octave
-    flt: c5:2 g4:2 | c4:1 |
-```
-
-### Example 1.2: Accidentals & Key Signatures
-*Logic Check:* The `key` meta-property sets the rendering display, but input notes can be explicit (`#`, `b`) or obey the key (`n` for natural).
-
-```javascript
-omniscore
-  meta { key: F#m } %% Key implies F#, C#, G#
-
-  def vln "Violin" style=standard
-
-  measure 1
-    %% f = f# (implied by key), gn = g natural (explicit)
-    vln: f4:4 gn4 a4 b4 |
-    
-    %% c#5 (implied), db5 (enharmonic equivalent)
-    vln: c5:2 db5:2 |
-```
-
----
-
-## 2. The Guitar Engine
-
-### Example 2.1: Chords & Strumming
-*Logic Check:* Stacking inputs (`[]`) creates vertical alignment. `d` and `u` modifiers denote strum direction.
-
-```javascript
-omniscore
-  def gtr "Rhythm Gtr" style=tab
-
-  measure 1
-    %% E Major Chord held for 2 beats, then strummed
-    gtr: [0-6 2-5 2-4 1-3 0-2 0-1]:2.down
-         [0-6 2-5 2-4]:8.d  [0-6 2-5 2-4]:8.u  r:4 |
-```
-
-### Example 2.2: Lead Techniques
-*Logic Check:* Complex articulations (Bends, Hammer-ons, Slides).
-
-```javascript
-omniscore
-  def lead "Lead Gtr" style=tab
-
-  measure 1
-    %% Bend 12th fret up a full step, then release
-    lead: 12-2:4.bu(full)  12-2:4.bd(0)
-    
-    %% Hammer-on / Pull-off sequence
-    lead: 10-2:8.h(12) 12-2:8.p(10)
-    
-    %% Slide from 5 to 10
-    lead: 5-3:4.slide(10) |
-```
-
-### Example 2.3: Alternate Tunings
-*Logic Check:* String 6 becomes D2 instead of E2. Logic validates fret range (e.g., negative numbers invalid).
-
-```javascript
-omniscore
-  %% Drop D Tuning definition
-  def gtr "Metal" style=tab tuning=[D2,A2,D3,G3,B3,E4]
-
-  measure 1
-    %% Open low string is now D
-    gtr: [0-6 0-5 0-4]:8.pm [0-6 0-5 0-4]:8.pm |
-```
-
----
-
-## 3. The Percussion Engine
-
-### Example 3.1: The Drum Map
-*Logic Check:* Mapping specific characters to vertical positions (Y-axis) on a non-pitch staff.
-
-```javascript
-omniscore
-  %% Define the kit: Kick(k) bottom, Snare(s) middle, Hat(h) top
-  def kit "Drums" style=grid map={ k:0, s:3, h:5, c:6 }
-
-  measure 1
-    %% Standard Rock Beat
-    kit: k:4    h:8 h    s:4    h:8 h |
-    
-    %% Crash on 1, Snare fill at end
-    kit: c:4    h:8 h    s:16 s s s |
-```
-
-### Example 3.2: Ghost Notes & Accents
-*Logic Check:* Dynamics apply to individual hits in the grid.
-
-```javascript
-  measure 1
-    %% Parentheses around note = ghost note (.ghost)
-    kit: s:4.acc   s:8.ghost   s:8.ghost   s:4.acc |
-```
-
----
-
-## 4. Piano & Polyphony
-
-### Example 4.1: The Grand Staff
-*Logic Check:* Linking two staves with a brace (`group`).
-
-```javascript
-omniscore
-  group "Piano" symbol=brace {
-    def rh "Right" style=standard clef=treble
-    def lh "Left"  style=standard clef=bass
-  }
-
-  measure 1
-    rh: c5:8 d5 e5 f5  g5:2 |
-    lh: c3:1                |
-```
-
-### Example 4.2: Multi-Voice (Fugue Logic)
-*Logic Check:* `v1` (stems up) and `v2` (stems down) must sum to the same total duration per measure.
-
-```javascript
-omniscore
-  def pno "Piano" style=standard
-
-  measure 1
-    pno: {
-      %% Voice 1: Quarter notes (Total 4 beats)
-      v1: e5:4  f5:4  g5:4  e5:4 |
-      
-      %% Voice 2: Half notes (Total 4 beats)
-      v2: c5:2        c5:2       |
-    }
-```
-
----
-
-## 5. Vocal & Lyrical Syntax
-
-### Example 5.1: Syllabic Alignment
-*Logic Check:* Parser counts notes in linked staff and aligns syllables.
-*   `-` = Hyphenate (shifts to next note)
-*   `_` = Melisma (holds word across notes)
-
-```javascript
-omniscore
-  def vox "Soprano" style=standard
-  def txt "Lyrics"  style=text link=vox
-
-  measure 1
-    vox: c5:4   d5:4   e5:2        |
-    txt: "Glo"  -      "ria"       |
-
-  measure 2
-    vox: f5:4   e5:4   d5:4   c5:4 |
-    txt: "in"   "ex"   "cel"  -    |
-    
-  measure 3
-    vox: d5:1                      |
-    txt: "sis"                     |
-```
-
----
-
-## 6. Orchestral Logic
-
-### Example 6.1: Transposing Instruments
-*Logic Check:* The score is written in *Concert Pitch* (for easy reading/playback), but the `transpose` flag tells the renderer to shift the visual output for the player.
-
-```javascript
-omniscore
-  %% Alto Sax sounds Major 6th lower (-9 semitones)
-  def sax "Alto Sax" style=standard transpose=+9
-
-  measure 1
-    %% Written as Concert C. Renders as A on the sheet music.
-    sax: c4:4 e4 g4 c5 |
-```
-
----
-
-## 7. Complex Time & Tuplets
-
-### Example 7.1: Odd Time Signatures
-*Logic Check:* Measure validation adapts to the numerator.
-
-```javascript
-omniscore
-  meta { time: 7/8 }
-
-  def vln "Violin" style=standard
-
-  measure 1
-    %% 3 + 2 + 2 grouping
-    vln: c5:8.acc d5:8 e5:8  f5:4 g5:4 |
-```
-
-### Example 7.2: Nested Tuplets
-*Logic Check:* `(ratio: events)`. Ratio `5:4` means "play 5 in the time of 4".
-
-```javascript
-omniscore
-  def flt "Flute" style=standard
-
-  measure 1
-    %% Standard Triplet (3 in space of 2 eighths)
-    flt: c5:4  (3:2 d5:8 e5 f5)  g5:4 |
-    
-    %% Quintuplet (5 in space of 1 quarter)
-    flt: (5:4 c5:16 d e f g) g5:2. |
-```
-
----
-
-## 8. Flow Control
-
-### Example 8.1: Repeats and Alternatives
-*Logic Check:* Programming logic for music structure. `repeat` blocks.
-
-```javascript
-omniscore
-  def tpt "Trumpet" style=standard
-
-  repeat 2x {
-    measure 1
-      tpt: c5:4 e5 g5 c6 |
-  } alternative {
-    %% 1st Ending
-    1. { measure 2 { tpt: g5:1 } }
-    
-    %% 2nd Ending
-    2. { measure 3 { tpt: c6:1.fine } }
-  }
-```
-
-### Example 8.2: D.S. al Coda (Jumps)
-*Logic Check:* Using labels and jump instructions.
-
-```javascript
-omniscore
-  flow
-    measure 1..4
-      ...
-    
-    label "Segno"
-    measure 5
-      ...
-    
-    instruction "To Coda"
-    measure 6
-      ...
-      
-    instruction "D.S. al Coda"
-    
-    label "Coda"
-    measure 7
-      ...
-```
-
----
-
-## 9. Experimental & Microtonal
-
-### Example 9.1: Microtones
-*Logic Check:* Support for quarter-tone accidentals.
-
-```javascript
-omniscore
-  def vln "Violin" style=standard
-
-  measure 1
-    %% q# = quarter-sharp, qb = quarter-flat
-    vln: c4:2  c4.q#:2 | d4.qb:1 |
-```
-
-### Example 9.2: Canvas Drawing (Avant-Garde)
-*Logic Check:* Direct SVG path injection via the `draw()` function relative to the staff coordinate system.
-
-```javascript
-omniscore
-  def noise "Generator" style=canvas range=0..100
-
-  measure 1
-    %% Draw a sine wave visually
-    noise: draw(wave, freq=5Hz, amp=50%, y=50) |
-    
-    %% Text instruction at beat 3
-    noise: text(t=3, "Turn knob clockwise") |
-```
-
----
-
-## 10. The Rendering Logic
-
-How does OmniScore ensure **100% logic consistency**? It parses everything into a standardized JSON structure before rendering.
-
-**Input:**
-```javascript
-vln: c4:4.stc
-```
-
-**Parsed Intermediate Representation (IR):**
-```json
-{
-  "track": "vln",
-  "measure": 1,
-  "events": [
-    {
-      "type": "note",
-      "pitch": { "step": "C", "octave": 4, "accidental": null },
-      "duration": 0.25, // 1/4
-      "modifiers": ["staccato"],
-      "timestamp": 0.0
-    }
-  ]
-}
-```
-
-**Why this matters:**
-1.  **Validation:** The parser sums the durations (`0.25 + ...`) to ensure they equal the Time Signature (`1.0` for 4/4). If they don't, it throws a `MeasureOverflowError` or `MeasureUnderflowWarning`.
-2.  **Diffing:** You can diff the JSON logic even if the syntax changes.
-3.  **Transport:** This JSON can be sent to MIDI players, VexFlow renderers, or Audio Engines.
-
----
-
-### Visualization of the Engine
-
-```mermaid
-graph TD
-    A[Source Code .omni] -->|Lexer| B(Tokens)
-    B -->|Parser| C{Validation Engine}
-    C --Error--> D[Report: Measure 4 Underflow]
-    C --Valid--> E[Intermediate JSON]
-    E -->|Renderer A| F[SVG / Sheet Music]
-    E -->|Renderer B| G[MIDI / Audio]
-    E -->|Renderer C| H[ASCII Tab]
-```
-This is the **visual architecture** of OmniScore.
-
-By using Mermaid diagrams, we can define the **Data Structure**, **Temporal Logic**, **Parsing Pipeline**, and **Syntax Rules** without writing paragraphs of text.
+Here is the official **OmniScore Master Reference**, updated with the correct attribution.
 
 ***
 
-# 📊 OmniScore: Visual Architecture
+# 🎼 OmniScore: The Master Reference
 
-## 1. The Data Hierarchy
-How an `.omni` file is structured internally. It treats a song like a database schema.
+[![Spec](https://img.shields.io/badge/spec-v1.1-blueviolet)](https://github.com/omniscore) [![Paradigm](https://img.shields.io/badge/paradigm-declarative-success)](https://github.com/omniscore) [![Logic](https://img.shields.io/badge/logic-100%25-verified)](https://github.com/omniscore) [![License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/omniscore)
+
+**The Universal Text-to-Music Standard.**
+
+OmniScore is a declarative language that generates high-fidelity music notation from simple text. It treats music as a coordinate system (Time × Vertical State), allowing it to represent everything from orchestral scores to guitar tabs and avant-garde graphic notation in a single, unified syntax.
+
+---
+
+## 🏗 The Visual Architecture
+
+Before diving into syntax, it is crucial to understand the data model. OmniScore is not just text; it is a structured database of musical events.
+
+### 1. The Data Hierarchy
+An `.omni` file is structured like a class inheritance system.
 
 ```mermaid
 classDiagram
@@ -391,17 +27,9 @@ classDiagram
         +List~Measure~ flow
     }
 
-    class Meta {
-        +String title
-        +String composer
-        +Fraction timeSig
-        +Integer tempo
-    }
-
     class Definition {
         +String id
-        +String name
-        +Enum style
+        +Enum style (Standard/Tab/Grid)
         +Object config
     }
 
@@ -410,37 +38,29 @@ classDiagram
         +List~Track~ tracks
     }
 
-    class Track {
-        +String instrumentId
-        +List~Event~ events
-    }
-
     class Event {
         +Value input
         +Float duration
         +List~String~ modifiers
     }
 
-    OmniFile *-- Meta
     OmniFile *-- Definition
     OmniFile *-- Measure
     Measure *-- Track
     Track *-- Event
 ```
 
----
-
-## 2. Temporal Logic (The Timeline)
-How OmniScore handles **Time**, **Rhythm**, and **Alignment**.
-*Scenario: A Violin playing quarter notes vs. a Guitar playing a half note.*
+### 2. Temporal Logic (The Timeline)
+How the engine handles **Time** and **Alignment**.
+*Scenario: Measure 1 (4/4). Violin plays quarters, Guitar plays half notes.*
 
 ```mermaid
 gantt
-    title Measure 1 (4/4 Time Signature)
+    title Measure 1 Logic
     dateFormat X
     axisFormat %s
     
-    section Grid (Beats)
+    section Beat Grid
     Beat 1 : crit, 0, 25
     Beat 2 : crit, 25, 50
     Beat 3 : crit, 50, 75
@@ -459,124 +79,188 @@ gantt
 
 ---
 
-## 3. The Parsing Pipeline
-How the engine turns Text into Music.
+## 📚 Syntax Reference
+
+### 1. Basics: Pitch & Rhythm
+**Logic:** If specific duration or octave is omitted, the parser infers it from the previous event.
+
+```javascript
+omniscore
+  def flt "Flute" style=standard
+
+  measure 1
+    %% Start at C4. Subsequent notes find closest neighbor.
+    %% Duration :4 is applied to d, e, f automatically.
+    flt: c4:4 d e f | g a b c5 |
+  
+  measure 2
+    %% Jumping intervals requires explicit octave
+    flt: c5:2 g4:2 | c4:1 |
+```
+
+### 2. The Guitar Engine (Tablature)
+**Logic:** Uses a coordinate system `[Fret]-[String]`. Modifiers handle guitar-specific techniques.
+
+```javascript
+omniscore
+  def gtr "Lead Gtr" style=tab tuning=[E2,A2,D3,G3,B3,E4]
+
+  measure 1
+    %% Bend 12th fret up a full step, then release
+    gtr: 12-2:4.bu(full)  12-2:4.bd(0) |
+    
+    %% Strumming (Stacked Notes)
+    gtr: [0-6 2-5 2-4]:2.down |
+```
+
+### 3. The Percussion Engine (Grid)
+**Logic:** Maps specific characters to vertical positions on a non-pitch staff.
+
+```javascript
+omniscore
+  %% Define kit: Kick(k) bottom, Snare(s) middle, Hat(h) top
+  def kit "Drums" style=grid map={ k:0, s:3, h:5 }
+
+  measure 1
+    %% Standard Rock Beat with Ghost Notes (.ghost)
+    kit: k:4    h:8 h    s:4.acc    h:8 h.ghost |
+```
+
+### 4. Piano & Polyphony
+**Logic:** `group` connects staves. `{ v1... v2... }` creates multi-threaded logic within a single measure.
+
+```javascript
+omniscore
+  group "Piano" symbol=brace {
+    def rh "Right" style=standard clef=treble
+    def lh "Left"  style=standard clef=bass
+  }
+
+  measure 1
+    rh: {
+      v1: e5:4 f5 g5 e5 | %% Voice 1 (Stems Up)
+      v2: c5:2     c5:2 | %% Voice 2 (Stems Down)
+    }
+    lh: c3:1            |
+```
+
+### 5. Vocal & Lyrics
+**Logic:** The `link` property binds text to rhythm. Hyphens `-` shift to the next note; underscores `_` hold the word (melisma).
+
+```javascript
+omniscore
+  def vox "Soprano" style=standard
+  def txt "Lyrics"  style=text link=vox
+
+  measure 1
+    vox: c5:4   d5:4   e5:2        |
+    txt: "Glo"  -      "ria"       |
+```
+
+### 6. Orchestral Logic (Transposition)
+**Logic:** Score is written in Concert Pitch. `transpose` shifts the *rendering* for the player without changing the data.
+
+```javascript
+omniscore
+  %% Alto Sax sounds Major 6th lower
+  def sax "Alto Sax" style=standard transpose=+9
+
+  measure 1
+    %% Written as Concert C. Renders as A on the sheet.
+    sax: c4:4 e4 g4 c5 |
+```
+
+### 7. Complex Time & Tuplets
+**Logic:** `(ratio: events)` overrides binary subdivision.
+
+```javascript
+omniscore
+  meta { time: 7/8 }
+  def vln "Violin" style=standard
+
+  measure 1
+    %% Triplet (3 in time of 2) inside 7/8 time
+    vln: c5:4 (3:2 d5:8 e5 f5) g5:8. |
+```
+
+### 8. Flow Control
+**Logic:** Programmatic structure for repeats and jumps.
+
+```javascript
+omniscore
+  repeat 2x {
+    measure 1
+      vln: c5:4 e5 g5 c6 |
+  } alternative {
+    1. { measure 2 { vln: g5:1 } }
+    2. { measure 3 { vln: c6:1.fine } }
+  }
+```
+
+### 9. Experimental & Canvas
+**Logic:** Direct vector injection for graphic scores.
+
+```javascript
+omniscore
+  def noise "Generator" style=canvas range=0..100
+
+  measure 1
+    %% Draw a sine wave visually
+    noise: draw(wave, freq=5Hz, amp=50%, y=50) |
+```
+
+---
+
+## ⚙️ The Engine Logic
+
+How does OmniScore guarantee the math is correct?
+
+### 1. The Parsing Pipeline
 
 ```mermaid
 flowchart LR
-    A[Input .omni Text] -->|Lexer| B(Token Stream)
+    A[Input .omni] -->|Lexer| B(Token Stream)
     B -->|Parser| C{Validation Engine}
     
     C --Check Time Sig--> D[Math Logic]
-    D --"Sum(durations) == 1.0"--> E[Intermediate JSON]
-    D --"Sum != 1.0"--> X[Error: Measure Overflow]
+    D --"Sum == 1.0"--> E[Intermediate JSON]
+    D --"Sum != 1.0"--> X[Error: Overflow]
     
-    E -->|Render Gate| F{Output Type}
-    
-    F -->|Visual| G[SVG Renderer]
-    F -->|Audio| H[MIDI Sequencer]
-    F -->|Code| I[MusicXML Export]
-    
-    G --> J[Browser View]
+    E -->|Render| F[SVG / MIDI / XML]
 ```
 
----
+### 2. Intermediate Representation (IR)
+All syntax is compiled into this JSON structure before rendering. This is the API surface for developers.
 
-## 4. Syntax Logic: "Sticky Duration"
-How the parser infers duration when the user omits it (e.g., `c4:4 d e f`).
+```json
+{
+  "track": "vln",
+  "measure": 1,
+  "events": [
+    {
+      "type": "note",
+      "pitch": { "step": "C", "octave": 4 },
+      "duration": 0.25,
+      "modifiers": ["staccato"],
+      "timestamp": 0.0
+    }
+  ]
+}
+```
+
+### 3. Syntax Logic: "Sticky Attributes"
+How the parser reduces redundancy.
 
 ```mermaid
 flowchart TD
-    Start[Read Next Note] --> Check{Has Duration?}
-    
-    Check --YES (:4)--> SetMem[Update 'LastDuration' = :4]
-    SetMem --> Apply[Apply :4 to Note]
-    
-    Check --NO--> Fetch[Fetch 'LastDuration' from Memory]
-    Fetch --> Apply
-    
-    Apply --> Output[Add to Event List]
-    Output --> Start
+    Start[Read Note] --> Check{Has Duration?}
+    Check --YES (:4)--> SetMem[Update Memory = :4]
+    Check --NO--> Fetch[Fetch Memory]
+    SetMem --> Apply
+    Fetch --> Apply[Apply to Note]
+    Apply --> Output
 ```
 
 ---
 
-## 5. Instrument Inheritance System
-How OmniScore handles "Universal" instrument types using a unified coordinate system.
-
-```mermaid
-classDiagram
-    class Staff {
-        +y_axis_map(input)
-        +render_glyph()
-    }
-
-    class Standard {
-        %% Y-Axis = Diatonic Scale
-        +clef: Treble/Bass
-        +render: Notehead
-    }
-
-    class Tablature {
-        %% Y-Axis = Strings
-        +tuning: [E,A,D...]
-        +render: Number
-    }
-
-    class Grid {
-        %% Y-Axis = Mapped Keys
-        +map: {k:0, s:2...}
-        +render: Shape
-    }
-
-    Staff <|-- Standard
-    Staff <|-- Tablature
-    Staff <|-- Grid
-```
-
----
-
-## 6. The "Measure" State Machine
-How the engine validates a single measure block during writing.
-
-```mermaid
-stateDiagram-v2
-    [*] --> EmptyMeasure
-    
-    EmptyMeasure --> Accumulating : Add Event
-    Accumulating --> Accumulating : Add Event
-    
-    Accumulating --> Full : Duration Sum == TimeSig
-    Accumulating --> Overflow : Duration Sum > TimeSig
-    
-    Full --> [*] : Render
-    Overflow --> Error : Throw Exception
-```
-
----
-
-## 7. Polyphony Logic (Multithreading)
-How the parser handles `{ v1: ... v2: ... }` blocks (multiple voices).
-
-```mermaid
-sequenceDiagram
-    participant P as Parser
-    participant V1 as Voice 1
-    participant V2 as Voice 2
-    participant M as Measure
-    
-    P->>M: Enter Polyphony Block
-    
-    par Process Voice 1
-        P->>V1: Parse Notes
-        V1->>V1: Check Sum (4/4)
-        V1-->>M: Return Event Stream A
-    and Process Voice 2
-        P->>V2: Parse Notes
-        V2->>V2: Check Sum (4/4)
-        V2-->>M: Return Event Stream B
-    end
-    
-    M->>M: Merge A + B (Same Timeline)
-    M-->>P: Continue
-```
+*Documentation generated by Arthur Penhaligan Engineering.*
