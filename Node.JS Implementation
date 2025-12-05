@@ -1,0 +1,401 @@
+This is the engineering phase. We are going to build the **Node.js implementation** of the OmniScore engine.
+
+This implementation focuses on the **Core Logic**: the Parser (which handles the semantic compression/inference) and a Schematic SVG Renderer (which generates the visual style we defined).
+
+### Project Structure
+```text
+omniscore-cli/
+├── package.json
+├── bin/
+│   └── omniscore.js   # The CLI Entry Point
+└── src/
+    ├── parser.js      # The Logic Engine (Text -> JSON)
+    ├── renderer.js    # The Visual Engine (JSON -> SVG)
+    └── theory.js      # Music Theory Helpers (Pitch to Integer)
+```
+
+---
+
+### 1. `package.json`
+We need `commander` for CLI flags.
+
+```json
+{
+  "name": "omniscore-cli",
+  "version": "1.0.0",
+  "description": "The Universal Text-to-Music Standard Compiler",
+  "main": "bin/omniscore.js",
+  "bin": {
+    "omniscore": "./bin/omniscore.js"
+  },
+  "dependencies": {
+    "commander": "^11.0.0"
+  },
+  "type": "module"
+}
+```
+
+---
+
+### 2. `src/theory.js`
+Helper logic to handle the math of music (converting `c4` to an integer index for drawing).
+
+```javascript
+// src/theory.js
+
+const NOTES = { c: 0, d: 1, e: 2, f: 3, g: 4, a: 5, b: 6 };
+
+export function parsePitch(pitchStr, currentOctave = 4) {
+  // Regex: matches "c", "#", "4"
+  const match = pitchStr.match(/^([a-g])([#b]?)(-?\d*)$/i);
+  if (!match) return null;
+
+  const step = match[1].toLowerCase();
+  const acc = match[2];
+  let oct = match[3] ? parseInt(match[3]) : null;
+
+  // Inference Logic (Sticky Octave)
+  // If no octave provided, we'd theoretically find the closest.
+  // For this lightweight CLI, if omitted, we default to currentOctave.
+  if (oct === null) oct = currentOctave;
+
+  return {
+    step,
+    acc,
+    oct,
+    // Calculate vertical index (C4 = 0)
+    index: (oct - 4) * 7 + NOTES[step]
+  };
+}
+
+export function parseDuration(durStr) {
+  // :4. -> 1/4 * 1.5
+  if (!durStr) return null;
+  
+  const baseMap = { '1': 4, '2': 2, '4': 1, '8': 0.5, '16': 0.25 };
+  let val = durStr.replace(/\.|:/g, '');
+  let dots = (durStr.match(/\./g) || []).length;
+  
+  let beats = baseMap[val] || 1;
+  if (dots) beats *= 1.5;
+  
+  return { code: val, value: beats };
+}
+```
+
+---
+
+### 3. `src/parser.js`
+This is the heart of OmniScore. It implements the **Definition Schema** and the **Sticky Attribute Logic**.
+
+```javascript
+// src/parser.js
+import { parsePitch, parseDuration } from './theory.js';
+
+export class OmniParser {
+  constructor(source) {
+    this.source = source;
+    this.lines = source.split(/\r?\n/);
+    this.ast = {
+      meta: {},
+      definitions: {},
+      measures: []
+    };
+    
+    // State Machine Memory
+    this.state = {
+      lastDuration: ':4', // Default quarter note
+      lastOctaves: {}     // Per-track memory
+    };
+  }
+
+  parse() {
+    let currentMeasure = null;
+
+    for (let line of this.lines) {
+      line = line.trim();
+      if (!line || line.startsWith('%%')) continue;
+
+      // 1. Meta Parsing
+      if (line.startsWith('meta')) {
+        // Simple regex for { key: value }
+        const content = line.match(/{(.*)}/)[1];
+        content.split(',').forEach(pair => {
+          const [k, v] = pair.split(':').map(s => s.trim().replace(/"/g, ''));
+          this.ast.meta[k] = v;
+        });
+        continue;
+      }
+
+      // 2. Definitions
+      if (line.startsWith('def')) {
+        // def vln "Violin" style=standard
+        const parts = line.split(/\s+/);
+        const id = parts[1];
+        const style = line.match(/style=(\w+)/)[1];
+        const nameMatch = line.match(/"([^"]+)"/);
+        
+        this.ast.definitions[id] = {
+          id,
+          name: nameMatch ? nameMatch[1] : id,
+          style
+        };
+        this.state.lastOctaves[id] = 4; // Initialize at C4
+        continue;
+      }
+
+      // 3. Measure Blocks
+      if (line.startsWith('measure')) {
+        const num = parseInt(line.split(' ')[1]);
+        currentMeasure = { number: num, tracks: {} };
+        this.ast.measures.push(currentMeasure);
+        continue;
+      }
+
+      // 4. Track Events (Inside Measure)
+      if (line.includes(':') && currentMeasure) {
+        // vln: c4:4 e g |
+        const [trackId, content] = line.split(/:(.+)/); // Split on first colon
+        const eventsRaw = content.split('|')[0].trim().split(/\s+/);
+        
+        const events = eventsRaw.map(rawToken => {
+            return this.processToken(trackId.trim(), rawToken);
+        }).filter(e => e !== null);
+
+        currentMeasure.tracks[trackId.trim()] = events;
+      }
+    }
+    return this.ast;
+  }
+
+  processToken(trackId, token) {
+    if (!token) return null;
+
+    // Token Structure: Value:Duration.Modifiers
+    // Regex splits "c4" and ":4.stc"
+    const parts = token.match(/^([^:.]+)(:[0-9.]+)?(\..*)?$/);
+    if (!parts) return null; // Logic fail safe
+
+    let [_, input, durRaw, modRaw] = parts;
+
+    // --- LOGIC: STICKY DURATION ---
+    if (durRaw) {
+      this.state.lastDuration = durRaw;
+    } else {
+      durRaw = this.state.lastDuration;
+    }
+
+    // --- LOGIC: INPUT TYPE HANDLING ---
+    // Check definition style
+    const def = this.ast.definitions[trackId];
+    let data = {};
+
+    if (def && def.style === 'tab') {
+      // Input is Fret-String (0-6)
+      data = { type: 'tab', value: input };
+    } else if (def && def.style === 'grid') {
+      // Input is Key (k)
+      data = { type: 'grid', value: input };
+    } else {
+      // Default: Pitch
+      // --- LOGIC: STICKY OCTAVE / INFERENCE ---
+      // If input is just 'c', use memory. 
+      // This simple CLI just parses what is there + defaults.
+      data = { type: 'note', ...parsePitch(input, this.state.lastOctaves[trackId]) };
+      if (data.oct) this.state.lastOctaves[trackId] = data.oct;
+    }
+
+    return {
+      ...data,
+      duration: parseDuration(durRaw),
+      modifiers: modRaw ? modRaw.split('.').filter(s => s) : []
+    };
+  }
+}
+```
+
+---
+
+### 4. `src/renderer.js`
+This converts the JSON Logic into the **Schematic SVG** style we designed. It creates a simple grid layout.
+
+```javascript
+// src/renderer.js
+
+export class OmniRenderer {
+  constructor(ast) {
+    this.ast = ast;
+    this.svg = [];
+    this.config = {
+      staffHeight: 60,
+      measureWidth: 300,
+      lineColor: '#E1E4E8',
+      noteColor: '#24292E'
+    };
+  }
+
+  generate() {
+    // 1. Calculate Canvas Size
+    const measureCount = this.ast.measures.length;
+    const staffCount = Object.keys(this.ast.definitions).length;
+    const width = measureCount * this.config.measureWidth + 100;
+    const height = staffCount * 100 + 100;
+
+    this.svg.push(`<svg viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">`);
+    this.svg.push(`<rect width="100%" height="100%" fill="white"/>`);
+    this.svg.push(`<style>.txt { font-family: monospace; font-size: 12px; fill: #586069; }</style>`);
+
+    // 2. Render Staves (The "Paper")
+    let yOffset = 50;
+    Object.values(this.ast.definitions).forEach(def => {
+      this.renderStaffLines(def, yOffset, width);
+      this.renderTrackLabel(def, yOffset);
+      yOffset += 100;
+    });
+
+    // 3. Render Events (The "Ink")
+    this.ast.measures.forEach((measure, mIndex) => {
+      const xStart = 50 + (mIndex * this.config.measureWidth);
+      
+      // Draw Bar Lines
+      this.svg.push(`<line x1="${xStart + this.config.measureWidth}" y1="50" x2="${xStart + this.config.measureWidth}" y2="${height-50}" stroke="#D1D5DA" stroke-width="2"/>`);
+
+      let trackY = 50;
+      Object.keys(this.ast.definitions).forEach(trackId => {
+        const events = measure.tracks[trackId] || [];
+        const def = this.ast.definitions[trackId];
+        
+        let cursorX = xStart + 20;
+        
+        events.forEach(ev => {
+          this.renderEvent(ev, def, cursorX, trackY);
+          // Advance Cursor based on duration (Simple linear mapping)
+          // 4 beats = measureWidth
+          const pxPerBeat = (this.config.measureWidth - 40) / 4;
+          cursorX += ev.duration.value * pxPerBeat;
+        });
+
+        trackY += 100;
+      });
+    });
+
+    this.svg.push('</svg>');
+    return this.svg.join('\n');
+  }
+
+  renderStaffLines(def, y, width) {
+    if (def.style === 'standard') {
+      // 5 lines
+      for (let i = 0; i < 5; i++) {
+        this.svg.push(`<line x1="50" y1="${y + i*10}" x2="${width-50}" y2="${y + i*10}" stroke="${this.config.lineColor}" stroke-width="2"/>`);
+      }
+    } else if (def.style === 'tab') {
+      // 6 lines
+      for (let i = 0; i < 6; i++) {
+        this.svg.push(`<line x1="50" y1="${y + i*10}" x2="${width-50}" y2="${y + i*10}" stroke="${this.config.lineColor}" stroke-width="1"/>`);
+      }
+    } else {
+      // Grid: 1 line
+      this.svg.push(`<line x1="50" y1="${y + 25}" x2="${width-50}" y2="${y + 25}" stroke="${this.config.lineColor}" stroke-width="1"/>`);
+    }
+  }
+
+  renderTrackLabel(def, y) {
+    this.svg.push(`<text x="40" y="${y + 25}" text-anchor="end" class="txt">${def.name}</text>`);
+  }
+
+  renderEvent(ev, def, x, y) {
+    if (def.style === 'standard') {
+      // Map Pitch Index to Y pixels
+      // Center C (index 0) is at y + 50 (roughly middle C position logic for demo)
+      // Higher pitch = Lower Y
+      const yPos = (y + 50) - (ev.index * 5); // 5px per step
+      this.svg.push(`<circle cx="${x}" cy="${yPos}" r="5" fill="${this.config.noteColor}"/>`);
+      // Simple Stem
+      this.svg.push(`<line x1="${x+5}" y1="${yPos}" x2="${x+5}" y2="${yPos-25}" stroke="${this.config.noteColor}" stroke-width="2"/>`);
+    } 
+    else if (def.style === 'tab') {
+      // Value "0-6" -> String 6 is bottom line
+      const [fret, str] = ev.value.split('-');
+      const lineIndex = parseInt(str) - 1; 
+      // Tab lines are inverted visually (Low E is bottom) usually, 
+      // but for simple logic: line 0 = top.
+      const yPos = y + (parseInt(str)-1)*10;
+      
+      this.svg.push(`<rect x="${x-5}" y="${yPos-5}" width="10" height="10" fill="white"/>`);
+      this.svg.push(`<text x="${x}" y="${yPos+4}" text-anchor="middle" font-family="monospace" font-size="10" fill="purple">${fret}</text>`);
+    }
+    else {
+      // Grid Hit
+      this.svg.push(`<rect x="${x-5}" y="${y+20}" width="10" height="10" fill="${this.config.noteColor}"/>`);
+    }
+  }
+}
+```
+
+---
+
+### 5. `bin/omniscore.js` (The CLI)
+The glue that makes it runnable.
+
+```javascript
+#!/usr/bin/env node
+
+import { program } from 'commander';
+import fs from 'fs';
+import { OmniParser } from '../src/parser.js';
+import { OmniRenderer } from '../src/renderer.js';
+
+program
+  .name('omniscore')
+  .description('Compile .omni text files to SVG notation')
+  .version('1.0.0');
+
+program.command('render')
+  .argument('<file>', 'input .omni file')
+  .option('-o, --out <file>', 'output filename', 'output.svg')
+  .action((file, options) => {
+    try {
+      console.log(`🎵 Reading ${file}...`);
+      const source = fs.readFileSync(file, 'utf-8');
+
+      console.log('🧠 Parsing logic...');
+      const parser = new OmniParser(source);
+      const ast = parser.parse();
+
+      console.log('🎨 Rendering SVG...');
+      const renderer = new OmniRenderer(ast);
+      const svg = renderer.generate();
+
+      fs.writeFileSync(options.out, svg);
+      console.log(`✅ Success! Rendered to ${options.out}`);
+      
+    } catch (e) {
+      console.error('❌ Error:', e.message);
+    }
+  });
+
+program.parse();
+```
+
+---
+
+### How to Run This (Proof of Concept)
+
+1.  Create the folder structure.
+2.  Paste the code files.
+3.  Run `npm install` (to get commander).
+4.  Create a file named `test.omni`:
+    ```javascript
+    omniscore
+    def vln "Violin" style=standard
+    def gtr "Guitar" style=tab
+    
+    measure 1
+      vln: c4:4 e4 g4 c5 |
+      gtr: 0-6:4 2-5 3-5 1-2 |
+    ```
+5.  Run: `node bin/omniscore.js render test.omni -o score.svg`
+6.  Open `score.svg` in Chrome.
+
+You will see a generated visual score that respects the logic of definitions and sticky durations. This code is the seed of the entire OmniScore ecosystem.
