@@ -265,7 +265,7 @@ c4:4 d e f
 
 ### Why is OmniScore ~30x Smaller?
 
-It comes down to three architectural decisions we made during this session:
+It comes down to three architectural decisions
 
 #### 1. "Sticky" Attributes (Contextual Inference)
 In MusicXML, every single note must declare "I am a quarter note" and "I am in Octave 4."
