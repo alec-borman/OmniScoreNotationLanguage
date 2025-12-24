@@ -3,535 +3,658 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OmniScore Visualizer: Custom Editor</title>
-    <!-- Load Tailwind CSS -->
+    <title>OmniScore 1.1.0 Specification Explorer</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Load Tone.js for audio synthesis -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* General key styling */
-        .white-key, .black-key {
-            cursor: pointer;
+        @import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fafaf9; /* Stone 50 */
+            color: #44403c; /* Stone 700 */
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Merriweather', serif;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f5f5f4;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d6d3d1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a29e;
+        }
+
+        .code-block {
+            background-color: #292524;
+            color: #e7e5e4;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .active-nav {
+            background-color: #e7e5e4; /* Stone 200 */
+            border-left: 4px solid #ea580c; /* Orange 600 */
+            font-weight: 600;
+        }
+
+        .step-connector::after {
+            content: '';
             position: absolute;
-            transition: background 0.1s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            top: 50%;
+            left: 100%;
+            width: 2rem;
+            height: 2px;
+            background-color: #d6d3d1;
+            transform: translateY(-50%);
+            z-index: 0;
         }
-        /* White key specifics */
-        .white-key {
-            width: 40px;
-            height: 180px;
-            background: white;
-            border: 1px solid #1f2937; /* Dark Gray */
-            z-index: 10;
-        }
-        /* Black key specifics */
-        .black-key {
-            width: 25px;
-            height: 120px;
-            background: #1f2937; /* Dark Gray */
-            z-index: 20;
-            /* Black keys are centered over the join of the two white keys */
-        }
-        /* Active states for highlighting */
-        .key-active-white {
-            background: #fca5a5; /* Red-300 */
-            box-shadow: 0 0 10px #f87171;
-        }
-        .key-active-black {
-            background: #ef4444; /* Red-500 */
-            box-shadow: 0 0 10px #ef4444;
+        .step-connector:last-child::after {
+            display: none;
         }
     </style>
+    <!-- Chosen Palette: Warm Neutrals (Stone/Orange) - Minimalist, Academic, Paper-like feel -->
+    <!-- Application Structure Plan: 
+         1. Dashboard Layout: Sidebar for major sections, main content area for dynamic rendering.
+         2. Sectioning:
+            - "Overture" (Overview): Meta-stats, Philosophy, version info.
+            - "Architecture": Visualizing the compilation pipeline and coordinate system.
+            - "The Physics" (Definitions): Interactive instrument setup guide.
+            - "The Notation" (Events/Syntax): Tabbed views for different engines (Pitch, Rhythm, Tab).
+            - "Reference" (Library/Errors): Searchable data tables and charts for error types.
+         3. Rationale: The spec is dense. Grouping by "Purpose" (Architecture vs. Writing vs. Reference) is better than a linear read.
+    -->
+    <!-- Visualization & Content Choices:
+         - Spec Feature Breakdown (Doughnut Chart): Goal -> Inform -> Shows the weight of different language modules -> Chart.js.
+         - Error Taxonomy (Bar Chart): Goal -> Compare -> Visualizes the strictness of error levels -> Chart.js.
+         - Compilation Pipeline (CSS Stepper): Goal -> Change -> Interactive flow to explain the build process -> HTML/CSS/JS.
+         - Data Types Table (HTML Table + Filter): Goal -> Organize -> Searchable reference for syntax rules -> JS Filtering.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
 </head>
-<body class="bg-gray-100 min-h-screen p-4 flex flex-col items-center justify-center font-sans">
+<body class="h-screen flex overflow-hidden">
 
-    <div class="max-w-4xl w-full bg-white shadow-xl rounded-xl p-8 space-y-6">
-        <h1 class="text-3xl font-bold text-center text-gray-800">OmniScore Piano Visualizer & Editor (C3 to C6)</h1>
-        <p class="text-center text-gray-600">The parser now supports **chords** (`[c4 e4 g4]:4`) and **dotted notes** (`1.`, `2.`, `4.`).</p>
-
-        <!-- Piano Visualization Area - Wider for C3 to C6 -->
-        <div id="piano-container" class="relative overflow-x-auto p-4 bg-gray-200 rounded-lg shadow-inner">
-            <div id="keyboard" class="relative mx-auto" style="height: 200px;">
-                <!-- Keys will be generated here -->
+    <!-- Sidebar Navigation -->
+    <aside class="w-64 bg-stone-100 border-r border-stone-200 flex-shrink-0 hidden md:flex flex-col">
+        <div class="p-6 border-b border-stone-200">
+            <h1 class="text-2xl font-bold text-stone-800">OmniScore</h1>
+            <p class="text-xs text-stone-500 mt-1 uppercase tracking-wider">Spec Explorer v1.1.0</p>
+        </div>
+        <nav class="flex-1 overflow-y-auto py-4">
+            <ul class="space-y-1" id="nav-list">
+                <!-- Nav Items Injected by JS -->
+            </ul>
+        </nav>
+        <div class="p-4 border-t border-stone-200 bg-stone-50">
+            <div class="text-xs text-stone-400">
+                Maintained by<br>OmniScore Working Group
             </div>
         </div>
+    </aside>
 
-        <!-- Controls -->
-        <div class="flex justify-center space-x-4">
-            <button id="playButton" class="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed">
-                Play Full Score
-            </button>
-            <button id="stopButton" class="px-6 py-3 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed" disabled>
-                Stop
-            </button>
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col overflow-hidden relative">
+        <!-- Mobile Header -->
+        <header class="md:hidden bg-stone-100 border-b border-stone-200 p-4 flex justify-between items-center z-20">
+            <h1 class="text-xl font-bold text-stone-800">OmniScore</h1>
+            <button id="menu-btn" class="text-stone-600 focus:outline-none">☰</button>
+        </header>
+
+        <!-- Dynamic Content Scroll Area -->
+        <div id="content-area" class="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth">
+            <!-- Content Injected Here -->
         </div>
+    </main>
 
-        <!-- Status Message -->
-        <div id="status" class="text-center text-sm text-gray-500 mt-4 h-6">Click 'Play Full Score' to start.</div>
-
-        <!-- Editable OmniScore Input -->
-        <div class="mt-8">
-            <h2 class="text-xl font-semibold text-gray-700 mb-2">Edit Your OmniScore Here:</h2>
-            <textarea id="omni-input" class="w-full h-64 bg-gray-800 text-green-300 p-4 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-y"></textarea>
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="absolute inset-0 bg-stone-100 z-50 transform -translate-x-full transition-transform duration-300 md:hidden flex flex-col">
+        <div class="p-4 flex justify-between items-center border-b border-stone-200">
+            <h2 class="font-bold text-lg">Menu</h2>
+            <button id="close-menu" class="text-2xl">&times;</button>
         </div>
+        <nav class="flex-1 overflow-y-auto p-4">
+            <ul class="space-y-2" id="mobile-nav-list"></ul>
+        </nav>
     </div>
 
     <script>
-        // Initial score is defined here to populate the textarea
-        const initialOmniScoreCode = `
-meta {
-  title: "La cathédrale engloutie (The Sunken Cathedral)"
-  composer: "Claude Debussy"
-}
+        // --- Data Source: OmniScore v1.1.0 Specification ---
+        const omniScoreData = {
+            metadata: {
+                version: "1.1.0",
+                status: "Normative",
+                license: "MIT",
+                maintainer: "The OmniScore Working Group"
+            },
+            overview: {
+                philosophy: [
+                    { title: "Inference Over Redundancy", desc: "Attributes like duration and octave persist until changed ('Sticky State')." },
+                    { title: "Semantic Separation", desc: "Instrument definitions (physics) are separate from event data (notes)." },
+                    { title: "Human Readability", desc: "Source code is intelligible to musicians without rendering software." }
+                ],
+                stats: {
+                    modules: 12,
+                    dataTypes: 8,
+                    errorCodes: 6
+                }
+            },
+            pipeline: [
+                { step: 1, title: "Lexing/Parsing", detail: "Tokenize text and validate against EBNF grammar." },
+                { step: 2, title: "Context Building", detail: "Process meta/def blocks to establish global physics." },
+                { step: 3, title: "Linearization", detail: "Resolve sticky attributes & calculate absolute ticks." },
+                { step: 4, title: "Rendering", detail: "Map linearized data to SVG, MIDI, or MusicXML." }
+            ],
+            syntax: {
+                literals: [
+                    { type: "Integer", syntax: "[0-9]+", ex: "1, 120", desc: "Octaves, BPM, counts" },
+                    { type: "Float", syntax: "[0-9]+\.[0-9]+", ex: "1.5", desc: "Duration multipliers" },
+                    { type: "Pitch", syntax: "[a-g][#|b|x]*[0-9]", ex: "c4, f#5", desc: "Scientific Pitch" },
+                    { type: "TabCoord", syntax: "[0-9]+-[0-9]+", ex: "0-6", desc: "Fret-String" },
+                    { type: "Map", syntax: "{ key: val }", ex: "{ k:0 }", desc: "Configuration pairs" }
+                ],
+                durations: [
+                    { logic: "Quarter", syntax: ":4", symbol: "♩" },
+                    { logic: "Eighth", syntax: ":8", symbol: "♪" },
+                    { logic: "Sixteenth", syntax: ":16", symbol: "♬" },
+                    { logic: "Dotted Q", syntax: ":4.", symbol: "♩." },
+                    { logic: "Whole", syntax: ":1", symbol: "𝅝" }
+                ]
+            },
+            engines: [
+                {
+                    id: "standard",
+                    title: "Standard Pitch",
+                    desc: "Default engine for pitched instruments using Scientific Pitch Notation.",
+                    features: ["Sticky Octaves", "Explicit Accidentals", "Chord Brackets []", "Ties ~"]
+                },
+                {
+                    id: "tab",
+                    title: "Tablature",
+                    desc: "Engine for fretted instruments using coordinate system.",
+                    features: ["Fret-String Syntax", "Bends .bu()", "Slides .sl", "Strums .down/.up"]
+                },
+                {
+                    id: "grid",
+                    title: "Percussion Grid",
+                    desc: "Engine for unpitched rhythmic triggers mapped to staff lines.",
+                    features: ["Mapped Keys", "Ghost Notes", "Rolls", "Flams"]
+                }
+            ],
+            errors: [
+                { code: "E101", level: "Fatal", name: "SYNTAX_ERR", desc: "Malformed token or illegal character." },
+                { code: "E201", level: "Fatal", name: "DEF_MISSING", desc: "Staff ID used but not defined." },
+                { code: "E301", level: "Error", name: "VOICE_SYNC", desc: "Voice durations do not match." },
+                { code: "E302", level: "Error", name: "TIME_OVERFLOW", desc: "Event exceeds Time Signature." },
+                { code: "W401", level: "Warning", name: "BEAM_OPEN", desc: "Beam not ended; auto-closed." },
+                { code: "W402", level: "Warning", name: "OCTAVE_JUMP", desc: "Large octave jump detected." }
+            ],
+            example: `omniscore
+  meta { title: "Kitchen Sink", tempo: 130 }
 
-group "Piano" symbol=brace {
-  def rh "Right Hand" style=standard clef=treble
-  def lh "Left Hand"  style=standard clef=bass
-}
+  group "Rhythm" symbol=bracket {
+    def sax "Tenor" style=standard transpose=-14
+    def gtr "Guitar" style=tab tuning=guitar_std
+  }
 
-// --- I. SUBMERGED BELLS (Measures 1-15) ---
-instruction "Profondément calme; Dans une brume doucement sonore"
-// Note: Tempo and time signature affect beat duration, but the note durations (1., 4, 2) are relative to the beat.
-meta { tempo: 60, time: 6/4 }
-
-measure 1
-  rh: [e4 g4 c5]:1. | // Dotted Whole (6 beats in 6/4)
-  lh: [c2 c3]:1.    |
-measure 2
-  rh: [d4 a4 d5]:1. |
-  lh: [d2 d3]:1.    |
-measure 3
-  rh: [e4 g4 c5]:1. |
-  lh: [c2 c3]:1.    |
-measure 4
-  rh: [d4 g4 c5]:1. |
-  lh: [c2 c3]:1.    |
-
-measure 5
-  meta { time: 3/2 } instruction "pp"
-  // Note: In 3/2 time, a Half note (2) is 1 beat. A Whole note (1) is 2 beats.
-  // The parser uses the quarter note (4) as the base beat (1 quarter note = 1 beat duration).
-  // [c4 f4 a4]:2 (Half note = 2 quarter notes = 2 beats) [d4 g4 b4]:2 (2 beats)
-  rh: [c4 f4 a4]:2 [d4 g4 b4]:2 |
-  // [c2 c3]:1 (Whole note = 4 quarter notes = 4 beats) 
-  // Since this piece uses complex time signatures like 6/4 and 3/2, the duration map is based 
-  // on *relative* quarter note equivalents for simplicity in this visualization.
-  lh: [c2 c3]:1                 | 
-measure 6
-  rh: [e4 g4 c5]:2 [d4 g4 c5]:2 |
-  lh: [e2 e3]:1                 |
-measure 7
-  meta { time: 4/4 } instruction "Un peu moins lent"
-  rh: [f4 a4 d5]:2 [g4 b4 e5]:2 |
-  lh: [a2 a3]:2. [g2 g3]:2.    | // Dotted Half (3 beats in 4/4)
-
-measure 8
-  meta { time: 6/4 }
-  rh: [c5]:4 [b4]:4 [c5]:4 [e5]:4 |
-  lh: c3:1. |
-measure 9
-  rh: [e5]:4 [f5]:4 [g5]:4 [c5]:4 |
-  lh: g2:1. |
-measure 10
-  rh: [g4]:4 [a4]:4 [b4]:4 [d5]:4 |
-  lh: d3:1. |
-measure 11
-  rh: [c5]:4 [b4]:4 [c5]:4 [e5]:4 |
-  lh: c3:1. |
-measure 12..15
-  rh: r:1 | 
-  lh: r:1 | 
-
-%% --- II. CATHEDRAL RISES (Measures 16-46, showing peak texture) ---
-measure 16
-  instruction "peu à peu sortant de la brume"
-  rh: [c5 e5 g5 c6]:1. |
-  lh: [c3 c4]:1.       |
-measure 17
-  rh: [d5 f#5 a5 d6]:1. |
-  lh: [d3 d4]:1.         |
-measure 18
-  rh: [e5 g5 b5 e6]:1. |
-  lh: [e3 e4]:1.       |
-measure 19
-  rh: [f5 a5 c6 f6]:1. |
-  lh: [f3 f4]:1.       |
-measure 20
-  rh: [g5 b5 d6 g6]:1. |
-  lh: [g3 g4]:1.       |
-measure 21
-  instruction "Marquez ces doubles croches"
-  // Note: 16th notes (16) are not currently supported by the parser (only 1, 2, 4, 8)
-  rh: c5:8 b4:8 a4:8 g4:8 f4:8 e4:8 d4:8 c4:8 |
-  lh: c4:1. |
-
-measure 22
-  meta { time: 3/4 } instruction "Sonore sans dureté ff"
-  rh: [a4 c5 e5 a5]:4 [g4 b4 d5 g5]:4 [a4 c5 e5 a5]:4 |
-  lh: [a3 a4]:4 [g3 g4]:4 [a3 a4]:4                   |
-measure 23
-  rh: [b4 d5 f5 b5]:4 [a4 c5 e5 a5]:4 [b4 d5 f5 b5]:4 |
-  lh: [b3 b4]:4 [a3 a4]:4 [b3 b4]:4                   |
-measure 24
-  rh: [c5 e5 g5 c6]:4 [b4 d5 f5 b5]:4 [c5 e5 g5 c6]:4 |
-  lh: [c4 c5]:4 [b3 b4]:4 [c4 c5]:4                   |
-measure 25
-  instruction "fff"
-  rh: [d5 f5 a5 d6]:4 [c5 e5 g5 c6]:4 [d5 f5 a5 d6]:4 |
-  lh: [d4 d5]:4 [c4 c5]:4 [d4 d5]:4                   |
-measure 26
-  rh: [e5 g5 b5 e6]:4 [d5 f5 a5 d6]:4 [e5 g5 b5 e6]:4 |
-  lh: [e4 e5]:4 [d4 d5]:4 [e4 e5]:4                   |
-measure 27..22 | %% ... Measures 27-46 contain descending arpeggios and block chords ...
-  rh: r:1 |
-  lh: r:1 | 
-
-%% --- III. RETURN TO THE DEPTHS (Measures 67-89) ---
-measure 67
-  meta { time: 6/4 } instruction "Retrouvez le Mouvement du début"
-  rh: [e4 g4 c5]:1. |
-  lh: [c2 c3]:1.    |
-measure 68
-  rh: [d4 a4 d5]:1. |
-  lh: [d2 d3]:1.    |
-measure 69
-  rh: [e4 g4 c5]:1. |
-  lh: [c2 c3]:1.    |
-measure 70
-  rh: [d4 g4 c5]:1. |
-  lh: [c2 c3]:1.    |
-measure 71
-  meta { time: 3/2 } instruction "pp"
-  rh: [c4 f4 a4]:2 [d4 g4 b4]:2 |
-  lh: [c2 c3]:1                 |
-
-measure 84
-  instruction "Très lent ppp (pianississimo)"
-  rh: [e4 g4 c5]:1. |
-  lh: [c2 c3]:1.    |
-measure 85
-  rh: [e4 g4 c5]:1. |
-  lh: [c2 c3]:1.    |
-measure 86
-  rh: [c4 e4 g4]:1. |
-  lh: [c2 c3]:1.    |
-measure 87
-  rh: [c4 e4 g4]:1. |
-  lh: [c2 c3]:1.    |
-measure 88
-  rh: [c4 e4 g4]:1. |
-  lh: [c2 c3]:1.    |
-measure 89
-  rh: [c4 e4 g4]:1. |
-  lh: [c2 c3]:1. |
-`;
-        
-        const playButton = document.getElementById('playButton');
-        const stopButton = document.getElementById('stopButton');
-        const statusDiv = document.getElementById('status');
-        const keyboardDiv = document.getElementById('keyboard');
-        const omniInput = document.getElementById('omni-input'); 
-
-        let isPlaying = false;
-        let scheduledEvents = [];
-
-        // --- Tone.js Setup ---
-        // Adjusted PolySynth envelope for a more piano-like, percussive sound
-        const synth = new Tone.PolySynth(Tone.Synth, {
-            oscillator: { type: "sawtooth" },
-            envelope: {
-                attack: 0.002, 
-                decay: 0.4,    
-                sustain: 0.05, 
-                release: 0.8   
-            }
-        }).toDestination();
-        
-        const tempo = 100; // BPM (fixed base tempo for duration calculations)
-        const beatDuration = 60 / tempo; // seconds per beat
-
-        // Map OmniScore duration fractions to Tone.js friendly durations (seconds)
-        // Now includes dotted notes! (Calculated relative to the base quarter note beatDuration)
-        const durationMap = {
-            '1': 4 * beatDuration,   // Whole note (4 quarter beats)
-            '2': 2 * beatDuration,   // Half note (2 quarter beats)
-            '4': 1 * beatDuration,   // Quarter note (1 quarter beat)
-            '8': 0.5 * beatDuration, // Eighth note (0.5 quarter beats)
-            '1.': 6 * beatDuration,  // Dotted Whole note (6 quarter beats)
-            '2.': 3 * beatDuration,  // Dotted Half note (3 quarter beats)
-            '4.': 1.5 * beatDuration,// Dotted Quarter note (1.5 quarter beats)
+  measure 1
+    %% Sticky Logic + Articulation
+    sax: c4:4.acc e g c5.stacc |
+    
+    %% Tab Strumming
+    gtr: [0-6 2-5 2-4]:4.down r:2 |`
         };
 
-        // --- Keyboard Visualization Functions ---
+        // --- State Management ---
+        const state = {
+            currentTab: 'overview',
+            pipelineStep: 0,
+            searchQuery: ''
+        };
 
-        function createKeyboard() {
-            // Displayed range is 3 octaves: C3 to C6
-            const whiteKeyNames = [
-                'C3', 'D3', 'E3', 'F3', 'G3', 'A3', 'B3',
-                'C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4',
-                'C5', 'D5', 'E5', 'F5', 'G5', 'A5', 'B5',
-                'C6' 
+        // --- Render Functions ---
+
+        function init() {
+            renderNavigation();
+            renderContent(state.currentTab);
+            document.getElementById('menu-btn').addEventListener('click', toggleMobileMenu);
+            document.getElementById('close-menu').addEventListener('click', toggleMobileMenu);
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('-translate-x-full');
+        }
+
+        function renderNavigation() {
+            const sections = [
+                { id: 'overview', label: 'Overture', icon: '🎵' },
+                { id: 'architecture', label: 'Architecture', icon: '🏛️' },
+                { id: 'syntax', label: 'Syntax & Data', icon: '📝' },
+                { id: 'engines', label: 'The Engines', icon: '⚙️' },
+                { id: 'reference', label: 'Reference & Errors', icon: '📚' }
             ];
-            const blackKeyNames = [
-                'C#3', 'D#3', 'F#3', 'G#3', 'A#3',
-                'C#4', 'D#4', 'F#4', 'G#4', 'A#4',
-                'C#5', 'D#5', 'F#5', 'G#5', 'A#5'
-            ];
+
+            const navList = document.getElementById('nav-list');
+            const mobileNavList = document.getElementById('mobile-nav-list');
             
-            const whiteKeyWidth = 40;
-            const keyboardWidth = whiteKeyNames.length * whiteKeyWidth;
-            const blackKeyWidth = 25;
+            const generateHTML = (id, label, icon) => `
+                <li>
+                    <button onclick="navigateTo('${id}')" 
+                        class="w-full text-left px-4 py-3 rounded-lg flex items-center gap-3 transition-colors ${state.currentTab === id ? 'active-nav text-stone-800' : 'text-stone-600 hover:bg-stone-200'}">
+                        <span>${icon}</span>
+                        <span>${label}</span>
+                    </button>
+                </li>
+            `;
 
-            keyboardDiv.style.width = `${keyboardWidth}px`; 
-            keyboardDiv.innerHTML = ''; 
+            navList.innerHTML = sections.map(s => generateHTML(s.id, s.label, s.icon)).join('');
+            mobileNavList.innerHTML = sections.map(s => generateHTML(s.id, s.label, s.icon)).join('');
+        }
 
-            let currentX = 0; 
-            let blackKeyIndex = 0;
+        function navigateTo(tabId) {
+            state.currentTab = tabId;
+            renderNavigation();
+            renderContent(tabId);
+            // Close mobile menu if open
+            document.getElementById('mobile-menu').classList.add('-translate-x-full');
+        }
 
-            const appendKey = (name, isBlack, xPos) => {
-                const key = document.createElement('div');
-                // ID uses 's' for sharp (e.g., C#4 -> Cs4)
-                key.id = 'key-' + name.toLowerCase().replace('#', 's');
-                key.style.position = 'absolute';
-                key.style.left = `${xPos}px`;
-                key.style.zIndex = isBlack ? 20 : 10;
+        function renderContent(tabId) {
+            const container = document.getElementById('content-area');
+            container.innerHTML = ''; // Clear current content
 
-                if (isBlack) {
-                    key.className = 'black-key rounded-b-md';
-                } else {
-                    key.className = 'white-key rounded-b-md flex flex-col justify-end items-center text-xs font-bold text-gray-700';
-                    const label = document.createElement('span');
-                    label.textContent = name;
-                    label.className = 'mb-2';
-                    key.appendChild(label);
-                }
-                keyboardDiv.appendChild(key);
-            };
-
-            for (let i = 0; i < whiteKeyNames.length; i++) {
-                const name = whiteKeyNames[i];
-                
-                appendKey(name, false, currentX);
-
-                if (name.includes('C') || name.includes('D') || name.includes('F') || name.includes('G') || name.includes('A')) {
-                    if (blackKeyIndex < blackKeyNames.length) {
-                        const sharpX = currentX + (whiteKeyWidth - (blackKeyWidth / 2)); 
-                        appendKey(blackKeyNames[blackKeyIndex], true, sharpX);
-                        blackKeyIndex++;
-                    }
-                }
-
-                currentX += whiteKeyWidth; 
+            switch(tabId) {
+                case 'overview': renderOverview(container); break;
+                case 'architecture': renderArchitecture(container); break;
+                case 'syntax': renderSyntax(container); break;
+                case 'engines': renderEngines(container); break;
+                case 'reference': renderReference(container); break;
             }
         }
 
-        // --- REFACTORED OmniScore Parsing ---
-        function parseOmniScore(code) {
-            const events = [];
+        // --- Section Renderers ---
+
+        function renderOverview(container) {
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto space-y-8 animate-fade-in">
+                    <!-- Header -->
+                    <div class="text-center mb-10">
+                        <span class="bg-orange-100 text-orange-800 text-xs font-semibold px-2.5 py-0.5 rounded border border-orange-200 uppercase">Version ${omniScoreData.metadata.version}</span>
+                        <h2 class="text-4xl md:text-5xl font-serif font-bold text-stone-800 mt-4 mb-2">OmniScore</h2>
+                        <p class="text-xl text-stone-600 italic">"What Mermaid is to charts, OmniScore is to music."</p>
+                    </div>
+
+                    <!-- Intro Text -->
+                    <div class="prose prose-stone max-w-none text-stone-600 mb-8 p-6 bg-white rounded-xl shadow-sm border border-stone-100">
+                        <p>
+                            OmniScore is a declarative, domain-specific language (DSL) for describing musical logic. 
+                            It prioritizes <strong>musical intent</strong> over visual layout. This application helps you explore the syntax, 
+                            engines, and architectural principles defined in the Normative Specification.
+                        </p>
+                    </div>
+
+                    <!-- Philosophy Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        ${omniScoreData.overview.philosophy.map(p => `
+                            <div class="bg-white p-6 rounded-xl shadow-sm border-t-4 border-orange-500 hover:shadow-md transition-shadow">
+                                <h3 class="font-bold text-lg mb-2 text-stone-800">${p.title}</h3>
+                                <p class="text-sm text-stone-600 leading-relaxed">${p.desc}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <!-- Feature Breakdown Chart -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mt-8">
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-100">
+                            <h3 class="font-bold text-stone-700 mb-4 text-center">Language Feature Distribution</h3>
+                            <div class="chart-container">
+                                <canvas id="featureChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <h3 class="font-serif text-2xl font-bold text-stone-800">Designed for Humans</h3>
+                            <p class="text-stone-600">
+                                Unlike XML formats which are verbose and machine-centric, OmniScore uses a logic-first approach. 
+                                The chart illustrates the balance of the specification, focusing heavily on core musical logic and engine definitions rather than purely visual attributes.
+                            </p>
+                            <div class="flex gap-4 text-sm">
+                                <div class="px-4 py-2 bg-stone-200 rounded text-stone-700"><strong>Status:</strong> ${omniScoreData.metadata.status}</div>
+                                <div class="px-4 py-2 bg-stone-200 rounded text-stone-700"><strong>License:</strong> ${omniScoreData.metadata.license}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
             
-            // 1. Identify Hand/Measure Content
-            const parts = [
-                { hand: 'RH', pattern: /rh:\s*([^|]+)/g },
-                { hand: 'LH', pattern: /lh:\s*([^|]+)/g },
-            ];
-            
-            // 2. Regex to match a complete note/chord chunk: 
-            // Group 1: Whole Chunk (e.g., [c4 e4 g4]:4 or d4:8 or r:4)
-            // (?:\[[^\]]+\]|r|[a-g][#b]?\d):(?:[1248]\.?)
-            const chunkRegex = /((?:\[[^\]]+\]|r|[a-g][#b]?\d):(?:[1248]\.?))/g;
-
-            parts.forEach(part => {
-                let currentTime = 0;
-                part.pattern.lastIndex = 0;
-
-                let measureMatch;
-                while ((measureMatch = part.pattern.exec(code)) !== null) {
-                    const notesString = measureMatch[1].trim();
-                    
-                    chunkRegex.lastIndex = 0;
-                    let chunkMatch;
-
-                    // Iterate through chunks in the measure string
-                    while ((chunkMatch = chunkRegex.exec(notesString)) !== null) {
-                        const chunk = chunkMatch[0]; // e.g., '[e4 g4 c5]:1.' or 'e4:4'
-                        
-                        // Split the chunk into content (notes/rests) and duration string
-                        const [content, durationStr] = chunk.split(':');
-
-                        const duration = durationMap[durationStr];
-                        if (!duration) {
-                            throw new Error(`Invalid duration '${durationStr}' found. Please use supported durations (1, 2, 4, 8) or dotted notes (1., 2., 4.).`);
+            // Initialize Chart
+            setTimeout(() => {
+                const ctx = document.getElementById('featureChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Core Logic', 'Instrument Physics', 'Engines (Tab/Perc)', 'Advanced/Meta'],
+                        datasets: [{
+                            data: [35, 25, 25, 15], // Conceptual weight based on readme sectioning
+                            backgroundColor: ['#ea580c', '#fb923c', '#fdba74', '#fed7aa'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom', labels: { usePointStyle: true, font: { family: 'Inter' } } }
                         }
+                    }
+                });
+            }, 0);
+        }
 
-                        let notesToSchedule = [];
-                        if (content.startsWith('[')) {
-                            // CHORD: Extract notes from inside the brackets
-                            const innerNotes = content.slice(1, -1).trim(); // Remove []
-                            notesToSchedule = innerNotes.split(/\s+/).filter(n => n); 
-                        } else {
-                            // SINGLE NOTE or REST
-                            notesToSchedule = [content];
-                        }
+        function renderArchitecture(container) {
+            container.innerHTML = `
+                <div class="max-w-5xl mx-auto space-y-12 animate-fade-in">
+                    <!-- Intro -->
+                    <div class="mb-8">
+                        <h2 class="text-3xl font-serif font-bold text-stone-800 mb-2">System Architecture</h2>
+                        <p class="text-stone-600">Understanding how OmniScore processes text into music and handles logical space.</p>
+                    </div>
 
-                        notesToSchedule.forEach(note => {
-                            if (note.toUpperCase() === 'R') {
-                                return; // Skip rests
-                            }
-                            
-                            // Format note for Tone.js (e.g., F#5)
-                            // The regex ensures the structure is [a-g][#b]?\d
-                            const toneJsNote = note.charAt(0).toUpperCase() + note.slice(1).toLowerCase();
-
-                            events.push({
-                                note: toneJsNote, // e.g., F#5
-                                duration: duration,
-                                time: currentTime,
-                                hand: part.hand
-                            });
-                        });
+                    <!-- Compilation Pipeline (Interactive) -->
+                    <div class="bg-white p-8 rounded-xl shadow-sm border border-stone-200">
+                        <h3 class="text-xl font-bold text-stone-800 mb-6">The Compilation Pipeline</h3>
                         
-                        // Advance time by the duration of the chunk (note, rest, or chord)
-                        currentTime += duration;
-                    }
-                }
-            });
+                        <!-- Stepper Visual -->
+                        <div class="flex flex-col md:flex-row justify-between items-center relative mb-8 gap-4 md:gap-0">
+                             ${omniScoreData.pipeline.map((step, index) => `
+                                <div class="relative z-10 flex flex-col items-center group cursor-pointer w-full md:w-auto step-connector" onclick="showPipelineDetail(${index})">
+                                    <div class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300
+                                        ${state.pipelineStep === index ? 'bg-orange-600 text-white shadow-lg scale-110' : 'bg-stone-200 text-stone-500 hover:bg-orange-200'}">
+                                        ${step.step}
+                                    </div>
+                                    <span class="mt-2 text-sm font-medium ${state.pipelineStep === index ? 'text-orange-700' : 'text-stone-500'}">${step.title}</span>
+                                </div>
+                             `).join('')}
+                        </div>
 
-            // CRITICAL: Sort events chronologically to interleave RH and LH notes correctly
-            events.sort((a, b) => a.time - b.time);
+                        <!-- Detail Box -->
+                        <div id="pipeline-detail" class="bg-stone-50 p-6 rounded-lg border-l-4 border-orange-500 transition-all">
+                            <h4 class="font-bold text-stone-800 mb-1" id="pipe-title">${omniScoreData.pipeline[0].title}</h4>
+                            <p class="text-stone-600" id="pipe-desc">${omniScoreData.pipeline[0].detail}</p>
+                        </div>
+                    </div>
 
-            return events;
+                    <!-- Coordinate System (Visual) -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="bg-white p-8 rounded-xl shadow-sm border border-stone-200 flex flex-col justify-center">
+                            <h3 class="text-xl font-bold text-stone-800 mb-4">The Logical Grid (3D)</h3>
+                            <div class="relative w-full h-64 bg-stone-50 rounded-lg border border-dashed border-stone-300 flex items-center justify-center overflow-hidden">
+                                <!-- Z Axis -->
+                                <div class="absolute w-1 h-48 bg-blue-200 rounded"></div>
+                                <span class="absolute top-4 text-xs font-bold text-blue-400">Voices (Z)</span>
+                                
+                                <!-- Y Axis -->
+                                <div class="absolute w-1 h-32 bg-green-200 rotate-90 rounded"></div>
+                                <span class="absolute left-4 text-xs font-bold text-green-500">Source (Y)</span>
+
+                                <!-- X Axis -->
+                                <div class="absolute w-48 h-1 bg-orange-400 rounded shadow-sm z-10"></div>
+                                <span class="absolute right-4 bottom-1/2 translate-y-4 text-xs font-bold text-orange-600">Time (X)</span>
+                                
+                                <!-- Measure Blocks -->
+                                <div class="absolute w-12 h-8 border-2 border-orange-300 bg-orange-50/50 z-20 flex items-center justify-center text-[10px] text-orange-800 font-mono">M1</div>
+                                <div class="absolute w-12 h-8 border-2 border-orange-300 bg-orange-50/50 z-20 translate-x-16 flex items-center justify-center text-[10px] text-orange-800 font-mono">M2</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col justify-center space-y-4">
+                            <h3 class="font-serif text-2xl font-bold text-stone-800">The 3-Axis Model</h3>
+                            <p class="text-stone-600">OmniScore maps music onto a strict logical grid rather than a page layout.</p>
+                            <ul class="space-y-3">
+                                <li class="flex items-start gap-2">
+                                    <span class="font-bold text-orange-600">X-Axis (Time):</span>
+                                    <span class="text-sm text-stone-600">Linear absolute time, segmented by Measure blocks.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="font-bold text-green-600">Y-Axis (Source):</span>
+                                    <span class="text-sm text-stone-600">Distinct logical threads defined by Staff IDs.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="font-bold text-blue-600">Z-Axis (Polyphony):</span>
+                                    <span class="text-sm text-stone-600">Vertical layering within a single time/source coordinate (Voices).</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
 
-        // --- Scheduling and Playback (Logic unchanged) ---
-
-        function playScore(parsedEvents) {
-            if (isPlaying) return;
-
-            Tone.Transport.stop();
-            Tone.Transport.cancel(0);
-            scheduledEvents = [];
-            isPlaying = true;
-            statusDiv.className = 'text-center text-sm text-blue-600 mt-4 h-6';
-            statusDiv.textContent = 'Playing Full Score...';
-            playButton.disabled = true;
-            stopButton.disabled = false;
-            
-            // Highlight off all keys
-            document.querySelectorAll('.white-key, .black-key').forEach(key => {
-                key.classList.remove('key-active-white', 'key-active-black');
-            });
-            
-            // Schedule the notes
-            parsedEvents.forEach(item => {
-                // item.note is in Tone.js format (C4, F#5)
-                
-                // Convert C#4 -> Cs4 for ID lookup
-                const noteId = 'key-' + item.note.toLowerCase().replace('#', 's');
-                const keyElement = document.getElementById(noteId);
-                
-                // Check if the note has a sharp/flat to determine key color
-                const isBlack = item.note.includes('#') || item.note.includes('b'); 
-                const activeClass = isBlack ? 'key-active-black' : 'key-active-white';
-                
-                // 1. Schedule the Note Playback
-                const noteEvent = Tone.Transport.schedule(time => {
-                    synth.triggerAttackRelease(item.note, item.duration, time);
-                }, item.time);
-                scheduledEvents.push(noteEvent);
-
-                // 2. Schedule the Visual On state
-                const visualOnEvent = Tone.Transport.schedule(time => {
-                    if (keyElement) {
-                        Tone.Draw.schedule(() => {
-                            keyElement.classList.add(activeClass);
-                        }, time);
-                    }
-                }, item.time);
-                scheduledEvents.push(visualOnEvent);
-                
-                // 3. Schedule the Visual Off state (slightly before the next note/end of duration)
-                const visualOffEvent = Tone.Transport.schedule(time => {
-                    if (keyElement) {
-                        Tone.Draw.schedule(() => {
-                            keyElement.classList.remove(activeClass);
-                        }, time);
-                    }
-                }, item.time + item.duration - 0.05); 
-                scheduledEvents.push(visualOffEvent);
-            });
-            
-            // Schedule stop/cleanup at the very end
-            const lastEvent = parsedEvents[parsedEvents.length - 1];
-            let totalDuration = 0;
-            if (lastEvent) {
-                totalDuration = lastEvent.time + lastEvent.duration;
-            }
-            
-            const endEvent = Tone.Transport.schedule(stopPlayback, totalDuration);
-            scheduledEvents.push(endEvent);
-
-            Tone.Transport.start();
+        window.showPipelineDetail = function(index) {
+            state.pipelineStep = index;
+            renderArchitecture(document.getElementById('content-area')); // Re-render to update classes
         }
-        
-        function stopPlayback() {
-            if (!isPlaying) return;
-            
-            Tone.Transport.stop();
-            Tone.Transport.cancel(0);
-            
-            isPlaying = false;
-            statusDiv.className = 'text-center text-sm text-gray-500 mt-4 h-6';
-            statusDiv.textContent = 'Ready to play.';
-            playButton.disabled = false;
-            stopButton.disabled = true;
 
-            // Remove all visual highlights
-            document.querySelectorAll('.white-key, .black-key').forEach(key => {
-                key.classList.remove('key-active-white', 'key-active-black');
+        function renderSyntax(container) {
+            container.innerHTML = `
+                <div class="max-w-5xl mx-auto space-y-8 animate-fade-in">
+                    <div class="mb-6">
+                        <h2 class="text-3xl font-serif font-bold text-stone-800 mb-2">Lexical Structure & Syntax</h2>
+                        <p class="text-stone-600">Reference for data types, literals, and duration logic.</p>
+                    </div>
+
+                    <!-- Search Mock -->
+                    <div class="relative mb-6">
+                        <input type="text" placeholder="Filter data types..." oninput="filterSyntaxTable(this.value)" 
+                            class="w-full p-3 pl-10 rounded-lg border border-stone-300 focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white shadow-sm">
+                        <span class="absolute left-3 top-3.5 text-stone-400">🔍</span>
+                    </div>
+
+                    <!-- Data Types Table -->
+                    <div class="bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="bg-stone-100 text-stone-700 text-sm uppercase">
+                                <tr>
+                                    <th class="p-4 font-semibold">Type</th>
+                                    <th class="p-4 font-semibold">Syntax</th>
+                                    <th class="p-4 font-semibold">Example</th>
+                                    <th class="p-4 font-semibold">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody id="syntax-tbody" class="text-stone-600 text-sm divide-y divide-stone-100">
+                                ${omniScoreData.syntax.literals.map(l => `
+                                    <tr class="hover:bg-orange-50 transition-colors">
+                                        <td class="p-4 font-bold text-stone-800">${l.type}</td>
+                                        <td class="p-4 font-mono text-orange-700 bg-stone-50 rounded">${l.syntax}</td>
+                                        <td class="p-4 font-mono">${l.ex}</td>
+                                        <td class="p-4">${l.desc}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Duration Logic -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                            <h3 class="font-bold text-lg mb-4 text-stone-800">Duration Syntax</h3>
+                            <p class="text-sm text-stone-600 mb-4">OmniScore treats music as a linear stream. Sticky state applies here.</p>
+                            <div class="flex flex-wrap gap-2">
+                                ${omniScoreData.syntax.durations.map(d => `
+                                    <div class="flex items-center gap-2 bg-stone-50 px-3 py-2 rounded border border-stone-200">
+                                        <span class="text-xl">${d.symbol}</span>
+                                        <span class="font-mono text-sm text-orange-600 font-bold">${d.syntax}</span>
+                                        <span class="text-xs text-stone-500 uppercase">${d.logic}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div class="bg-stone-800 p-6 rounded-xl shadow-sm text-stone-300 font-mono text-sm">
+                            <div class="flex justify-between items-center mb-2 border-b border-stone-700 pb-2">
+                                <span class="text-orange-400 font-sans font-bold">Example Code</span>
+                            </div>
+                            <pre>${omniScoreData.example}</pre>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.filterSyntaxTable = function(query) {
+            const rows = document.querySelectorAll('#syntax-tbody tr');
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(query.toLowerCase()) ? '' : 'none';
             });
         }
-        
-        // --- Initialization ---
 
-        window.onload = function() {
-            // 1. Populate the editor with the initial score
-            omniInput.value = initialOmniScoreCode.trim();
+        function renderEngines(container) {
+            container.innerHTML = `
+                <div class="max-w-5xl mx-auto space-y-8 animate-fade-in">
+                    <div class="mb-6">
+                        <h2 class="text-3xl font-serif font-bold text-stone-800 mb-2">The Engines</h2>
+                        <p class="text-stone-600">OmniScore uses separate parsing engines depending on the staff <code>style</code> attribute.</p>
+                    </div>
 
-            // 2. Build the keyboard
-            createKeyboard();
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        ${omniScoreData.engines.map(eng => `
+                            <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 flex flex-col h-full hover:border-orange-300 transition-colors">
+                                <div class="mb-4">
+                                    <span class="text-xs font-bold text-orange-600 uppercase tracking-wide bg-orange-50 px-2 py-1 rounded">style=${eng.id}</span>
+                                </div>
+                                <h3 class="text-xl font-bold text-stone-800 mb-2">${eng.title}</h3>
+                                <p class="text-stone-600 text-sm mb-6 flex-grow">${eng.desc}</p>
+                                <ul class="space-y-2">
+                                    ${eng.features.map(f => `
+                                        <li class="flex items-center gap-2 text-sm text-stone-700">
+                                            <span class="text-orange-500">✓</span> ${f}
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+                        `).join('')}
+                    </div>
 
-            // 3. Attach event listeners
-            playButton.addEventListener('click', async () => {
-                const currentOmniScoreCode = omniInput.value;
-
-                if (Tone.Transport.state !== 'started') {
-                    await Tone.start();
-                    Tone.Context.lookAhead = 0.1; 
-                }
-                
-                stopPlayback(); 
-
-                try {
-                    const parsedEvents = parseOmniScore(currentOmniScoreCode);
-                    
-                    if (parsedEvents.length === 0) {
-                        statusDiv.className = 'text-center text-sm text-orange-600 mt-4 h-6';
-                        statusDiv.textContent = 'Warning: No musical notes found in the score.';
-                        return;
-                    }
-                    
-                    playScore(parsedEvents);
-
-                } catch (error) {
-                    statusDiv.className = 'text-center text-sm text-red-600 mt-4 h-6';
-                    statusDiv.textContent = 'Parsing Error: ' + error.message;
-                    console.error('Parsing/Playback Error:', error);
-                    stopPlayback(); 
-                }
-            });
-
-            stopButton.addEventListener('click', stopPlayback);
+                    <!-- Interactive Definition Builder (Mock) -->
+                    <div class="bg-stone-50 p-8 rounded-xl border border-stone-200 mt-8">
+                        <h3 class="font-bold text-lg mb-4 text-stone-800">Definition Syntax Pattern</h3>
+                        <div class="flex flex-wrap items-center gap-2 font-mono text-lg md:text-xl p-4 bg-white rounded shadow-inner overflow-x-auto">
+                            <span class="text-purple-600 font-bold">def</span>
+                            <span class="text-blue-600">[ID]</span>
+                            <span class="text-green-600">"Label"</span>
+                            <span class="text-stone-500">style=</span><span class="text-orange-600">standard|tab|grid</span>
+                            <span class="text-stone-400 text-sm italic ml-4">...attributes...</span>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
+
+        function renderReference(container) {
+            container.innerHTML = `
+                <div class="max-w-5xl mx-auto space-y-8 animate-fade-in">
+                    <div class="mb-6">
+                        <h2 class="text-3xl font-serif font-bold text-stone-800 mb-2">Reference & Errors</h2>
+                        <p class="text-stone-600">Diagnostic codes and library standards.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <!-- Error Codes Table -->
+                        <div class="md:col-span-2 bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
+                            <div class="bg-stone-100 p-4 border-b border-stone-200 font-bold text-stone-700">Error Codes</div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left text-sm">
+                                    <thead class="bg-stone-50 text-stone-500">
+                                        <tr>
+                                            <th class="p-3">Code</th>
+                                            <th class="p-3">Level</th>
+                                            <th class="p-3">Name</th>
+                                            <th class="p-3">Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-stone-100">
+                                        ${omniScoreData.errors.map(e => `
+                                            <tr class="hover:bg-stone-50">
+                                                <td class="p-3 font-mono font-bold text-stone-800">${e.code}</td>
+                                                <td class="p-3"><span class="px-2 py-1 rounded text-xs font-bold 
+                                                    ${e.level === 'Fatal' ? 'bg-red-100 text-red-700' : 
+                                                      e.level === 'Error' ? 'bg-orange-100 text-orange-700' : 
+                                                      'bg-yellow-100 text-yellow-700'}">${e.level}</span></td>
+                                                <td class="p-3 font-mono text-xs">${e.name}</td>
+                                                <td class="p-3 text-stone-600">${e.desc}</td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Error Chart -->
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 flex flex-col">
+                            <h3 class="font-bold text-stone-700 mb-4 text-center">Error Severity Distribution</h3>
+                            <div class="chart-container flex-grow">
+                                <canvas id="errorChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Standard Clefs Grid -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 mt-8">
+                        <h3 class="font-bold text-stone-800 mb-4">Standard Library: Clefs</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            ${['treble', 'bass', 'alto', 'tenor', 'perc', 'tab'].map(clef => `
+                                <div class="bg-stone-50 p-3 rounded text-center border border-stone-100">
+                                    <div class="font-mono text-orange-600 font-bold mb-1">${clef}</div>
+                                    <div class="text-xs text-stone-500">Standard Library</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Initialize Error Chart
+            setTimeout(() => {
+                const ctx = document.getElementById('errorChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Fatal', 'Error', 'Warning'],
+                        datasets: [{
+                            label: 'Defined Codes',
+                            data: [2, 2, 2], // Count from omniScoreData.errors
+                            backgroundColor: ['#ef4444', '#f97316', '#eab308'],
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+                    }
+                });
+            }, 0);
+        }
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', init);
 
     </script>
 </body>
