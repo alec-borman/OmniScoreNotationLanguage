@@ -39,6 +39,8 @@
 
 OmniScore is a declarative, domain-specific language (DSL) describing musical logic, notation, and performance data. Unlike XML-based formats which prioritize visual layout coordinates, OmniScore prioritizes musical intent, utilizing an inference engine to calculate layout at render-time.
 
+**The Core Analogy:** \> **OmniScore is to music what Mermaid is to charts.** \> Just as you write text to generate a flowchart without manually dragging boxes, you write OmniScore code to generate a musical score without manually placing notes.
+
 ### **1.1 Design Philosophy**
 
 The language adheres to three core principles:
@@ -279,7 +281,8 @@ Pitch is defined by a Note Name (A-G), an Accidental, and an Octave Number.
 * **Format:** \[Step\]\[Accidental\]\[Octave\]  
 * **Examples:** C4 (Middle C), F\#5, Bb2.
 
-**Sticky Octaves:** Like duration, octaves are sticky. If an octave is omitted, the engine assumes the octave of the previous note.
+Sticky Octaves:  
+Like duration, octaves are sticky. If an octave is omitted, the engine assumes the octave of the previous note.
 
 * **Constraint:** OmniScore does **not** use "closest proximity" logic (like ABC notation). It strictly uses the last declared integer.  
 * **Example:** c4 e g becomes c4 e4 g4.
@@ -294,7 +297,8 @@ Accidentals are explicit.
 * bb: Double Flat  
 * n: Natural (Force natural)
 
-**Key Signature Interaction:** Notes are assumed to be natural unless modified by the key signature in the meta block. However, explicit accidentals in code always override the key signature visually and logically.
+Key Signature Interaction:  
+Notes are assumed to be natural unless modified by the key signature in the meta block. However, explicit accidentals in code always override the key signature visually and logically.
 
 ### **6.3 Chords**
 
@@ -654,7 +658,9 @@ Ornaments are attached as attributes.
 * .invTurn: Inverted turn.  
 * .prall: Upper mordent (Pralltriller).
 
-**Parameters:** Some ornaments accept an interval or accidental in parentheses. c4:2.tr(flat) indicates a trill to the flat upper neighbor.
+Parameters:  
+Some ornaments accept an interval or accidental in parentheses.  
+c4:2.tr(flat) indicates a trill to the flat upper neighbor.
 
 ### **18.2 Glissando & Portamento**
 
