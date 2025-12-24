@@ -48,6 +48,11 @@
             background-color: #292524;
             color: #e7e5e4;
             font-family: 'Courier New', Courier, monospace;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-size: 0.875rem;
+            border-left: 4px solid #f97316;
         }
 
         .active-nav {
@@ -70,23 +75,33 @@
         .step-connector:last-child::after {
             display: none;
         }
+
+        /* Sticky State Visualizer */
+        .note-block {
+            transition: all 0.3s ease;
+        }
+        .note-block:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
     </style>
     <!-- Chosen Palette: Warm Neutrals (Stone/Orange) - Minimalist, Academic, Paper-like feel -->
     <!-- Application Structure Plan: 
-         1. Dashboard Layout: Sidebar for major sections, main content area for dynamic rendering.
-         2. Sectioning:
-            - "Overture" (Overview): Meta-stats, Philosophy, version info.
-            - "Architecture": Visualizing the compilation pipeline and coordinate system.
-            - "The Physics" (Definitions): Interactive instrument setup guide.
-            - "The Notation" (Events/Syntax): Tabbed views for different engines (Pitch, Rhythm, Tab).
-            - "Reference" (Library/Errors): Searchable data tables and charts for error types.
-         3. Rationale: The spec is dense. Grouping by "Purpose" (Architecture vs. Writing vs. Reference) is better than a linear read.
+         1. Comprehensive Layout: Left sidebar for 6 major Modules containing all 28 spec chapters.
+         2. Content Architecture:
+            - Module 1: Foundations (Intro, Lexical, Structure, Architecture). Visuals: Pipeline, Grid.
+            - Module 2: Instruments (Definitions, Styles, Grouping, Std Lib). Visuals: Syntax breakdown.
+            - Module 3: Core Notation (Rhythm, Pitch, Tab, Perc, Attrs). Visuals: Sticky State simulator.
+            - Module 4: Structure & Flow (Polyphony, Flow, Lyrics, Macros). Visuals: Voice Layering diagram.
+            - Module 5: Advanced Features (Playback, Visuals, MIDI, Engraving). Visuals: Feature toggles.
+            - Module 6: Technical Reference (Compiler, Errors, Implementation, Interop, EBNF). Visuals: Error Chart.
+         3. Interaction Design: Search bar to filter topics. Dynamic "Try Code" blocks (visual only). 
     -->
     <!-- Visualization & Content Choices:
-         - Spec Feature Breakdown (Doughnut Chart): Goal -> Inform -> Shows the weight of different language modules -> Chart.js.
-         - Error Taxonomy (Bar Chart): Goal -> Compare -> Visualizes the strictness of error levels -> Chart.js.
-         - Compilation Pipeline (CSS Stepper): Goal -> Change -> Interactive flow to explain the build process -> HTML/CSS/JS.
-         - Data Types Table (HTML Table + Filter): Goal -> Organize -> Searchable reference for syntax rules -> JS Filtering.
+         - Sticky State Interactive Flow: Goal -> Inform -> Demonstrates how attributes persist -> HTML/CSS Blocks + JS.
+         - Feature Breakdown (Doughnut): Goal -> Inform -> Scope of language -> Chart.js.
+         - Error Taxonomy (Bar Chart): Goal -> Compare -> Severity levels -> Chart.js.
+         - Code Syntax Highlighter (CSS): Goal -> Inform -> Readability -> Custom CSS classes.
     -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
 </head>
@@ -98,7 +113,14 @@
             <h1 class="text-2xl font-bold text-stone-800">OmniScore</h1>
             <p class="text-xs text-stone-500 mt-1 uppercase tracking-wider">Spec Explorer v1.1.0</p>
         </div>
-        <nav class="flex-1 overflow-y-auto py-4">
+        
+        <!-- Search -->
+        <div class="p-4 border-b border-stone-200">
+            <input type="text" id="sidebar-search" placeholder="Search topics..." 
+                class="w-full px-3 py-2 bg-white border border-stone-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-orange-500">
+        </div>
+
+        <nav class="flex-1 overflow-y-auto py-2">
             <ul class="space-y-1" id="nav-list">
                 <!-- Nav Items Injected by JS -->
             </ul>
@@ -119,7 +141,7 @@
         </header>
 
         <!-- Dynamic Content Scroll Area -->
-        <div id="content-area" class="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth">
+        <div id="content-area" class="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth max-w-6xl mx-auto w-full">
             <!-- Content Injected Here -->
         </div>
     </main>
@@ -136,7 +158,7 @@
     </div>
 
     <script>
-        // --- Data Source: OmniScore v1.1.0 Specification ---
+        // --- Data Source: Comprehensive OmniScore v1.1.0 Specification ---
         const omniScoreData = {
             metadata: {
                 version: "1.1.0",
@@ -144,96 +166,233 @@
                 license: "MIT",
                 maintainer: "The OmniScore Working Group"
             },
-            overview: {
-                philosophy: [
-                    { title: "Inference Over Redundancy", desc: "Attributes like duration and octave persist until changed ('Sticky State')." },
-                    { title: "Semantic Separation", desc: "Instrument definitions (physics) are separate from event data (notes)." },
-                    { title: "Human Readability", desc: "Source code is intelligible to musicians without rendering software." }
-                ],
-                stats: {
-                    modules: 12,
-                    dataTypes: 8,
-                    errorCodes: 6
-                }
-            },
-            pipeline: [
-                { step: 1, title: "Lexing/Parsing", detail: "Tokenize text and validate against EBNF grammar." },
-                { step: 2, title: "Context Building", detail: "Process meta/def blocks to establish global physics." },
-                { step: 3, title: "Linearization", detail: "Resolve sticky attributes & calculate absolute ticks." },
-                { step: 4, title: "Rendering", detail: "Map linearized data to SVG, MIDI, or MusicXML." }
-            ],
-            syntax: {
-                literals: [
-                    { type: "Integer", syntax: "[0-9]+", ex: "1, 120", desc: "Octaves, BPM, counts" },
-                    { type: "Float", syntax: "[0-9]+\.[0-9]+", ex: "1.5", desc: "Duration multipliers" },
-                    { type: "Pitch", syntax: "[a-g][#|b|x]*[0-9]", ex: "c4, f#5", desc: "Scientific Pitch" },
-                    { type: "TabCoord", syntax: "[0-9]+-[0-9]+", ex: "0-6", desc: "Fret-String" },
-                    { type: "Map", syntax: "{ key: val }", ex: "{ k:0 }", desc: "Configuration pairs" }
-                ],
-                durations: [
-                    { logic: "Quarter", syntax: ":4", symbol: "♩" },
-                    { logic: "Eighth", syntax: ":8", symbol: "♪" },
-                    { logic: "Sixteenth", syntax: ":16", symbol: "♬" },
-                    { logic: "Dotted Q", syntax: ":4.", symbol: "♩." },
-                    { logic: "Whole", syntax: ":1", symbol: "𝅝" }
-                ]
-            },
-            engines: [
+            modules: [
                 {
-                    id: "standard",
-                    title: "Standard Pitch",
-                    desc: "Default engine for pitched instruments using Scientific Pitch Notation.",
-                    features: ["Sticky Octaves", "Explicit Accidentals", "Chord Brackets []", "Ties ~"]
+                    id: "foundations",
+                    title: "Module 1: Foundations",
+                    icon: "🏛️",
+                    chapters: [
+                        {
+                            id: "intro",
+                            title: "1. Introduction",
+                            content: `<p>OmniScore is to music what Mermaid is to charts. It is a declarative, domain-specific language (DSL) describing musical logic, notation, and performance data. Unlike XML-based formats, it prioritizes musical intent using an inference engine.</p>`,
+                            subsections: [
+                                { title: "Design Philosophy", text: "1. Inference Over Redundancy (Sticky State). 2. Semantic Separation (Physics vs Data). 3. Human Readability." },
+                                { title: "Coordinate System", text: "X-Axis: Time (Linear). Y-Axis: Source (Staves). Z-Axis: Polyphony (Voices)." },
+                                { title: "Compilation Pipeline", text: "Lexing -> Context Building -> Linearization -> Rendering." }
+                            ]
+                        },
+                        {
+                            id: "lexical",
+                            title: "2. Lexical Structure",
+                            content: "<p>Source files must be UTF-8. Keywords and Note names are case-insensitive. Identifiers are case-sensitive. Whitespace is insignificant.</p>",
+                            code: "%% Comment syntax\nc4:4 %% Inline comment",
+                            data_table: [
+                                { type: "Integer", syntax: "[0-9]+", ex: "120" },
+                                { type: "Float", syntax: "[0-9]+.[0-9]+", ex: "1.5" },
+                                { type: "Pitch", syntax: "[a-g][#|b|x]*[0-9]", ex: "c4, f#5" },
+                                { type: "TabCoord", syntax: "Fret-String", ex: "0-6" }
+                            ]
+                        },
+                        {
+                            id: "doc_struct",
+                            title: "3. Document Structure",
+                            content: "A valid file has a root <code>omniscore</code> block containing Meta, Definitions, and Flow sections.",
+                            code: `omniscore
+  meta { title: "My Song", tempo: 120 }
+  def ...
+  measure 1 ...`
+                        }
+                    ]
                 },
                 {
-                    id: "tab",
-                    title: "Tablature",
-                    desc: "Engine for fretted instruments using coordinate system.",
-                    features: ["Fret-String Syntax", "Bends .bu()", "Slides .sl", "Strums .down/.up"]
+                    id: "instruments",
+                    title: "Module 2: Instrument Setup",
+                    icon: "🎻",
+                    chapters: [
+                        {
+                            id: "def_physics",
+                            title: "4. Definitions (The Physics)",
+                            content: "Define the instruments before writing music. This tells the parser how to interpret data (e.g., is '0' a rest, a fret, or a drum?).",
+                            code: `def vln "Violin I" style=standard
+def gtr "Guitar" style=tab tuning=[E2, A2, D3, G3, B3, E4]
+def kit "Drums" style=grid map={k:0, s:4}`,
+                            subsections: [
+                                { title: "Grouping", text: "Use 'group' blocks with 'symbol' attributes (brace, bracket, line) to organize staves visually." },
+                                { title: "Standard Library", text: "Includes standard clefs (treble, bass, alto, tenor, perc, tab) and tunings (guitar_std, bass_std)." }
+                            ]
+                        }
+                    ]
                 },
                 {
-                    id: "grid",
-                    title: "Percussion Grid",
-                    desc: "Engine for unpitched rhythmic triggers mapped to staff lines.",
-                    features: ["Mapped Keys", "Ghost Notes", "Rolls", "Flams"]
+                    id: "core_notation",
+                    title: "Module 3: Core Notation",
+                    icon: "♩",
+                    chapters: [
+                        {
+                            id: "rhythm",
+                            title: "5. Event Engine: Rhythm",
+                            content: "Time is linear. Duration is denoted by a colon (:). OmniScore uses 'Sticky State' logic: if duration is omitted, it persists from the previous event.",
+                            code: `c4:4 d4 e4 f4  %% First note is 1/4, others inherit 1/4
+(c d e):3/2    %% Triplet`,
+                            visualizer: "sticky_state" 
+                        },
+                        {
+                            id: "pitch",
+                            title: "6. Pitch Engine",
+                            content: "Scientific Pitch Notation (SPN). Accidentals are explicit (#, b, x, bb, n). Chords use brackets []. Ties use tilde ~.",
+                            code: `c4 e4 g4       %% Individual notes
+[c4 e4 g4]:4   %% Chord
+c4:4~ c4:8     %% Tie`
+                        },
+                        {
+                            id: "attributes",
+                            title: "7. Attributes",
+                            content: "Decorate events with dot notation for dynamics, articulations, and text.",
+                            code: `c4:4.ff.stacc
+c4."Sim."`
+                        },
+                        {
+                            id: "tab_perc",
+                            title: "8 & 9. Tab & Percussion",
+                            content: "Tab uses Fret-String coordinates. Percussion uses mapped character keys.",
+                            code: `gtr: 0-6 2-5 3-5.bu(full)  %% Tab
+drm: k:4 s:8.ghost s:8     %% Percussion`
+                        }
+                    ]
+                },
+                {
+                    id: "structure",
+                    title: "Module 4: Structure & Flow",
+                    icon: "🔀",
+                    chapters: [
+                        {
+                            id: "polyphony",
+                            title: "10. Advanced Polyphony",
+                            content: "Multi-threading within a single staff using Voice Groups { v1: ... | v2: ... }.",
+                            code: `piano: {
+  v1: c5:4 d5 e5 |
+  v2: c4:2 g4:2  |
+}`
+                        },
+                        {
+                            id: "flow",
+                            title: "11. Flow Control",
+                            content: "Repeats (|: :|), Voltas ([1. ... ]), and Navigation (D.S., Coda).",
+                            code: `measure 1
+  vln: |: c4 d e f :|`
+                        },
+                        {
+                            id: "lyrics",
+                            title: "12. Lyric Engine",
+                            content: "Map syllables 1-to-1 with notes. Use hyphens (-) and underscores (_) for melismas.",
+                            code: `vox: c4 d4 e4
+vox.lyric: "Hel- lo world"`
+                        },
+                        {
+                            id: "macros",
+                            title: "15. Macros",
+                            content: "Text substitution for repetitive patterns. Invoke with $.",
+                            code: `macro Riff = { c4 e g }
+measure 1
+  gtr: $Riff $Riff+2`
+                        }
+                    ]
+                },
+                {
+                    id: "advanced",
+                    title: "Module 5: Advanced Features",
+                    icon: "✨",
+                    chapters: [
+                        {
+                            id: "playback",
+                            title: "14. Playback & Synth",
+                            content: "Define patches (General MIDI) and control Volume/Pan via metadata.",
+                            code: `def syn "Lead" patch="Sawtooth"
+meta { syn.vol: 80, syn.pan: -64 }`
+                        },
+                        {
+                            id: "midi",
+                            title: "21. Advanced MIDI",
+                            content: "Send raw CC messages and automation curves.",
+                            code: `c4:1.cc(1, 127)       %% Mod wheel max
+c4:1.cc(11, [0, 100]) %% Expression swell`
+                        },
+                        {
+                            id: "visuals",
+                            title: "20. Visual Styling",
+                            content: "Theme profiles (jazz, educational) and color overrides.",
+                            code: `meta { theme: "jazz" }
+c4.color("red").head("diamond")`
+                        },
+                        {
+                            id: "microtonal",
+                            title: "19. Microtonality",
+                            content: "Quarter-tone syntax (qs, qf) and cent deviation (+/-).",
+                            code: `c4+14:4   %% 14 cents sharp
+d4qf      %% Quarter-flat`
+                        }
+                    ]
+                },
+                {
+                    id: "reference",
+                    title: "Module 6: Tech Reference",
+                    icon: "🛠️",
+                    chapters: [
+                        {
+                            id: "compiler",
+                            title: "22. Compiler Directives",
+                            content: "Strict mode for validation and Conditional Compilation for targets.",
+                            code: `meta { strict: true }
+if (midi) { ... }`
+                        },
+                        {
+                            id: "grammar",
+                            title: "27. Formal Grammar (EBNF)",
+                            content: "Simplified EBNF for parser implementation.",
+                            code: `Program ::= 'omniscore' Meta? Def+ Measure+
+Event   ::= (Note | Chord | Rest) Duration? Mod*`
+                        },
+                        {
+                            id: "errors",
+                            title: "24. Error Reference",
+                            content: "Diagnostic codes.",
+                            chart: "errors"
+                        }
+                    ]
                 }
             ],
             errors: [
-                { code: "E101", level: "Fatal", name: "SYNTAX_ERR", desc: "Malformed token or illegal character." },
-                { code: "E201", level: "Fatal", name: "DEF_MISSING", desc: "Staff ID used but not defined." },
-                { code: "E301", level: "Error", name: "VOICE_SYNC", desc: "Voice durations do not match." },
-                { code: "E302", level: "Error", name: "TIME_OVERFLOW", desc: "Event exceeds Time Signature." },
-                { code: "W401", level: "Warning", name: "BEAM_OPEN", desc: "Beam not ended; auto-closed." },
-                { code: "W402", level: "Warning", name: "OCTAVE_JUMP", desc: "Large octave jump detected." }
-            ],
-            example: `omniscore
-  meta { title: "Kitchen Sink", tempo: 130 }
-
-  group "Rhythm" symbol=bracket {
-    def sax "Tenor" style=standard transpose=-14
-    def gtr "Guitar" style=tab tuning=guitar_std
-  }
-
-  measure 1
-    %% Sticky Logic + Articulation
-    sax: c4:4.acc e g c5.stacc |
-    
-    %% Tab Strumming
-    gtr: [0-6 2-5 2-4]:4.down r:2 |`
+                { code: "E101", level: "Fatal", name: "SYNTAX_ERR" },
+                { code: "E201", level: "Fatal", name: "DEF_MISSING" },
+                { code: "E301", level: "Error", name: "VOICE_SYNC" },
+                { code: "E302", level: "Error", name: "TIME_OVERFLOW" },
+                { code: "W401", level: "Warning", name: "BEAM_OPEN" },
+                { code: "W402", level: "Warning", name: "OCTAVE_JUMP" }
+            ]
         };
 
         // --- State Management ---
         const state = {
-            currentTab: 'overview',
-            pipelineStep: 0,
+            currentModule: 0,
             searchQuery: ''
         };
 
-        // --- Render Functions ---
-
+        // --- Init ---
         function init() {
-            renderNavigation();
-            renderContent(state.currentTab);
+            renderSidebar();
+            renderModule(0);
+            
+            // Search Listener
+            document.getElementById('sidebar-search').addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase();
+                const items = document.querySelectorAll('.nav-item');
+                items.forEach(item => {
+                    const text = item.innerText.toLowerCase();
+                    item.style.display = text.includes(query) ? 'flex' : 'none';
+                });
+            });
+
             document.getElementById('menu-btn').addEventListener('click', toggleMobileMenu);
             document.getElementById('close-menu').addEventListener('click', toggleMobileMenu);
         }
@@ -243,417 +402,230 @@
             menu.classList.toggle('-translate-x-full');
         }
 
-        function renderNavigation() {
-            const sections = [
-                { id: 'overview', label: 'Overture', icon: '🎵' },
-                { id: 'architecture', label: 'Architecture', icon: '🏛️' },
-                { id: 'syntax', label: 'Syntax & Data', icon: '📝' },
-                { id: 'engines', label: 'The Engines', icon: '⚙️' },
-                { id: 'reference', label: 'Reference & Errors', icon: '📚' }
-            ];
-
+        function renderSidebar() {
             const navList = document.getElementById('nav-list');
             const mobileNavList = document.getElementById('mobile-nav-list');
             
-            const generateHTML = (id, label, icon) => `
-                <li>
-                    <button onclick="navigateTo('${id}')" 
-                        class="w-full text-left px-4 py-3 rounded-lg flex items-center gap-3 transition-colors ${state.currentTab === id ? 'active-nav text-stone-800' : 'text-stone-600 hover:bg-stone-200'}">
-                        <span>${icon}</span>
-                        <span>${label}</span>
+            const html = omniScoreData.modules.map((mod, index) => `
+                <li class="nav-item">
+                    <button onclick="navigateTo(${index})" 
+                        class="w-full text-left px-4 py-3 rounded-lg flex items-center gap-3 transition-colors text-sm ${state.currentModule === index ? 'active-nav text-stone-800' : 'text-stone-600 hover:bg-stone-200'}">
+                        <span>${mod.icon}</span>
+                        <span class="font-medium">${mod.title}</span>
                     </button>
                 </li>
-            `;
+            `).join('');
 
-            navList.innerHTML = sections.map(s => generateHTML(s.id, s.label, s.icon)).join('');
-            mobileNavList.innerHTML = sections.map(s => generateHTML(s.id, s.label, s.icon)).join('');
+            navList.innerHTML = html;
+            mobileNavList.innerHTML = html;
         }
 
-        function navigateTo(tabId) {
-            state.currentTab = tabId;
-            renderNavigation();
-            renderContent(tabId);
-            // Close mobile menu if open
+        function navigateTo(index) {
+            state.currentModule = index;
+            renderSidebar();
+            renderModule(index);
             document.getElementById('mobile-menu').classList.add('-translate-x-full');
         }
 
-        function renderContent(tabId) {
+        // --- Content Rendering ---
+        function renderModule(index) {
+            const module = omniScoreData.modules[index];
             const container = document.getElementById('content-area');
-            container.innerHTML = ''; // Clear current content
+            
+            // Generate Module Header
+            let html = `
+                <div class="mb-8 animate-fade-in">
+                    <h2 class="text-3xl md:text-4xl font-serif font-bold text-stone-800 mb-2">${module.title}</h2>
+                    <div class="h-1 w-20 bg-orange-500 rounded"></div>
+                </div>
+            `;
 
-            switch(tabId) {
-                case 'overview': renderOverview(container); break;
-                case 'architecture': renderArchitecture(container); break;
-                case 'syntax': renderSyntax(container); break;
-                case 'engines': renderEngines(container); break;
-                case 'reference': renderReference(container); break;
+            // Introduction Component (Special Case for Module 1)
+            if (module.id === "foundations") {
+                html += renderIntroComponent();
             }
+
+            // Generate Chapters
+            html += `<div class="grid grid-cols-1 gap-12">`;
+            module.chapters.forEach(chap => {
+                html += `
+                    <div class="bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
+                        <div class="p-6 border-b border-stone-100 bg-stone-50">
+                            <h3 class="text-xl font-bold text-stone-800">${chap.title}</h3>
+                        </div>
+                        <div class="p-6 space-y-6">
+                            <div class="prose prose-stone text-stone-600 max-w-none">
+                                ${chap.content}
+                            </div>
+                            
+                            ${chap.subsections ? chap.subsections.map(sub => `
+                                <div class="pl-4 border-l-2 border-orange-200">
+                                    <h4 class="font-bold text-stone-700 text-sm">${sub.title}</h4>
+                                    <p class="text-sm text-stone-600">${sub.text}</p>
+                                </div>
+                            `).join('') : ''}
+
+                            ${chap.data_table ? renderTable(chap.data_table) : ''}
+                            
+                            ${chap.visualizer === 'sticky_state' ? renderStickyVisualizer() : ''}
+                            
+                            ${chap.chart === 'errors' ? renderErrorChartHTML() : ''}
+
+                            ${chap.code ? `
+                                <div class="bg-stone-800 rounded-lg p-4 shadow-inner relative group">
+                                    <div class="absolute top-2 right-2 text-xs text-stone-500 font-mono">OMNISCORE</div>
+                                    <pre class="font-mono text-sm text-stone-300 overflow-x-auto">${chap.code}</pre>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+
+            container.innerHTML = html;
+
+            // Post-render scripts
+            if (module.id === "foundations") renderPipeline();
+            if (module.id === "reference") renderErrorChartJS();
         }
 
-        // --- Section Renderers ---
+        // --- Helper Components ---
 
-        function renderOverview(container) {
-            container.innerHTML = `
-                <div class="max-w-4xl mx-auto space-y-8 animate-fade-in">
-                    <!-- Header -->
-                    <div class="text-center mb-10">
-                        <span class="bg-orange-100 text-orange-800 text-xs font-semibold px-2.5 py-0.5 rounded border border-orange-200 uppercase">Version ${omniScoreData.metadata.version}</span>
-                        <h2 class="text-4xl md:text-5xl font-serif font-bold text-stone-800 mt-4 mb-2">OmniScore</h2>
-                        <p class="text-xl text-stone-600 italic">"What Mermaid is to charts, OmniScore is to music."</p>
-                    </div>
-
-                    <!-- Intro Text -->
-                    <div class="prose prose-stone max-w-none text-stone-600 mb-8 p-6 bg-white rounded-xl shadow-sm border border-stone-100">
-                        <p>
-                            OmniScore is a declarative, domain-specific language (DSL) for describing musical logic. 
-                            It prioritizes <strong>musical intent</strong> over visual layout. This application helps you explore the syntax, 
-                            engines, and architectural principles defined in the Normative Specification.
-                        </p>
-                    </div>
-
-                    <!-- Philosophy Cards -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        ${omniScoreData.overview.philosophy.map(p => `
-                            <div class="bg-white p-6 rounded-xl shadow-sm border-t-4 border-orange-500 hover:shadow-md transition-shadow">
-                                <h3 class="font-bold text-lg mb-2 text-stone-800">${p.title}</h3>
-                                <p class="text-sm text-stone-600 leading-relaxed">${p.desc}</p>
-                            </div>
-                        `).join('')}
-                    </div>
-
-                    <!-- Feature Breakdown Chart -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mt-8">
-                        <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-100">
-                            <h3 class="font-bold text-stone-700 mb-4 text-center">Language Feature Distribution</h3>
-                            <div class="chart-container">
-                                <canvas id="featureChart"></canvas>
+        function renderIntroComponent() {
+            return `
+                <div class="bg-gradient-to-r from-stone-800 to-stone-700 text-stone-100 rounded-xl p-8 mb-10 shadow-lg">
+                    <div class="grid md:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <h3 class="text-2xl font-serif font-bold mb-4 text-orange-400">Philosophy</h3>
+                            <p class="mb-4 leading-relaxed">OmniScore is designed to be readable by humans and parseable by machines without redundancy. It separates the <em>Physics</em> (instrument defs) from the <em>Performance</em> (notes).</p>
+                            <div class="bg-white/10 p-4 rounded-lg backdrop-blur-sm border border-white/10">
+                                <span class="font-bold text-orange-300">The Analogy:</span><br>
+                                "What Mermaid is to charts, OmniScore is to music."
                             </div>
                         </div>
                         <div class="space-y-4">
-                            <h3 class="font-serif text-2xl font-bold text-stone-800">Designed for Humans</h3>
-                            <p class="text-stone-600">
-                                Unlike XML formats which are verbose and machine-centric, OmniScore uses a logic-first approach. 
-                                The chart illustrates the balance of the specification, focusing heavily on core musical logic and engine definitions rather than purely visual attributes.
-                            </p>
-                            <div class="flex gap-4 text-sm">
-                                <div class="px-4 py-2 bg-stone-200 rounded text-stone-700"><strong>Status:</strong> ${omniScoreData.metadata.status}</div>
-                                <div class="px-4 py-2 bg-stone-200 rounded text-stone-700"><strong>License:</strong> ${omniScoreData.metadata.license}</div>
+                            <h4 class="font-bold border-b border-white/20 pb-2">Architecture</h4>
+                            <div id="pipeline-container" class="flex justify-between text-xs text-center">
+                                <!-- JS Injected -->
                             </div>
                         </div>
                     </div>
                 </div>
             `;
-            
-            // Initialize Chart
-            setTimeout(() => {
-                const ctx = document.getElementById('featureChart').getContext('2d');
-                new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Core Logic', 'Instrument Physics', 'Engines (Tab/Perc)', 'Advanced/Meta'],
-                        datasets: [{
-                            data: [35, 25, 25, 15], // Conceptual weight based on readme sectioning
-                            backgroundColor: ['#ea580c', '#fb923c', '#fdba74', '#fed7aa'],
-                            borderWidth: 0
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { position: 'bottom', labels: { usePointStyle: true, font: { family: 'Inter' } } }
-                        }
-                    }
-                });
-            }, 0);
         }
 
-        function renderArchitecture(container) {
-            container.innerHTML = `
-                <div class="max-w-5xl mx-auto space-y-12 animate-fade-in">
-                    <!-- Intro -->
-                    <div class="mb-8">
-                        <h2 class="text-3xl font-serif font-bold text-stone-800 mb-2">System Architecture</h2>
-                        <p class="text-stone-600">Understanding how OmniScore processes text into music and handles logical space.</p>
-                    </div>
-
-                    <!-- Compilation Pipeline (Interactive) -->
-                    <div class="bg-white p-8 rounded-xl shadow-sm border border-stone-200">
-                        <h3 class="text-xl font-bold text-stone-800 mb-6">The Compilation Pipeline</h3>
-                        
-                        <!-- Stepper Visual -->
-                        <div class="flex flex-col md:flex-row justify-between items-center relative mb-8 gap-4 md:gap-0">
-                             ${omniScoreData.pipeline.map((step, index) => `
-                                <div class="relative z-10 flex flex-col items-center group cursor-pointer w-full md:w-auto step-connector" onclick="showPipelineDetail(${index})">
-                                    <div class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300
-                                        ${state.pipelineStep === index ? 'bg-orange-600 text-white shadow-lg scale-110' : 'bg-stone-200 text-stone-500 hover:bg-orange-200'}">
-                                        ${step.step}
-                                    </div>
-                                    <span class="mt-2 text-sm font-medium ${state.pipelineStep === index ? 'text-orange-700' : 'text-stone-500'}">${step.title}</span>
-                                </div>
-                             `).join('')}
-                        </div>
-
-                        <!-- Detail Box -->
-                        <div id="pipeline-detail" class="bg-stone-50 p-6 rounded-lg border-l-4 border-orange-500 transition-all">
-                            <h4 class="font-bold text-stone-800 mb-1" id="pipe-title">${omniScoreData.pipeline[0].title}</h4>
-                            <p class="text-stone-600" id="pipe-desc">${omniScoreData.pipeline[0].detail}</p>
+        function renderPipeline() {
+            const steps = [
+                {t: "Lexing", d: "Tokenize"}, 
+                {t: "Context", d: "Build Physics"}, 
+                {t: "Linearize", d: "Resolve Time"}, 
+                {t: "Render", d: "Output SVG"}
+            ];
+            const el = document.getElementById('pipeline-container');
+            if(el) {
+                el.innerHTML = steps.map((s, i) => `
+                    <div class="flex flex-col items-center gap-2 group cursor-default">
+                        <div class="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center font-bold shadow-lg ring-4 ring-white/10">${i+1}</div>
+                        <div class="opacity-80">
+                            <div class="font-bold">${s.t}</div>
+                            <div class="text-[10px] uppercase tracking-wide text-stone-400">${s.d}</div>
                         </div>
                     </div>
-
-                    <!-- Coordinate System (Visual) -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div class="bg-white p-8 rounded-xl shadow-sm border border-stone-200 flex flex-col justify-center">
-                            <h3 class="text-xl font-bold text-stone-800 mb-4">The Logical Grid (3D)</h3>
-                            <div class="relative w-full h-64 bg-stone-50 rounded-lg border border-dashed border-stone-300 flex items-center justify-center overflow-hidden">
-                                <!-- Z Axis -->
-                                <div class="absolute w-1 h-48 bg-blue-200 rounded"></div>
-                                <span class="absolute top-4 text-xs font-bold text-blue-400">Voices (Z)</span>
-                                
-                                <!-- Y Axis -->
-                                <div class="absolute w-1 h-32 bg-green-200 rotate-90 rounded"></div>
-                                <span class="absolute left-4 text-xs font-bold text-green-500">Source (Y)</span>
-
-                                <!-- X Axis -->
-                                <div class="absolute w-48 h-1 bg-orange-400 rounded shadow-sm z-10"></div>
-                                <span class="absolute right-4 bottom-1/2 translate-y-4 text-xs font-bold text-orange-600">Time (X)</span>
-                                
-                                <!-- Measure Blocks -->
-                                <div class="absolute w-12 h-8 border-2 border-orange-300 bg-orange-50/50 z-20 flex items-center justify-center text-[10px] text-orange-800 font-mono">M1</div>
-                                <div class="absolute w-12 h-8 border-2 border-orange-300 bg-orange-50/50 z-20 translate-x-16 flex items-center justify-center text-[10px] text-orange-800 font-mono">M2</div>
-                            </div>
-                        </div>
-                        <div class="flex flex-col justify-center space-y-4">
-                            <h3 class="font-serif text-2xl font-bold text-stone-800">The 3-Axis Model</h3>
-                            <p class="text-stone-600">OmniScore maps music onto a strict logical grid rather than a page layout.</p>
-                            <ul class="space-y-3">
-                                <li class="flex items-start gap-2">
-                                    <span class="font-bold text-orange-600">X-Axis (Time):</span>
-                                    <span class="text-sm text-stone-600">Linear absolute time, segmented by Measure blocks.</span>
-                                </li>
-                                <li class="flex items-start gap-2">
-                                    <span class="font-bold text-green-600">Y-Axis (Source):</span>
-                                    <span class="text-sm text-stone-600">Distinct logical threads defined by Staff IDs.</span>
-                                </li>
-                                <li class="flex items-start gap-2">
-                                    <span class="font-bold text-blue-600">Z-Axis (Polyphony):</span>
-                                    <span class="text-sm text-stone-600">Vertical layering within a single time/source coordinate (Voices).</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            `;
+                `).join('<div class="h-0.5 w-8 bg-white/20 self-start mt-5"></div>');
+            }
         }
 
-        window.showPipelineDetail = function(index) {
-            state.pipelineStep = index;
-            renderArchitecture(document.getElementById('content-area')); // Re-render to update classes
-        }
-
-        function renderSyntax(container) {
-            container.innerHTML = `
-                <div class="max-w-5xl mx-auto space-y-8 animate-fade-in">
-                    <div class="mb-6">
-                        <h2 class="text-3xl font-serif font-bold text-stone-800 mb-2">Lexical Structure & Syntax</h2>
-                        <p class="text-stone-600">Reference for data types, literals, and duration logic.</p>
-                    </div>
-
-                    <!-- Search Mock -->
-                    <div class="relative mb-6">
-                        <input type="text" placeholder="Filter data types..." oninput="filterSyntaxTable(this.value)" 
-                            class="w-full p-3 pl-10 rounded-lg border border-stone-300 focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white shadow-sm">
-                        <span class="absolute left-3 top-3.5 text-stone-400">🔍</span>
-                    </div>
-
-                    <!-- Data Types Table -->
-                    <div class="bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
-                        <table class="w-full text-left border-collapse">
-                            <thead class="bg-stone-100 text-stone-700 text-sm uppercase">
+        function renderTable(data) {
+            return `
+                <div class="overflow-x-auto border border-stone-200 rounded-lg">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-stone-100 text-stone-700 font-semibold">
+                            <tr>
+                                <th class="p-3">Type</th>
+                                <th class="p-3">Syntax</th>
+                                <th class="p-3">Example</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-stone-100 bg-white">
+                            ${data.map(r => `
                                 <tr>
-                                    <th class="p-4 font-semibold">Type</th>
-                                    <th class="p-4 font-semibold">Syntax</th>
-                                    <th class="p-4 font-semibold">Example</th>
-                                    <th class="p-4 font-semibold">Description</th>
+                                    <td class="p-3 font-medium">${r.type}</td>
+                                    <td class="p-3 font-mono text-orange-600 bg-stone-50">${r.syntax}</td>
+                                    <td class="p-3 font-mono text-stone-500">${r.ex}</td>
                                 </tr>
-                            </thead>
-                            <tbody id="syntax-tbody" class="text-stone-600 text-sm divide-y divide-stone-100">
-                                ${omniScoreData.syntax.literals.map(l => `
-                                    <tr class="hover:bg-orange-50 transition-colors">
-                                        <td class="p-4 font-bold text-stone-800">${l.type}</td>
-                                        <td class="p-4 font-mono text-orange-700 bg-stone-50 rounded">${l.syntax}</td>
-                                        <td class="p-4 font-mono">${l.ex}</td>
-                                        <td class="p-4">${l.desc}</td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    </div>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
 
-                    <!-- Duration Logic -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
-                            <h3 class="font-bold text-lg mb-4 text-stone-800">Duration Syntax</h3>
-                            <p class="text-sm text-stone-600 mb-4">OmniScore treats music as a linear stream. Sticky state applies here.</p>
-                            <div class="flex flex-wrap gap-2">
-                                ${omniScoreData.syntax.durations.map(d => `
-                                    <div class="flex items-center gap-2 bg-stone-50 px-3 py-2 rounded border border-stone-200">
-                                        <span class="text-xl">${d.symbol}</span>
-                                        <span class="font-mono text-sm text-orange-600 font-bold">${d.syntax}</span>
-                                        <span class="text-xs text-stone-500 uppercase">${d.logic}</span>
-                                    </div>
-                                `).join('')}
-                            </div>
+        function renderStickyVisualizer() {
+            return `
+                <div class="bg-orange-50 border border-orange-100 p-4 rounded-lg mt-4">
+                    <h4 class="text-sm font-bold text-orange-800 mb-3 flex items-center gap-2">
+                        <span>🔄</span> Sticky State Simulator
+                    </h4>
+                    <div class="grid grid-cols-4 gap-2 text-center text-xs font-mono">
+                        <div class="bg-white border border-orange-200 p-2 rounded shadow-sm">
+                            <div class="text-stone-400">Input</div>
+                            <div class="font-bold text-stone-800">c4:4</div>
                         </div>
-                        <div class="bg-stone-800 p-6 rounded-xl shadow-sm text-stone-300 font-mono text-sm">
-                            <div class="flex justify-between items-center mb-2 border-b border-stone-700 pb-2">
-                                <span class="text-orange-400 font-sans font-bold">Example Code</span>
-                            </div>
-                            <pre>${omniScoreData.example}</pre>
+                        <div class="bg-white border-dashed border-2 border-stone-300 p-2 rounded opacity-75">
+                            <div class="text-stone-400">Input</div>
+                            <div class="font-bold text-stone-800">d4</div>
+                            <div class="text-[10px] text-orange-500">(:4 implied)</div>
+                        </div>
+                        <div class="bg-white border-dashed border-2 border-stone-300 p-2 rounded opacity-75">
+                            <div class="text-stone-400">Input</div>
+                            <div class="font-bold text-stone-800">e4</div>
+                            <div class="text-[10px] text-orange-500">(:4 implied)</div>
+                        </div>
+                        <div class="bg-white border border-orange-200 p-2 rounded shadow-sm">
+                            <div class="text-stone-400">Input</div>
+                            <div class="font-bold text-stone-800">f4:8</div>
+                            <div class="text-[10px] text-green-600">(New State)</div>
                         </div>
                     </div>
                 </div>
             `;
         }
 
-        window.filterSyntaxTable = function(query) {
-            const rows = document.querySelectorAll('#syntax-tbody tr');
-            rows.forEach(row => {
-                const text = row.innerText.toLowerCase();
-                row.style.display = text.includes(query.toLowerCase()) ? '' : 'none';
+        function renderErrorChartHTML() {
+            return `
+                <div class="bg-white p-4 rounded-lg border border-stone-200">
+                    <h4 class="text-center font-bold text-stone-600 mb-4">Error Severity</h4>
+                    <div class="chart-container" style="height: 200px;">
+                        <canvas id="errorChart"></canvas>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderErrorChartJS() {
+            const ctx = document.getElementById('errorChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Fatal (Halts)', 'Error (Skips)', 'Warning (Continues)'],
+                    datasets: [{
+                        label: 'Count',
+                        data: [2, 2, 2],
+                        backgroundColor: ['#ef4444', '#f97316', '#eab308'],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+                }
             });
         }
 
-        function renderEngines(container) {
-            container.innerHTML = `
-                <div class="max-w-5xl mx-auto space-y-8 animate-fade-in">
-                    <div class="mb-6">
-                        <h2 class="text-3xl font-serif font-bold text-stone-800 mb-2">The Engines</h2>
-                        <p class="text-stone-600">OmniScore uses separate parsing engines depending on the staff <code>style</code> attribute.</p>
-                    </div>
-
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        ${omniScoreData.engines.map(eng => `
-                            <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 flex flex-col h-full hover:border-orange-300 transition-colors">
-                                <div class="mb-4">
-                                    <span class="text-xs font-bold text-orange-600 uppercase tracking-wide bg-orange-50 px-2 py-1 rounded">style=${eng.id}</span>
-                                </div>
-                                <h3 class="text-xl font-bold text-stone-800 mb-2">${eng.title}</h3>
-                                <p class="text-stone-600 text-sm mb-6 flex-grow">${eng.desc}</p>
-                                <ul class="space-y-2">
-                                    ${eng.features.map(f => `
-                                        <li class="flex items-center gap-2 text-sm text-stone-700">
-                                            <span class="text-orange-500">✓</span> ${f}
-                                        </li>
-                                    `).join('')}
-                                </ul>
-                            </div>
-                        `).join('')}
-                    </div>
-
-                    <!-- Interactive Definition Builder (Mock) -->
-                    <div class="bg-stone-50 p-8 rounded-xl border border-stone-200 mt-8">
-                        <h3 class="font-bold text-lg mb-4 text-stone-800">Definition Syntax Pattern</h3>
-                        <div class="flex flex-wrap items-center gap-2 font-mono text-lg md:text-xl p-4 bg-white rounded shadow-inner overflow-x-auto">
-                            <span class="text-purple-600 font-bold">def</span>
-                            <span class="text-blue-600">[ID]</span>
-                            <span class="text-green-600">"Label"</span>
-                            <span class="text-stone-500">style=</span><span class="text-orange-600">standard|tab|grid</span>
-                            <span class="text-stone-400 text-sm italic ml-4">...attributes...</span>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderReference(container) {
-            container.innerHTML = `
-                <div class="max-w-5xl mx-auto space-y-8 animate-fade-in">
-                    <div class="mb-6">
-                        <h2 class="text-3xl font-serif font-bold text-stone-800 mb-2">Reference & Errors</h2>
-                        <p class="text-stone-600">Diagnostic codes and library standards.</p>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <!-- Error Codes Table -->
-                        <div class="md:col-span-2 bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
-                            <div class="bg-stone-100 p-4 border-b border-stone-200 font-bold text-stone-700">Error Codes</div>
-                            <div class="overflow-x-auto">
-                                <table class="w-full text-left text-sm">
-                                    <thead class="bg-stone-50 text-stone-500">
-                                        <tr>
-                                            <th class="p-3">Code</th>
-                                            <th class="p-3">Level</th>
-                                            <th class="p-3">Name</th>
-                                            <th class="p-3">Description</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-stone-100">
-                                        ${omniScoreData.errors.map(e => `
-                                            <tr class="hover:bg-stone-50">
-                                                <td class="p-3 font-mono font-bold text-stone-800">${e.code}</td>
-                                                <td class="p-3"><span class="px-2 py-1 rounded text-xs font-bold 
-                                                    ${e.level === 'Fatal' ? 'bg-red-100 text-red-700' : 
-                                                      e.level === 'Error' ? 'bg-orange-100 text-orange-700' : 
-                                                      'bg-yellow-100 text-yellow-700'}">${e.level}</span></td>
-                                                <td class="p-3 font-mono text-xs">${e.name}</td>
-                                                <td class="p-3 text-stone-600">${e.desc}</td>
-                                            </tr>
-                                        `).join('')}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <!-- Error Chart -->
-                        <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 flex flex-col">
-                            <h3 class="font-bold text-stone-700 mb-4 text-center">Error Severity Distribution</h3>
-                            <div class="chart-container flex-grow">
-                                <canvas id="errorChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Standard Clefs Grid -->
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 mt-8">
-                        <h3 class="font-bold text-stone-800 mb-4">Standard Library: Clefs</h3>
-                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            ${['treble', 'bass', 'alto', 'tenor', 'perc', 'tab'].map(clef => `
-                                <div class="bg-stone-50 p-3 rounded text-center border border-stone-100">
-                                    <div class="font-mono text-orange-600 font-bold mb-1">${clef}</div>
-                                    <div class="text-xs text-stone-500">Standard Library</div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            // Initialize Error Chart
-            setTimeout(() => {
-                const ctx = document.getElementById('errorChart').getContext('2d');
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Fatal', 'Error', 'Warning'],
-                        datasets: [{
-                            label: 'Defined Codes',
-                            data: [2, 2, 2], // Count from omniScoreData.errors
-                            backgroundColor: ['#ef4444', '#f97316', '#eab308'],
-                            borderRadius: 4
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
-                        scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
-                    }
-                });
-            }, 0);
-        }
-
-        // Initialize App
+        // Start
         document.addEventListener('DOMContentLoaded', init);
 
     </script>
