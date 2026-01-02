@@ -1,0 +1,101 @@
+omniscore
+meta {
+  title: "Symphony No. Ω: The Dissipative Mind",
+  composer: "Virtual Maestro Node",
+  tempo: 60,
+  tension_gradient: 0.1,
+  thematic_density: 3, 
+  strict: true
+}
+
+group "The Friction Core" symbol=bracket {
+  def vln1 "Lyrical Friction I" style=standard keyswitch={ transcendence: 24, suffering: 25 }
+  def vln2 "Lyrical Friction II" style=standard
+  def vla  "Inner Entropy"      style=standard clef=alto
+}
+
+group "The Coda-Bringers" symbol=bracket {
+  def tpt  "The Herald"         style=standard transpose=+2
+  def tbn  "Gravity's Voice"    style=standard clef=bass
+}
+
+group "The Clocks of Fate" symbol=line {
+  def clk  "Metabolic Pulse"    style=grid map={ f: 0, s: 4 }
+}
+
+macro $FateSeed = { g4:4.ten f#4:8.stacc r:8 } 
+macro $Spark    = { (c5 d5 eb5):3/2 }           
+macro $Gravity  = { g2:1.cc(11, [20, 110]) }    
+
+%% --- PHASE 1 ---
+measure 1-10
+  vln1: g4+14:1.suffering.cc(1, [0, 80]).color("blue") |
+  vln2: r:1 |
+  vla:  eb4-12:1.cc(1, [0, 40]) |
+  clk:  f:4 r:4 f:4 r:4 |
+
+measure 11-20
+  meta { tension_gradient: 0.35 }
+  vln1: $FateSeed $FateSeed+2 |
+  vln2: r:2 $FateSeed-5 |
+  vla:  [c4 eb4 g4]:2.gliss [b3 d4 f#4]:2 |
+  clk:  f:8 f:8 f:8 f:8 s:4.acc |
+
+measure 21-40
+  vln1: $Spark $Spark+1 $Spark+2 $Spark+3.accent |
+  vln2: $Spark-12:1.gliss g4:1 |
+  tpt:  r:1 * 10 r:2 g4:2.cc(1, [0, 100]).ten |
+
+%% --- PHASE 2 ---
+measure 41-60
+  meta { tempo: 120, tension_gradient: 0.75 }
+  vln1: {
+    v1: g4:8.bm a b c5.bme d5:4.accent |
+    v2: eb4:4.stacc $FateSeed-12 |
+  }
+  tpt:  g4:4.ff $FateSeed.accent |
+  tbn:  c3:2.cc(11, [80, 127]) c2:2 |
+  clk:  s:16 s s s s:8.ghost k:8 |
+
+measure 61-90
+  vln1: $Spark.color("red") $FateSeed.stacc $Spark+7 |
+  vla:  $FateSeed-12.cc(1, 100) $FateSeed-12 |
+  tpt:  [g4 c5 e5]:2.arp.ff [ab4 db5 f5]:2.arp |
+  tbn:  $Gravity.color("red") |
+  clk:  (f:8 s:8 k:8):3/2 s:4.roll |
+
+measure 91-110
+  meta { tension_gradient: 0.95 }
+  vln1: c6:1.ff.gliss c5:1.gliss c4:1 |
+  tpt:  g5:4.marcato f#5:4 f5:4 e5:4 |
+  tbn:  [c2 g2 c3]:1.ffff.cc(1, 127) |
+  clk:  s:4.roll.cc(11, [0, 127]) s:4.roll s:4.roll s:4.roll |
+
+%% --- PHASE 3 ---
+measure 111-130
+  meta { tempo: 50, tension_gradient: 0.40 }
+  vln1: g4:1.transcendence.cc(11, [100, 20]) |
+  vln2: eb4:1.cc(11, [80, 10]) |
+  vla:  c4:1.cc(11, [60, 0]) |
+  tbn:  c2:1.pp |
+  clk:  f:1.ghost |
+
+measure 131-145
+  vln1: $FateSeed:1.ten.color("green") |
+  vln2: $FateSeed-12:1.ten |
+  tpt:  r:1 |
+  tbn:  r:1 |
+  clk:  r:1 |
+
+measure 146-149
+  meta { tension_gradient: 0.05 }
+  vln1: [c4 e4 g4 c5]:1.cc(11, [20, 120]).fermata |
+  vln2: [c3 g3 c4]:1.fermata |
+  tpt:  c5:1.ff.fermata |
+  tbn:  c2:1.ff.fermata |
+
+measure 150
+  meta { stretch: 2.0 }
+  vln1: [c4 e4 g4 c5]:1.p.head("diamond") |
+  clk:  f:1.head("x").color("black") |
+  |]
