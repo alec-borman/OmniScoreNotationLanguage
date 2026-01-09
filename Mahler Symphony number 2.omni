@@ -1,0 +1,3654 @@
+omniscore
+  %% 1. GLOBAL METADATA
+  meta {
+    title: "Totenfeier - Symphonische Dichtung",
+    composer: "Gustav Mahler",
+    tempo: 84, %% Maestoso
+    time: 4/4,
+    key: Cm
+  }
+
+  %% 2. INSTRUMENT DEFINITIONS
+  %% Based on Page 3 "Orchesterbesetzung" 
+  
+  group "Holzbläser (Woodwinds)" symbol=bracket {
+    group "Flöten" symbol=brace {
+      def fl1 "Flöte 1" style=standard
+      def fl2 "Flöte 2" style=standard
+      def fl3 "Flöte 3 (Picc)" style=standard
+    }
+    group "Oboen" symbol=brace {
+      def ob1 "Oboe 1" style=standard
+      def ob2 "Oboe 2" style=standard
+      def eh  "Englisch Horn" style=standard transpose=-7
+    }
+    group "Klarinetten" symbol=brace {
+      def cl1 "Klarinette 1 (B)" style=standard transpose=-2
+      def cl2 "Klarinette 2 (B)" style=standard transpose=-2
+      def bcl "Baßklarinette (B)" style=standard transpose=-14
+    }
+    group "Fagotte" symbol=brace {
+      def bn1 "Fagott 1" style=standard clef=bass
+      def bn2 "Fagott 2" style=standard clef=bass
+      def bn3 "Fagott 3" style=standard clef=bass
+    }
+  }
+
+  group "Blechbläser (Brass)" symbol=bracket {
+    group "Hörner" symbol=brace {
+      def hn1 "Horn 1 (F)" style=standard transpose=+7
+      def hn2 "Horn 2 (F)" style=standard transpose=+7
+      def hn3 "Horn 3 (F)" style=standard transpose=+7
+      def hn4 "Horn 4 (F)" style=standard transpose=+7
+    }
+    group "Trompeten" symbol=brace {
+      def tpt1 "Trompete 1 (F)" style=standard transpose=+7
+      def tpt2 "Trompete 2 (F)" style=standard transpose=+7
+      def tpt3 "Trompete 3 (F)" style=standard transpose=+7
+    }
+    group "Posaunen" symbol=brace {
+      def tbn1 "Posaune 1" style=standard clef=tenor
+      def tbn2 "Posaune 2" style=standard clef=tenor
+      def tbn3 "Posaune 3" style=standard clef=bass
+      def tba  "Kontrabaßtuba" style=standard clef=bass
+    }
+  }
+
+  group "Schlagwerk (Percussion)" symbol=line {
+    def timp "Pauken" style=standard clef=bass
+    def tri "Triangel" style=grid map={x:5} %% 1-line staff
+    def cym "Becken" style=grid map={x:5}
+    def tam "Tamtam" style=grid map={x:5}
+    def bd  "Gr. Trommel" style=grid map={x:5}
+  }
+
+  def hrp "Harfe" style=standard
+
+  group "Streicher (Strings)" symbol=bracket {
+    def vln1 "Violine I" style=standard
+    def vln2 "Violine II" style=standard
+    def vla  "Viola" style=standard clef=alto
+    def vc   "Violoncello" style=standard clef=bass
+    def db   "Kontrabaß" style=standard clef=bass transpose=-12
+  }
+
+  %% 3. MUSICAL FLOW
+  %% Page 4: Measures 1-5 [cite: 41-65]
+
+  measure 1
+    meta { time: 4/4, tempo: "Maestoso" }
+    
+    %% Upper strings enter with the shimmer [cite: 44, 47, 48]
+    vln1: g5:1.trem.ff
+    vln2: g4:1.trem.ff
+    vla:  c4:1.trem.ff
+    
+    %% The "schnell" run in low strings [cite: 57-62]
+    %% Note: Notation implies a fast run leading to the beat or filling it.
+    vc: {
+      v1: (c2:32 d eb f g ab b c3).text("schnell") g2:2.. |
+    }
+    db: {
+      v1: (c1:32 d eb f g ab b c2).text("schnell") g1:2.. |
+    }
+
+  measure 2
+    %% Tremolo continues
+    vln1: g5:1.trem
+    vln2: g4
+    vla:  c4
+    
+    %% Low strings hold the G [cite: 59, 64]
+    vc: g2:1.ff
+    db: g1
+
+  measure 3
+    vln1: g5:1.trem
+    vln2: g4
+    vla:  c4
+    vc:   g2
+    db:   g1
+
+  measure 4
+    vln1: g5:1.trem
+    vln2: g4
+    vla:  c4
+    vc:   g2
+    db:   g1
+
+  measure 5
+    %% End of Page 4, transition to Page 5
+    vln1: g5:1.trem
+    vln2: g4
+    vla:  c4
+    vc:   g2
+    db:   g1
+    %% --- PAGE 5 ---
+  
+  measure 6
+    %% Strings continue tremolo, but Low Strings begin the motive [cite: 75, 76]
+    vln1: g5:1.trem
+    vln2: g4
+    vla:  c4
+    
+    %% The driving triplet motif: Triplet 8ths + Quarter
+    vc: (c3:8 g2 c3):3 c3:4 (c3 g2 c3):3 c3
+    db: (c2:8 g1 c2):3 c2:4 (c2 g1 c2):3 c2
+
+  measure 7
+    vln1: g5:1.trem
+    vln2: g4
+    vla:  c4
+    vc:   (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+    db:   (c2 g1 c2):3 c2 (c2 g1 c2):3 c2
+
+  measure 8
+    vln1: g5:1.trem
+    vln2: g4
+    vla:  c4
+    vc:   (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+    db:   (c2 g1 c2):3 c2 (c2 g1 c2):3 c2
+
+  measure 9
+    vln1: g5:1.trem
+    vln2: g4
+    vla:  c4
+    vc:   (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+    db:   (c2 g1 c2):3 c2 (c2 g1 c2):3 c2
+
+  measure 10
+    meta { mark: "1" } %% Rehearsal Mark 1 [cite: 79]
+    
+    %% Bassoons enter "a 3" (Unison) [cite: 78, 80]
+    %% Notation: Dotted quarter G, 16th F, Quarter Eb, Quarter D
+    bn1: g3:4..ffp f3:16 eb3:4 d3:4
+    bn2: g3:4..ffp f3:16 eb3:4 d3:4
+    bn3: g3:4..ffp f3:16 eb3:4 d3:4
+    
+    vln1: g5:1.trem
+    vln2: g4
+    vla:  c4
+    vc:   (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+    db:   (c2 g1 c2):3 c2 (c2 g1 c2):3 c2
+
+  measure 11
+    %% Bassoons split: a2 on top, 3rd on bottom [cite: 83]
+    bn1: c3:1.ffp
+    bn2: c3:1.ffp
+    bn3: c2:1.ffp
+    
+    %% Dynamics change ffp [cite: 85, 87]
+    vln1: g5:1.trem.ffp
+    vln2: g4.ffp
+    vla:  c4.ffp
+    
+    %% Low strings continue
+    vc:   (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+    db:   (c2 g1 c2):3 c2 (c2 g1 c2):3 c2
+
+  measure 12
+    bn1: r:1
+    bn2: r
+    bn3: r
+    
+    vln1: g5:1.trem.p.text("sempre") %% p sempre 
+    vln2: g4.p.text("sempre")
+    vla:  c4.p.text("sempre")
+    
+    vc:   (c3 g2 c3):3.mf c3 (c3 g2 c3):3 c3 %% mf enters here [cite: 117]
+    db:   (c2 g1 c2):3.mf c2 (c2 g1 c2):3 c2
+
+  measure 13
+    vln1: g5:1.trem
+    vln2: g4
+    vla:  c4
+    vc:   (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+    db:   (c2 g1 c2):3 c2 (c2 g1 c2):3 c2
+
+  measure 14
+    vln1: g5:1.trem
+    vln2: g4
+    vla:  c4
+    vc:   (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+    db:   (c2 g1 c2):3 c2 (c2 g1 c2):3 c2
+
+  measure 15
+    vln1: g5:1.trem
+    vln2: g4
+    vla:  c4
+    vc:   (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+    db:   (c2 g1 c2):3 c2 (c2 g1 c2):3 c2
+
+  measure 16
+    vln1: g5:1.trem
+    vln2: g4
+    vla:  c4
+    vc:   (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+    db:   (c2 g1 c2):3 c2 (c2 g1 c2):3 c2
+
+  measure 17
+    meta { mark: "2" } %% Rehearsal Mark 2 [cite: 68]
+    
+    %% Woodwinds Enter [cite: 90-94]
+    ob1: g5:1.f.a2 %% "a 2" indicated
+    ob2: g5:1.f
+    eh:  c5:1.f    %% Transposed pitch (written G, sounds C)
+    cl1: c5:1.f.a2 %% "a 2" indicated (written D, sounds C)
+    cl2: c5:1.f
+    bn1: r:1
+    bn2: r
+    bn3: r
+    
+    %% Horns Enter "a 2 gestopft" (Stopped) 
+    hn1: r:1
+    hn2: c4:2.pp.gestopft~ c4:2 %% Syncopated entry? Checking image...
+    hn3: r:1
+    hn4: c4:2.pp.gestopft~ c4:2
+    %% Note: Image shows Horns 2/4 entering on beat 2? Or tied over?
+    %% Looking at, there is a tie coming from nowhere or a long note.
+    %% Let's assume whole note tied for now based on context.
+    
+    vln1: g5:1.trem.pp
+    vln2: g4.pp
+    vla:  c4.pp
+    
+    %% Low strings drop to p [cite: 108]
+    vc:   (c3:8.p g2 c3):3 c3:4 (c3 g2 c3):3 c3
+    db:   (c2:8.p g1 c2):3 c2:4 (c2 g1 c2):3 c2
+
+  measure 18
+    ob1: g5:1
+    ob2: g5
+    eh:  c5
+    cl1: c5
+    cl2: c5
+    
+    %% Horns shift
+    hn2: c4:1.fp
+    hn4: c4.fp
+    
+    vln1: g5:1.trem
+    vln2: g4
+    vla:  c4
+    vc:   (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+    db:   (c2 g1 c2):3 c2 (c2 g1 c2):3 c2
+
+  measure 19
+    ob1: g5:1
+    ob2: g5
+    eh:  c5
+    cl1: c5
+    cl2: c5
+    
+    hn2: c4:1
+    hn4: c4
+    
+    vln1: g5:1.trem
+    vln2: g4
+    vla:  c4
+    vc:   (c3 g2 c3):3.pp c3 (c3 g2 c3):3 c3 %% Drop to pp 
+    db:   (c2 g1 c2):3.pp c2 (c2 g1 c2):3 c2
+
+  measure 20
+    ob1: g5:1
+    ob2: g5
+    eh:  c5
+    cl1: c5
+    cl2: c5
+    
+    hn2: c4:1
+    hn4: c4
+    
+    vln1: g5:1.trem
+    vln2: g4
+    vla:  c4
+    vc:   (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+    db:   (c2 g1 c2):3 c2 (c2 g1 c2):3 c2
+
+  measure 21
+    ob1: g5:1
+    ob2: g5
+    eh:  c5
+    cl1: c5
+    cl2: c5
+    
+    hn2: c4:1
+    hn4: c4
+    
+    vln1: g5:1.trem
+    vln2: g4
+    vla:  c4
+    vc:   (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+    db:   (c2 g1 c2):3 c2 (c2 g1 c2):3 c2
+
+  %% --- PAGE 6 (Measures 22-27) ---
+  
+  measure 22
+    [cite_start]%% Woodwinds enter with independent lines [cite: 118-122]
+    fl1: { v1: r:2 c6:4.p d6:8 | v2: r:1 } %% Flutes enter
+    fl2: r:1
+    fl3: r:1
+    
+    [cite_start]ob1: c5:4.fp.a2 d5:8 c5:4 b4:4 %% Oboes a2 [cite: 120]
+    ob2: c5.fp d5 c5 b4 
+    
+    [cite_start]cl1: g4:4.fp.a2 a4:8 g4:4 f4:4 %% Clarinets a2 [cite: 136]
+    cl2: g4.fp a4 g4 f4
+    
+    [cite_start]%% Bassoons enter a2 [cite: 141]
+    bn1: c3:4.a2 d3 e3 f3
+    bn2: c3.a2 d3 e3 f3
+    bn3: r:1
+    
+    %% Horns syncopated entry continues
+    hn1: r:1
+    hn2: c4:2.fp c4:2 
+    hn4: c4:2.fp c4:2
+    
+    [cite_start]vln1: g5:1.f [cite: 150]
+    vln2: g4.f
+    vla:  c4.f
+    vc:   (c3:8 g2 c3):3.f c3 (c3 g2 c3):3 c3 %% Dynamics increase to f
+    db:   (c2:8 g1 c2):3.f c2 (c2 g1 c2):3 c2
+
+  measure 23
+    fl1: eb6:2 f6:4 g6
+    ob1: c5:2.a2 d5:4 eb5
+    cl1: g4:2.a2 ab4:4 bb4
+    bn1: g3:2.a2 f3:4 eb3
+    
+    hn2: c4:1.p
+    
+    vln1: g5:1
+    vln2: g4
+    vla:  c4
+    vc:   (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+    db:   (c2 g1 c2):3 c2 (c2 g1 c2):3 c2
+
+  measure 24
+    fl1: ab6:1.mf
+    ob1: f5:1.mf
+    cl1: c5:1.mf
+    bn1: d3:1.mf
+    
+    hn2: c4:1
+    
+    vln1: g5:1
+    vln2: g4
+    vla:  c4
+    vc:   (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+    db:   (c2 g1 c2):3 c2 (c2 g1 c2):3 c2
+
+  measure 25
+    [cite_start]%% Trumpet 1 enters [cite: 149]
+    tpt1: g4:1.p
+    
+    vln1: g5:1.f
+    vc:   (c3 g2 c3):3.f c3 (c3 g2 c3):3 c3
+
+  measure 26
+    tpt1: r:1
+    vln1: g5:1
+    vc:   (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  measure 27
+    tpt1: g4:1.p
+    vln1: g5:1
+    vc:   (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  %% --- PAGE 7 (Measures 28-33) ---
+
+  measure 28
+    [cite_start]%% Woodwind motive develops [cite: 162-175]
+    fl1: c6:4.fp.espr d6:8 c6:4 b5:4
+    ob1: g5:4.fp.espr a5:8 g5:4 f5:4
+    cl1: e5:4.fp.espr f5:8 e5:4 d5:4
+    
+    [cite_start]hn1: g4:1.mf.text("[offen]") %% Horn 1 enters open [cite: 182]
+    
+    vln1: c6:1.p.espr
+    vln2: c5:1.p.espr
+    [cite_start]vc:   (c3 g2 c3):3.ff c3 (c3 g2 c3):3 c3 %% Cellos ff [cite: 201]
+    db:   (c2 g1 c2):3.ff c2 (c2 g1 c2):3 c2
+
+  measure 29
+    fl1: c6:1
+    ob1: g5
+    hn1: g4
+    vc:   (c3 g2 c3):3.ff c3 (c3 g2 c3):3 c3
+
+  measure 30
+    [cite_start]%% Strings marked "hervortretend" (bringing out) [cite: 189]
+    vln1: g5:4.ff.text("hervortretend") f5 e5 d5
+    vln2: g4:4.ff.text("hervortretend") f4 e4 d4
+    vla:  c4:1.f
+    vc:   c3:1.ff.text("sempre")
+    db:   c2:1.ff.text("sempre")
+
+  measure 31
+    vln1: c5:1.ff
+    vln2: c4:1.ff
+    
+  measure 32
+    vln1: g5:4 f5 e5 d5
+    vln2: g4:4 f4 e4 d4
+
+  measure 33
+    vln1: c5:1.ff
+    vln2: c4:1.ff
+    %% Crescendo into Rehearsal 3
+
+  %% --- PAGE 8 (Measures 34-40) ---
+
+  measure 34
+    [cite_start]meta { mark: "3" } %% Rehearsal Mark 3 [cite: 209]
+    
+    [cite_start]%% Tutti ff entry with triplets [cite: 239-248]
+    fl1: (c6:8 d6 e6):3.ff f6:4 (e6:8 d6 c6):3 d6:4
+    fl2: (c6 d6 e6):3.ff f6 (e6 d6 c6):3 d6
+    fl3: (c6 d6 e6):3.ff f6 (e6 d6 c6):3 d6
+    
+    ob1: (g5 a5 b5):3.ff c6 (b5 a5 g5):3 a5
+    
+    %% Brass enters heavily
+    hn1: g4:1.ff
+    hn3: g4.ff
+    tpt1: c5:1.ff
+    
+    timp: c2:1.tr.ff %% Timpani roll
+    
+    vln1: (c6 d6 e6):3.ff f6 (e6 d6 c6):3 d6
+    vc:   c3:1.ff
+    db:   c2:1.ff
+
+  measure 35
+    fl1: e6:1.ff
+    ob1: b5.ff
+    vln1: e6.ff
+
+  measure 36
+    %% Continuation of triplet patterns
+    fl1: (c6 d6 e6):3 f6 (e6 d6 c6):3 d6
+    vln1: (c6 d6 e6):3 f6 (e6 d6 c6):3 d6
+
+  measure 37
+    fl1: e6:1
+    vln1: e6
+
+  measure 38
+    %% Pattern repeats
+    fl1: (c6 d6 e6):3 f6 (e6 d6 c6):3 d6
+    vln1: (c6 d6 e6):3 f6 (e6 d6 c6):3 d6
+
+  measure 39
+    fl1: e6:1
+    vln1: e6
+
+  measure 40
+    %% Build up to climax
+    meta { tempo: [84, 90], curve: linear } %% Slight accel implied by momentum
+    fl1: (e6 f6 g6):3 a6 (g6 f6 e6):3 f6
+    vln1: (e6 f6 g6):3 a6 (g6 f6 e6):3 f6
+
+  %% --- PAGE 9 (Measures 41-46) ---
+
+  measure 41
+    [cite_start]%% Climax fff [cite: 251, 266, 285]
+    
+    fl1: g6:1.fff
+    fl2: g6.fff
+    fl3: g6.fff
+    
+    ob1: c6:1.fff
+    cl1: c6:1.fff
+    
+    [cite_start]%% Percussion Crash [cite: 281-282]
+    cym: x:1.f
+    bd:  x:1.f
+    timp: c2:1.tr.fff
+    
+    hn1: c5:1.fff
+    tpt1: c5:1.f
+    tbn1: c4:1.f
+    tba:  c2:1.f
+    
+    vln1: c6:1.fff
+    vln2: c5:1.fff
+    vla:  c4:1.fff
+    vc:   c3:1.fff
+    db:   c2:1.fff
+
+  measure 42
+    %% Sustain fff
+    fl1: g6:1
+    vln1: c6
+
+  measure 43
+    fl1: g6:1
+    vln1: c6
+
+  measure 44
+    %% Diminuendo begins in some voices
+    tpt1: c5:1.pp
+    tbn1: c4:1.pp
+    
+    vln1: c6:1.dim
+    vc:   (c3 g2 c3):3.ff.dim c3 (c3 g2 c3):3 c3
+
+  measure 45
+    tpt1: c5:1.pp
+    vln1: c6.p
+    vc:   (c3 g2 c3):3.p c3 (c3 g2 c3):3 c3
+
+  measure 46
+    %% Transition to quieter section
+    fl1: r:1
+    vln1: c6:1.pp
+    vc:   (c3 g2 c3):3.pp c3 (c3 g2 c3):3 c3
+
+  %% --- PAGE 10 (Measures 47-58) ---
+
+  measure 47
+    [cite_start]meta { mark: "4" } %% Rehearsal Mark 4 [cite: 314]
+    [cite_start]meta { text: "Nachgeben" } %% [cite: 316]
+    
+    %% Texture thins out significantly
+    fl1: r:1
+    ob1: r:1
+    
+    %% Horns holding pedal points
+    hn1: g4:1.pp
+    hn2: e4:1.pp
+    
+    vln1: c6:1.pp
+    vln2: g4:1.pp
+    vla:  e4:1.pp
+    
+    %% Cellos/Bass rhythm continues softly
+    vc: (c3:8 g2 c3):3.pp c3:4 (c3 g2 c3):3 c3
+    db: (c2:8 g1 c2):3.pp c2:4 (c2 g1 c2):3 c2
+
+  measure 48
+    hn1: g4:1
+    hn2: e4
+    vln1: c6
+    vc: (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  measure 49
+    hn1: g4
+    vln1: c6
+    vc: (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  measure 50
+    [cite_start]%% Strings crescendo [cite: 359-363]
+    vln1: c6:1.cresc
+    vln2: g4.cresc
+    vla:  e4.cresc
+    vc:   (c3 g2 c3):3.cresc c3 (c3 g2 c3):3 c3
+
+  measure 51
+    vln1: c6
+    vc: (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  measure 52
+    vln1: c6
+    vc: (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  measure 53
+    %% Build up slightly
+    bn1: c3:1.pp.a2
+    [cite_start]hn1: g4:1.mf [cite: 379]
+    vln1: c6.f
+    vc:   (c3 g2 c3):3.f c3 (c3 g2 c3):3 c3
+
+  measure 54
+    [cite_start]hn1: g4.poco_cresc [cite: 381]
+    vln1: c6
+
+  measure 55
+    hn1: g4
+    vln1: c6
+
+  measure 56
+    hn1: g4
+    vln1: c6
+
+  measure 57
+    hn1: g4.f
+    vln1: c6
+
+  measure 58
+    [cite_start]%% Sudden drop to ppp [cite: 378]
+    tbn1: c4:2.f r:2
+    timp: c2:4.f r:4 r:2
+    
+    vln1: c6:1.ppp
+    vln2: g4:1.ppp
+    vla:  e4:1.ppp
+    vc:   c3:1.ppp
+    db:   c2:1.ppp
+
+  %% --- PAGE 11 (Measures 59-69) ---
+
+  measure 59
+    [cite_start]meta { mark: "5" } %% Rehearsal Mark 5 [cite: 395]
+    
+    %% Dramatic interruptions
+    [cite_start]vln1: r:8 c6:8.fff~ c6:4 r:2 [cite: 387]
+    vln2: r:8 g5:8.fff~ g5:4 r:2
+    vla:  r:8 e5:8.fff~ e5:4 r:2
+    
+    vc:   c3:1.pp
+    db:   c2:1.pp
+
+  measure 60
+    vln1: r:1
+    vc:   c3
+    db:   c2
+
+  measure 61
+    vln1: r:8 c6:8.fff~ c6:4 r:2
+    vc:   c3
+    db:   c2
+
+  measure 62
+    vln1: r:1
+    vc:   c3
+    db:   c2
+
+  measure 63
+    vln1: r:8 c6:8.fff~ c6:4 r:2
+    vc:   c3
+    db:   c2
+
+  measure 64
+    %% Low strings crescendo
+    vc: c3:1.ff
+    db: c2:1.ff
+
+  measure 65
+    [cite_start]%% Winds enter "a 2" f [cite: 397-408]
+    fl1: g5:1.f.a2
+    ob1: g5.f.a2
+    cl1: g5.f.a2
+    
+    vln1: g5:1.f
+    [cite_start]vc:   (c3:8 g2 c3):3.ff.dim c3:4 (c3 g2 c3):3 c3 [cite: 416]
+    db:   (c2:8 g1 c2):3.ff.dim c2:4 (c2 g1 c2):3 c2
+
+  measure 66
+    fl1: g5:1
+    ob1: g5
+    vc:   (c3 g2 c3):3.p c3 (c3 g2 c3):3 c3
+
+  measure 67
+    fl1: g5:1
+    vc:   (c3 g2 c3):3.pp c3 (c3 g2 c3):3 c3
+
+  measure 68
+    [cite_start]%% Triplets in winds now [cite: 399]
+    fl1: (g5:8 a5 b5):3 c6 (b5 a5 g5):3 a5
+    ob1: (g5 a5 b5):3 c6 (b5 a5 g5):3 a5
+    
+    vc: c3:1.pp
+    db: c2:1.pp
+
+  measure 69
+    fl1: g5:1
+    ob1: g5
+    vc: c3
+    db: c2
+
+  measure 70
+    %% Transition to Page 12 logic (next chunk)
+    fl1: g5:1
+    vc: c3
+    %% --- PAGE 9 (Measures 70-75) ---
+  [cite_start]%% Source: [cite: 436-492]
+
+  measure 70
+    [cite_start]%% Woodwinds: Intense triplet figures continue a2 [cite: 446, 447]
+    fl1: (c6:8 d6 e6):3.f f6:4 (e6:8 d6 c6):3 d6:4
+    ob1: (g5:8 a5 b5):3.f c6:4 (b5:8 a5 g5):3 a5:4
+    cl1: (e5:8 f5 g5):3.f a5:4 (g5:8 f5 e5):3 f5:4
+    
+    [cite_start]%% Bassoons & Low Strings: Strong downbeats [cite: 449, 450]
+    bn1: c3:1.f.a2
+    vc:  c3:1.ff
+    db:  c2:1.ff
+
+    [cite_start]%% Brass: Horns sustained, Trumpets enter p [cite: 453, 464]
+    hn1: g4:1.f.a2
+    hn3: e4:1.f.a2
+    tpt1: c5:1.p
+    tpt2: g4:1.p
+    tbn1: c4:1.p
+    
+    %% Strings: High strings have syncopated figure
+    vln1: r:8 c6:8.ff d6:4 r:8 e6:8.ff f6:4
+    vln2: r:8 g5:8.ff a5:4 r:8 b5:8.ff c6:4
+    vla:  r:8 e5:8.ff f5:4 r:8 g5:8.ff a5:4
+
+  measure 71
+    fl1: (c6 d6 e6):3 f6 (e6 d6 c6):3 d6
+    ob1: (g5 a5 b5):3 c6 (b5 a5 g5):3 a5
+    
+    vln1: r:8 c6:8.ff d6:4 r:8 e6:8 f6:4
+    vc:   c3:1.ff
+    db:   c2:1.ff
+
+  measure 72
+    [cite_start]%% Crescendo in brass [cite: 468]
+    tpt1: c5:1.cresc
+    tbn1: c4:1.cresc
+    
+    [cite_start]vln1: (g6 f6 e6):3.fff d6:4 (c6 b5 a5):3 g5:4 %% Triplet runs begin in strings [cite: 475]
+    vln2: (e6 d6 c6):3.fff b5:4 (a5 g5 f5):3 e5:4
+
+  measure 73
+    %% Tutti fff intensity
+    fl1: g6:1.ff
+    ob1: c6:1.ff
+    
+    hn1: g4:1.ff
+    tpt1: e5:1.f
+    
+    vln1: c6:1.ff.tr
+    vln2: g5:1.ff.tr
+    vla:  e5:1.ff.tr
+    vc:   c3:1.fff
+    db:   c2:1.fff
+
+  measure 74
+    [cite_start]%% Sudden drop to p in brass [cite: 489]
+    tpt1: c5:1.p
+    tbn1: c4:1.p
+    
+    vln1: c6:1.ffp
+    vln2: g5:1.ffp
+    
+    vc: c3:1.p
+    db: c2:1.p
+
+  measure 75
+    %% Swell back up
+    tpt1: c5:1.cresc
+    vln1: c6:1.cresc
+    vc:   c3:1.cresc
+
+  %% --- PAGE 10 (Measures 76-80) ---
+  [cite_start]%% Source: [cite: 493-547]
+
+  measure 76
+    [cite_start]%% Dramatic texture split: High strings pp, Low strings ff [cite: 523, 529]
+    fl1: (c6:8 d6 e6):3.f.a2 f6:4 (e6 d6 c6):3 d6
+    ob1: (g5 a5 b5):3.f.a2 c6 (b5 a5 g5):3 a5
+    
+    %% Violins sudden pp tremolo
+    vln1: g5:1.trem.pp
+    vln2: g4:1.trem.pp
+    
+    %% Low strings/winds heavy ff
+    bn1: c3:1.ff.a2
+    vc:  c3:1.ff
+    db:  c2:1.ff
+    
+    %% Horns/Trumpets fanfare figures
+    hn1: g4:4.f.a2 r:4 g4:2
+    tpt1: c5:4.f r:4 c5:2
+
+  measure 77
+    fl1: (c6 d6 e6):3 f6 (e6 d6 c6):3 d6
+    vln1: g5:1.trem
+    vc:   c3:1.ff
+    
+    hn1: g4:4 r:4 g4:2
+
+  measure 78
+    %% Climax of this phrase
+    fl1: e6:1.ff
+    ob1: b5:1.ff
+    
+    vln1: g5:1.trem.cresc
+    vc:   c3:1.ff
+    
+    tpt1: e5:1.ff.a2
+
+  measure 79
+    fl1: c6:1.ff
+    vln1: c6:1.ff
+    vc:   c3:1.ff
+    [cite_start]timp: c2:1.tr.fff [cite: 520]
+
+  measure 80
+    %% Cutoff/Transition
+    fl1: g5:1.ff
+    vln1: g5:1.ffp
+    vc:   g2:1.ffp
+    timp: g2:1.ff
+
+  %% --- PAGE 11 (Measures 81-85) ---
+  [cite_start]%% Source: [cite: 548-600]
+
+  measure 81
+    [cite_start]%% Sustain with dynamic swells [cite: 585-588]
+    fl1: c6:1.f.dim
+    ob1: g5:1.f.dim
+    
+    %% Strings: f -> pp
+    vln1: c6:1.f.dim
+    vln2: g5:1.f.dim
+    vla:  e5:1.f.dim
+    
+    %% Low strings punch
+    vc: c3:1.f
+    db: c2:1.f
+
+  measure 82
+    fl1: c6:1.pp
+    ob1: g5:1.pp
+    vln1: c6:1.pp
+    vc:   c3:1.pp
+
+  measure 83
+    %% Swell again
+    fl1: c6:1.cresc
+    vln1: c6:1.cresc
+    
+    [cite_start]%% Horns re-enter [cite: 569]
+    hn1: g4:1.f.a2
+
+  measure 84
+    fl1: e6:1.ff
+    vln1: e6:1.ff
+    
+    [cite_start]%% Trumpets/Trombones join [cite: 573, 575]
+    tpt1: c5:1.ff.a2
+    tbn1: c4:1.ff
+
+  measure 85
+    [cite_start]%% Full Tutti ff [cite: 598, 600]
+    fl1: g6:1.ff
+    ob1: c6:1.ff
+    cl1: c6:1.ff
+    
+    hn1: g4:1.ff
+    tpt1: e5:1.ff
+    
+    vln1: g6:1.ff
+    vln2: e6:1.ff
+    vla:  c5:1.ff
+    vc:   c3:1.ff
+    db:   c2:1.ff
+    %% --- PAGE 12 (Measures 86-91) ---
+  [cite_start]%% Source: [cite: 601-674]
+
+  measure 86
+    meta { mark: "6" }
+    [cite_start]meta { text: "Höchste Kraft" } %% Highest Power [cite: 631]
+    
+    %% Woodwinds: Sustained chords, building intensity
+    fl1: g6:1.f.a2
+    ob1: g5:1.f.a2
+    cl1: g5:1.f.a2
+    bn1: c3:1.f.a2
+    
+    %% Brass: Sustained chords
+    hn1: g4:1.f.a2
+    hn3: e4:1.f.a2
+    tpt1: c5:1.f.a2
+    tbn1: c4:1.ff
+    tba:  c2:1.ff
+    
+    %% Strings: Start pp and crescendo continuously to fff over next bars
+    [cite_start]%% Note: "pp cresc . . . al fff sempre ff" [cite: 656, 661]
+    vln1: c6:1.trem.pp.cresc
+    vln2: g5:1.trem.pp.cresc
+    vla:  e5:1.trem.pp.cresc
+    vc:   c3:1.trem.pp.cresc
+    [cite_start]db:   c2:1.trem.fff %% Basses seem to start louder or swell immediately [cite: 671]
+
+  measure 87
+    %% Winds increase intensity
+    fl1: g6:1.ff
+    vln1: c6.trem.cresc
+
+  measure 88
+    fl1: g6:1.ff
+    vln1: c6.trem.cresc
+
+  measure 89
+    fl1: g6:1.fff
+    tpt1: c5:1.fff
+    vln1: c6.trem.cresc
+
+  measure 90
+    %% Full saturation
+    cym: x:1.fff
+    bd:  x:1.fff
+    timp: c2:1.tr.fff
+    vln1: c6.trem.fff
+
+  measure 91
+    %% Holding the climax
+    fl1: g6:1
+    vln1: c6.trem
+
+  %% --- PAGE 13 (Measures 92-96) ---
+  [cite_start]%% Source: [cite: 675-744]
+
+  measure 92
+    [cite_start]%% Diminuendo begins in winds [cite: 679, 682]
+    fl1: g6:1.f.dim
+    ob1: g5.f.dim
+    cl1: g5.f.dim
+    
+    [cite_start]%% Strings: Violas/Cellos bring out the theme "hervortretend" [cite: 729]
+    vln1: c6:1.pp.get %% Divisi, soft background
+    vln2: g5:1.pp
+    vla:  c4:4.ff.text("hervortretend") d4 eb4 f4 %% Theme emerges
+    vc:   c3:4.ff.text("hervortretend") d3 eb3 f3
+    db:   c2:1.p
+
+  measure 93
+    fl1: g6:1.mf
+    vla:  g4:2.dim f4:4 eb4
+    vc:   g3:2.dim f3:4 eb3
+
+  measure 94
+    fl1: g6:1.p
+    vla:  d4:1.p
+    vc:   d3:1.p
+
+  measure 95
+    [cite_start]%% Texture thins to ppp [cite: 734]
+    fl1: g6:1.ppp
+    vln1: c6.ppp
+    vla:  c4.pp
+
+  measure 96
+    fl1: r:1
+    vla: r:1
+
+  %% --- PAGE 14 (Measures 97-111) ---
+  [cite_start]%% Source: [cite: 745-788]
+
+  measure 97
+    [cite_start]%% Flute Solo [cite: 747]
+    fl1: c6:1.p
+    hn1: g4:1.pp
+    vln1: c6:1.pp
+    vc:   c3:1.pp
+
+  measure 98
+    fl1: r:1
+    hn1: g4
+
+  measure 99
+    hn1: g4
+
+  measure 100
+    hn1: g4
+
+  measure 101
+    hn1: g4:2 r:2
+
+  measure 102
+    [cite_start]%% Oboe takes over [cite: 759]
+    ob1: c5:1.p.a2
+    hn1: c4:1.pp.a2
+    vc:  c3:1.pp
+
+  measure 103
+    ob1: d5:1
+    hn1: c4
+
+  measure 104
+    ob1: eb5:1
+    hn1: c4
+
+  measure 105
+    ob1: d5:1
+    hn1: c4
+
+  measure 106
+    ob1: c5:1
+    hn1: c4
+
+  measure 107
+    [cite_start]meta { mark: "7" } [cite: 771]
+    
+    ob1: c5:1.p.a2
+    hn1: c4:1.pp
+    tpt1: c4:1.pp
+    tbn1: c3:1.pp
+    vc:   c3:1.pp
+
+  measure 108
+    ob1: c5
+    hn1: c4
+
+  measure 109
+    ob1: c5
+    hn1: c4
+
+  measure 110
+    ob1: c5
+    hn1: c4
+
+  measure 111
+    %% Diminuendo to ppp
+    ob1: c5.ppp
+    hn1: c4.ppp
+    tpt1: c4.ppp
+    tbn1: c3.ppp
+
+  %% --- PAGE 15 (Measures 112-124) ---
+  [cite_start]%% Source: [cite: 789-839]
+
+  measure 112
+    [cite_start]meta { text: "Etwas zurückhaltend" } %% Somewhat holding back [cite: 799]
+    
+    ob1: c5:1.ppp
+    hn1: c4:1.ppp
+    
+    %% Strings Divisi "get." (getheilt) [cite_start][cite: 803]
+    vln1: { v1: c6:1.ppp | v2: g5:1.ppp }
+    vln2: { v1: eb5:1.ppp | v2: c5:1.ppp }
+    vla:  { v1: g4:1.ppp | v2: eb4:1.ppp }
+    vc:   { v1: c4:1.ppp | v2: g3:1.ppp }
+    db:   c2:1.ppp
+
+  measure 113
+    vln1: { v1: c6 | v2: g5 }
+    vln2: { v1: eb5 | v2: c5 }
+
+  measure 114
+    vln1: { v1: c6 | v2: g5 }
+
+  measure 115
+    vln1: { v1: c6 | v2: g5 }
+
+  measure 116
+    vln1: { v1: c6 | v2: g5 }
+
+  measure 117
+    %% Ritardando into next section
+    vln1: { v1: c6 | v2: g5 }
+
+  measure 118
+    [cite_start]meta { text: "Sehr zurückhaltend" } %% Very holding back [cite: 815]
+    
+    [cite_start]%% Harp Enters [cite: 813]
+    hrp: [c4 e4 g4 c5]:1.ppp.arp
+    
+    %% Horn solo pp
+    hn1: c4:4.pp d4:4 eb4:2
+    
+    %% Strings continue divisi, ppp
+    vln1: { v1: c6:1.ppp | v2: g5:1.ppp }
+    vln2: { v1: eb5:1.ppp | v2: c5:1.ppp }
+    vla:  c4:1.ppp
+    vc:   c3:1.ppp
+    db:   c2:1.ppp
+
+  measure 119
+    hrp: r:1
+    hn1: d4:4 c4:4 b3:2
+    vln1: { v1: c6 | v2: g5 }
+
+  measure 120
+    hrp: r:1
+    hn1: c4:1
+    vln1: { v1: c6 | v2: g5 }
+
+  measure 121
+    hrp: [c4 e4 g4 c5]:1.ppp.arp
+    hn1: r:1
+    vln1: { v1: c6 | v2: g5 }
+
+  measure 122
+    hrp: r:1
+    hn1: c4:4.pp d4:4 eb4:2
+    vln1: { v1: c6 | v2: g5 }
+
+  measure 123
+    hrp: r:1
+    hn1: d4:4 c4:4 b3:2
+    vln1: { v1: c6 | v2: g5 }
+
+  measure 124
+    hrp: r:1
+    hn1: c4:1
+    vln1: { v1: c6 | v2: g5 }
+%% --- PAGE 16 (Measures 125-131) ---
+  [cite_start]%% Source: [cite: 840-885]
+
+  measure 125
+    meta { mark: "8" }
+    meta { tempo: "Meno mosso" }
+    
+    %% Flutes soft chords
+    fl1: g5:1.ppp
+    fl2: e5:1.ppp
+    fl3: c5:1.ppp
+    
+    %% Harp harmonic/low note support
+    hrp: c4:1.pppp
+    
+    %% Strings: "zus." indicates playing together (tutti) after previous divisi
+    vln1: c6:1.pppp.text("zus.")
+    vln2: g5:1.pppp.text("zus.")
+    vla:  e5:1.pppp.text("zus.")
+    vc:   c4:1.pppp.text("zus.")
+    db:   c3:1.pppp.text("zus.")
+
+  measure 126
+    fl1: g5:1
+    hrp: c4
+    vln1: c6
+
+  measure 127
+    fl1: g5:1
+    hrp: c4
+    vln1: c6
+
+  measure 128
+    %% Solo Violin 1 "zart hervortretend" (tenderly bringing out)
+    vln1: { v1: g5:4.p.espr.text("zart") f5 e5 d5 | v2: c6:1.pppp }
+    
+    fl1: r:1
+    hrp: r:1
+
+  measure 129
+    vln1: { v1: c5:1 | v2: c6:1 }
+    ob1: c5:1.p
+
+  measure 130
+    vln1: { v1: g5:4 f5 e5 d5 | v2: c6:1 }
+    ob1: r:1
+
+  measure 131
+    vln1: { v1: c5:1 | v2: c6:1 }
+    %% Transitioning to next page...
+
+  %% --- PAGE 17 (Measures 132-137) ---
+  [cite_start]%% Source: [cite: 886-914]
+
+  measure 132
+    meta { text: "Immer noch zurückhalten" } %% Still holding back
+    
+    %% Horn "Echoton" (Echo tone) - usually stopped/distant effect
+    hn1: g4:1.ppp.text("(Echoton)")
+    
+    %% Strings sustain very softly
+    vln1: c6:1.ppp
+    vln2: g5:1.ppp
+    vla:  e5:1.ppp
+    vc:   c4:1.ppp
+    db:   c3:1.ppp
+
+  measure 133
+    hn1: g4
+    vln1: c6
+
+  measure 134
+    hn1: g4
+    vln1: c6
+
+  measure 135
+    %% Horn 2 Echo
+    hn1: r:1
+    hn2: e4:1.ppp.text("(Echoton)")
+    vln1: c6
+
+  measure 136
+    hn2: e4
+    vln1: c6
+
+  measure 137
+    hn2: e4
+    vln1: c6
+
+  %% --- PAGE 18 (Measures 138-143) ---
+  [cite_start]%% Source: [cite: 915-944]
+
+  measure 138
+    meta { mark: "9" }
+    
+    %% Woodwinds gentle movement
+    ob1: c5:4.pp d5:4 eb5:2
+    cl1: g4:4.pp a4:4 bb4:2
+    
+    %% Strings continue ppp sustain
+    vln1: c6:1.ppp
+    vla:  g4:1.pp.espr %% Viola brings out melody
+    vc:   c3:1.pp
+
+  measure 139
+    ob1: f5:1
+    cl1: c5:1
+    vla: ab4:4 g4 f4 eb4
+
+  measure 140
+    ob1: g5:1
+    cl1: d5:1
+    vla: d4:1
+
+  measure 141
+    ob1: c5:1
+    cl1: g4:1
+    vla: eb4:1
+
+  measure 142
+    %% Bassoons join
+    bn1: c3:1.pp
+    vla: c4:1
+
+  measure 143
+    bn1: g2:1
+    vla: g3:1
+
+  %% --- PAGE 19 (Measures 144-148) ---
+  [cite_start]%% Source: [cite: 945-977]
+
+  measure 144
+    %% Flute solo ppp
+    fl1: g5:1.ppp
+    
+    %% Strings very static
+    vln1: c6:1.pppp
+    vln2: g5:1.pppp
+    vla:  e5:1.pppp
+    vc:   c4:1.pppp
+    db:   c3:1.pppp
+
+  measure 145
+    fl1: f5:4 e5 d5 c5
+
+  measure 146
+    fl1: g5:1
+
+  measure 147
+    fl1: c6:1
+
+  measure 148
+    fl1: g5:1
+
+  %% --- PAGE 20 (Measures 149-158) ---
+  [cite_start]%% Source: [cite: 978-1003]
+
+  measure 149
+    [cite_start]%% English Horn & Bass Clarinet Solo [cite: 963-966]
+    eh:  c5:4.p d5:8 c5:4 b4:4
+    bcl: c4:4.p d4:8 c4:4 b3:4
+    
+    fl1: r:1
+    vln1: c6:1.ppp
+    vla:  e5:1.ppp
+
+  measure 150
+    eh:  c5:1
+    bcl: c4:1
+
+  measure 151
+    eh:  g4:4.p a4:8 g4:4 f4:4
+    bcl: g3:4.p a3:8 g3:4 f3:4
+
+  measure 152
+    eh:  e4:2 f4:4 g4
+    bcl: e3:2 f3:4 g3
+
+  measure 153
+    eh:  c5:1
+    bcl: c4:1
+
+  measure 154
+    [cite_start]%% Syncopated rhythm in EH/BCL [cite: 979]
+    eh:  r:4 g4:4.p~ g4:8 a4:4
+    bcl: r:4 g3:4.p~ g3:8 a3:4
+    
+    %% Strings swell slightly
+    vla: c4:1.pp
+    vc:  g3:1.pp
+    db:  c3:1.pp
+
+  measure 155
+    eh:  g4:4. f4:8 e4:2
+    bcl: g3:4. f3:8 e3:2
+
+  measure 156
+    eh:  d4:1
+    bcl: d3:1
+
+  measure 157
+    eh:  c4:1
+    bcl: c3:1
+
+  measure 158
+    %% End of phrase, preparation for tempo change
+    eh:  g4:1.pp
+    bcl: g3:1.pp
+    
+    hn2: g3:1.pp
+    hn4: g3:1.pp
+    
+    vln1: c6:1.pp
+    vla:  c4:1.pp
+    %% --- PAGE 20 (Measures 159-163) ---
+  [cite_start]%% Source: [cite: 985-1003]
+
+  measure 159
+    meta { text: "Allmählich zum I. Tempo zurückkehren" } 
+    meta { tempo: [72, 84], curve: linear } %% Accelerando back to Tempo I
+    
+    %% Woodwinds continue figures
+    eh:  c5:4.pp d5:8 c5:4 b4:4
+    bcl: c4:4.pp d4:8 c4:4 b3:4
+    
+    %% Horns enter pp
+    hn1: r:1
+    hn2: c4:1.pp
+    hn4: c4:1.pp
+    
+    %% Strings re-enter with tremolo/measured figures
+    vln1: c6:1.pp.trem
+    vln2: g5:1.pp.trem
+    vla:  e5:1.pp.trem
+    vc:   c4:1.pp.trem
+    db:   c3:1.pp.trem
+
+  measure 160
+    eh:  c5:1
+    bcl: c4:1
+    hn2: c4
+    vln1: c6.trem
+
+  measure 161
+    eh:  g4:4 a4:8 g4:4 f4:4
+    bcl: g3:4 a3:8 g3:4 f3:4
+    
+    hn2: g4:2 f4:4 e4
+    vln1: c6.trem
+
+  measure 162
+    eh:  e4:1
+    bcl: e3:1
+    hn2: d4:1
+    vln1: c6.trem
+
+  measure 163
+    eh:  c4:1
+    bcl: c3:1
+    hn2: c4:1
+    vln1: c6.trem
+
+  %% --- PAGE 21 (Measures 164-168) ---
+  [cite_start]%% Source: [cite: 1004-1059]
+
+  measure 164
+    meta { mark: "10" }
+    
+    %% Flutes and Oboes enter "p espr." (expressive) [cite_start][cite: 1009]
+    fl1: c6:4.p.espr d6:8 c6:4 b5:4
+    ob1: g5:4.p.espr a5:8 g5:4 f5:4
+    cl1: e5:4.p.espr f5:8 e5:4 d5:4
+    
+    eh: r:1
+    bcl: r:1
+    
+    [cite_start]%% Horns "poco cresc." [cite: 1027]
+    hn2: c4:1.p.poco_cresc
+    hn3: c4:1.p.poco_cresc
+    
+    [cite_start]%% Strings "p poco cresc." [cite: 1044]
+    vln1: c6:1.p.trem.poco_cresc
+    vln2: g5:1.p.trem.poco_cresc
+    vla:  e5:1.p.trem.poco_cresc
+    vc:   (c3:8 g2 c3):3.p.poco_cresc c3:4 (c3 g2 c3):3 c3
+    db:   (c2:8 g1 c2):3.p.poco_cresc c2:4 (c2 g1 c2):3 c2
+
+  measure 165
+    fl1: c6:1
+    ob1: g5
+    cl1: e5
+    vc: (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  measure 166
+    fl1: g6:1.mf
+    ob1: c6:1.mf
+    cl1: g5:1.mf
+    
+    hn1: g4:1.mf
+    
+    vln1: g6:1.mf.trem
+    vc:   (c3 g2 c3):3.mf c3 (c3 g2 c3):3 c3
+
+  measure 167
+    fl1: g6:1
+    ob1: c6
+    vln1: g6.trem
+
+  measure 168
+    fl1: g6:1
+    vln1: g6.trem
+
+  %% --- PAGE 22 (Measures 169-173) ---
+  [cite_start]%% Source: [cite: 1060-1100]
+
+  measure 169
+    [cite_start]%% Flutes "8" (8va) [cite: 1065]
+    fl1: c7:1.p.8va
+    fl2: c7.p.8va
+    
+    ob1: g5:1.p
+    cl1: e5:1.p
+    
+    %% Bassoons join
+    bn1: c3:1.p
+    
+    vln1: c7:1.p.trem
+    vln2: g6:1.p.trem
+    vc:   c3:1.p
+
+  measure 170
+    fl1: c7:1
+    vln1: c7.trem
+
+  measure 171
+    fl1: g6:1.mf
+    ob1: c6.mf
+    
+    hn1: c5:1.mf.a2
+    hn3: c5.mf.a2
+    
+    vln1: g6.trem
+
+  measure 172
+    fl1: g6:1
+    vln1: g6.trem
+
+  measure 173
+    fl1: g6:1.cresc
+    vln1: g6.trem.cresc
+
+  %% --- PAGE 23 (Measures 174-178) ---
+  [cite_start]%% Source: [cite: 1101-1137]
+
+  measure 174
+    [cite_start]%% Winds "a2" mf [cite: 1102, 1105]
+    fl1: c7:1.mf.a2
+    ob1: g6:1.mf.a2
+    cl1: e6:1.mf.a2
+    bn1: c3:1.mf.a2
+    
+    hn1: g4:1.p.a2
+    hn3: g4.p.a2
+    
+    %% Trumpets enter
+    tpt1: c5:1.p.a2
+    
+    vln1: c7:1.trem
+    vc:   (c3:8 g2 c3):3.mf c3 (c3 g2 c3):3 c3
+
+  measure 175
+    fl1: c7:1
+    vc:   (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  measure 176
+    fl1: g6:1
+    vc:   (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  measure 177
+    fl1: g6:1
+    vc:   (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  measure 178
+    %% Full cresc leading to Tempo I
+    fl1: g6:1.cresc
+    vln1: g6.trem.cresc
+    tpt1: c5.cresc
+
+  %% --- PAGE 24 (Measures 179-183) ---
+  [cite_start]%% Source: [cite: 1138-1191]
+
+  measure 179
+    meta { mark: "11" }
+    meta { tempo: "Tempo I" }
+    
+    [cite_start]%% Winds "fp" [cite: 1145]
+    fl1: g6:1.fp.a2
+    fl3: g6.fp
+    ob1: c6.fp.a2
+    cl1: g5.fp.a2
+    bn1: c3.fp.a2
+    
+    [cite_start]%% Horns f [cite: 1168]
+    hn1: c5:1.f.a2
+    hn3: c5.f.a2
+    
+    [cite_start]%% Strings ff [cite: 1185, 1187]
+    %% Note: Notation changes from tremolo to measured triplets here
+    vln1: c7:1.ff.get
+    vln2: g6:1.ff
+    vla:  e6:1.ff
+    vc:   (c3:8 g2 c3):3.ff c3 (c3 g2 c3):3 c3
+    db:   (c2:8 g1 c2):3.ff c2 (c2 g1 c2):3 c2
+    
+    timp: c2:1.pp.text("sempre")
+
+  measure 180
+    fl1: f6:4.f e6 d6 c6
+    vln1: f6:4 e6 d6 c6
+    vc:   (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  measure 181
+    fl1: g6:1.f
+    vln1: g6:1.ff
+    vc:   (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  measure 182
+    fl1: f6:4 e6 d6 c6
+    vln1: f6:4 e6 d6 c6
+    vc:   (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  measure 183
+    fl1: g6:1
+    vln1: g6
+    vc:   (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  %% --- PAGE 25 (Measures 184-188) ---
+  [cite_start]%% Source: [cite: 1192-1251]
+
+  measure 184
+    [cite_start]%% Winds punch f then p [cite: 1201]
+    fl1: c6:1.fp
+    ob1: g5.fp
+    cl1: e5.fp
+    bn1: c3.fp
+    
+    %% Horns continue f/p figures
+    hn1: g4:1.fp
+    
+    [cite_start]%% Strings mf [cite: 1226]
+    vln1: c6:1.mf
+    vln2: g5:1.mf
+    vla:  e5:1.mf
+    vc:   c3:1.mf
+    db:   c2:1.mf
+
+  measure 185
+    fl1: c6:1.fp
+    vln1: c6:1
+
+  measure 186
+    fl1: c6:1.fp
+    vln1: c6:1
+
+  measure 187
+    fl1: c6:1.fp
+    vln1: c6:1
+
+  measure 188
+    fl1: c6:1.fp
+    vln1: c6:1
+    %% --- PAGE 26 (Measures 189-194) ---
+  [cite_start]%% Source: [cite: 1252-1307]
+
+  measure 189
+    meta { mark: "12" }
+    
+    %% Flutes crescendo
+    fl1: c6:1.p.cresc
+    fl2: c6:1.p.cresc
+    fl3: c6:1.p.cresc
+    
+    %% Oboes a2
+    ob1: c5:1.p.cresc.a2
+    
+    %% Bassoons a2
+    bn1: c3:1.p.cresc.a2
+    
+    %% Horns muted/soft
+    hn1: g4:1.ppp
+    hn3: g4:1.ppp
+    
+    %% Trumpets enter
+    tpt1: c5:1.p.cresc
+    
+    %% Trombones enter soft
+    tbn1: c4:1.pp.cresc
+    tbn3: c3:1.ppp
+    
+    %% Percussion enters softly
+    cym: x:1.ppp.text("Beck. mit Schl.")
+    bd:  x:1.ppp
+    timp: c2:1.ppp.tr
+    
+    %% Strings f, marcato
+    vln1: (c6 d6 e6):3.f f6 (e6 d6 c6):3 d6
+    vln2: (c6 d6 e6):3.f f6 (e6 d6 c6):3 d6
+    vla:  (c5 d5 e5):3.f f5 (e5 d5 c5):3 d5
+    vc:   (c4 d4 e4):3.f f4 (e4 d4 c4):3 d4
+
+  measure 190
+    fl1: g6:1
+    vln1: e6.f
+
+  measure 191
+    fl1: c7:1.nimmt_kl_fl %% Flute 3 takes Piccolo
+    vln1: c6.f
+
+  measure 192
+    fl1: g6:1
+    vln1: g6.f
+
+  measure 193
+    fl1: c7:1
+    vln1: c7.f
+
+  measure 194
+    fl1: e7:1.cresc
+    vln1: e7.cresc
+
+  %% --- PAGE 27 (Measures 195-199) ---
+  [cite_start]%% Source: [cite: 1308-1371]
+
+  measure 195
+    %% Tutti f/ff entrance
+    fl1: g6:1.f.a2
+    fl3: g6.f.text("kl.Fl.")
+    ob1: g5.f.a2
+    cl1: g5.f.a2
+    
+    %% Horns powerful triplet rhythm
+    hn1: (g4 a4 b4):3.f.cresc c5:4 (b4 a4 g4):3 a4:4
+    
+    %% Trumpets fanfares
+    tpt1: g5:4.ff f5:8 e5:2
+    
+    %% Trombones/Tuba
+    tbn1: c4:1.f
+    tba:  c2:1.f
+    
+    %% Strings heavy triplets
+    vln1: (g6 a6 b6):3.ff c7 (b6 a6 g6):3 a6
+    vc:   c3:1.ff
+    db:   c2:1.ff
+
+  measure 196
+    fl1: c7:1.ff
+    tpt1: c6:1.ff
+    vln1: c7.ff
+
+  measure 197
+    fl1: e7:1.ff.tr
+    ob1: b5.ff
+    vln1: e7.ff
+
+  measure 198
+    %% Horns continue driving rhythm
+    hn1: (c5 d5 e5):3 f5 (e5 d5 c5):3 d5
+    vln1: c7.ff
+
+  measure 199
+    fl1: g7:1.ff
+    vln1: g7.ff
+
+  %% --- PAGE 28 (Measures 200-204) ---
+  [cite_start]%% Source: [cite: 1372-1427]
+
+  measure 200
+    meta { mark: "13" }
+    meta { text: "Etwas vorwärtsgehen" } %% Moving forward somewhat
+    
+    %% High winds screeching high
+    fl1: c7:1.fff.a2
+    fl3: c7.fff.a2
+    ob1: c6.fff.a2
+    cl1: c6.fff.a2
+    
+    %% Brass power
+    hn1: g4:1.fff
+    tpt1: c5:1.fff
+    tbn1: c4:1.fff
+    tba:  c2:1.fff
+    
+    %% Percussion
+    cym: x:1.fff.text("mit Tellern")
+    timp: c2:1.tr.fff
+    
+    %% Strings
+    vln1: c7:1.fff
+    vc:   c3:1.fff
+    db:   c2:1.fff
+
+  measure 201
+    fl1: c7:1
+    vln1: c7
+
+  measure 202
+    fl1: c7:1.dim
+    vln1: c7.dim
+
+  measure 203
+    fl1: g6:1.dim
+    vln1: g6.dim
+
+  measure 204
+    fl1: e6:1.dim.al.ppp
+    vln1: e6.dim
+
+  %% --- PAGE 29 (Measures 205-209) ---
+  [cite_start]%% Source: [cite: 1428-1481]
+
+  measure 205
+    meta { text: "Nicht schleppen" } %% Do not drag
+    
+    %% Texture thins out instantly
+    fl1: c6:1.p.a2
+    ob1: g5:1.a2
+    
+    %% Bassoons soft
+    bn1: c3:1.p
+    
+    %% Horns soft pedal
+    hn1: g4:1.pp
+    
+    %% Strings soft tremolo/sustained
+    vln1: c6:1.pp.dim
+    vln2: g5:1.pp.tr
+    vla:  e5:1.pp.dim
+    vc:   c3:1.p
+
+  measure 206
+    fl1: g5:1
+    vln1: g5
+
+  measure 207
+    fl1: c5:1
+    vln1: c5
+
+  measure 208
+    fl1: c5:1
+    vln1: c5
+
+  measure 209
+    fl1: g5:1.p
+    vln1: g5.pp
+
+  %% --- PAGE 30 (Measures 210-221) ---
+  [cite_start]%% Source: [cite: 1482-1522]
+
+  measure 210
+    %% Solo Flute
+    fl1: c6:1.pp
+    ob1: r:1
+    
+    vln1: c6:1.p
+    vla:  e5:1.p
+
+  measure 211
+    fl1: g5:1
+    vln1: g5
+
+  measure 212
+    fl1: e5:1
+    vln1: e5
+
+  measure 213
+    fl1: c5:1
+    vln1: c5
+
+  measure 214
+    fl1: g5:1
+    vln1: g5
+
+  measure 215
+    fl1: c5:1
+    vln1: c5
+
+  measure 216
+    meta { mark: "14" }
+    
+    %% Flute 2 enters
+    fl1: c6:1.p
+    fl2: c6:1.p
+    
+    ob1: c5:1.p
+    hn1: g4:1.p
+    
+    vln1: c6:1.p.espr.text("Solo")
+    vln2: g5:1.p
+    vla:  e5:1.p
+    vc:   c3:1.p
+
+  measure 217
+    fl1: g5:1
+    vln1: g5
+
+  measure 218
+    fl1: e5:1
+    vln1: e5
+
+  measure 219
+    fl1: c5:1
+    vln1: c5
+
+  measure 220
+    fl1: g5:1
+    vln1: g5
+
+  measure 221
+    fl1: c5:1
+    vln1: c5
+    %% --- PAGE 31 (Measures 222-226) ---
+  [cite_start]%% Source: [cite: 1523-1582]
+
+  measure 222
+    [cite_start]%% Flutes enter a2 [cite: 1527]
+    fl1: c6:1.mf.a2
+    fl3: c6:1.mf.text("kl.Fl.")
+    
+    %% Oboes, Clarinets join
+    ob1: g5:1.mf.a2
+    cl1: e5:1.mf.a2
+    
+    %% Bassoons & Horns
+    bn1: c3:1.f.a2
+    hn1: g4:1.f.a2
+    
+    [cite_start]%% Strings ff [cite: 1573-1578]
+    vln1: c6:1.ff
+    vln2: g5:1.ff
+    vla:  e5:1.ff
+    vc:   c3:1.ff
+    db:   c2:1.ff
+
+  measure 223
+    fl1: g6:1.f
+    vln1: g6.ff
+
+  measure 224
+    [cite_start]fl1: c7:1.f.nimmt_gr_fl %% Piccolo takes big flute [cite: 1531]
+    vln1: c7.ff
+
+  measure 225
+    fl1: e7:1.ff
+    vln1: e7.ff
+
+  measure 226
+    %% Diminuendo begins
+    fl1: g7:1.dim
+    vln1: g7.dim
+
+  %% --- PAGE 32 (Measures 227-232) ---
+  [cite_start]%% Source: [cite: 1583-1653]
+
+  measure 227
+    %% Continuing dim.
+    fl1: c7:1.dim
+    ob1: g6.dim
+    cl1: e6.dim
+    
+    vln1: c7.dim
+    vc:   c3.dim
+
+  measure 228
+    [cite_start]meta { text: "Immer noch etwas vorwärtsgehen" } %% Still moving forward somewhat [cite: 1612]
+    
+    fl1: g6:1.p
+    vln1: g6.pp
+    
+    %% Strings drop to pp/ppp
+    vla:  c4:1.pp
+    vc:   c3:1.pp
+
+  measure 229
+    fl1: e6:1
+    vln1: e6
+
+  measure 230
+    fl1: c6:1.dim
+    vln1: c6
+
+  measure 231
+    fl1: g5:1.pp
+    vln1: g5
+
+  measure 232
+    [cite_start]%% Transition to pizzicato in low strings [cite: 1643]
+    fl1: e5:1.ppp
+    vln1: e5.ppp
+    vc:   c3:1.pizz.pp
+    db:   c2:1.pizz.pp
+
+  %% --- PAGE 33 (Measures 233-238) ---
+  [cite_start]%% Source: [cite: 1654-1687]
+
+  measure 233
+    meta { mark: "15" }
+    
+    [cite_start]%% Woodwinds a2 p [cite: 1656-1658]
+    ob1: c5:1.p.a2
+    bn1: c3:1.p.a2
+    
+    [cite_start]%% Triangle stroke [cite: 1668]
+    tri: x:1.p
+    
+    %% Harp harmonic
+    hrp: c4:1.p
+    
+    [cite_start]%% Strings ppp [cite: 1674]
+    vln1: c6:1.ppp
+    vln2: g5:1.ppp
+    vla:  e5:1.ppp
+    vc:   c3:1.ppp.pizz
+    db:   c2:1.ppp.pizz
+
+  measure 234
+    ob1: d5:1
+    bn1: d3:1
+    vln1: d6:1
+
+  measure 235
+    ob1: eb5:1
+    bn1: eb3:1
+    vln1: eb6:1
+
+  measure 236
+    ob1: d5:1
+    bn1: d3:1
+    vln1: d6:1
+
+  measure 237
+    ob1: c5:1
+    bn1: c3:1
+    vln1: c6:1
+
+  measure 238
+    ob1: g4:1
+    bn1: g2:1
+    vln1: g5:1
+
+  %% --- PAGE 34 (Measures 239-243) ---
+  [cite_start]%% Source: [cite: 1688-1724]
+
+  measure 239
+    [cite_start]%% Clarinets "hervortretend" [cite: 1698]
+    cl1: g4:4.p.espr.text("hervortretend") a4:8 g4:4 f4:4
+    ob1: c5:1.dim
+    bn1: c3.dim
+    
+    vln1: c6:1.ppp
+    [cite_start]vc:   c3:1.p.arco [cite: 1714]
+
+  measure 240
+    cl1: e4:2 f4:4 g4
+    vln1: r:1
+
+  measure 241
+    cl1: c5:1
+    vla: c4:1.dim
+
+  measure 242
+    cl1: g4:1.dim
+    vla: g3.dim
+
+  measure 243
+    cl1: e4:1.pp
+    vla: e3.pp
+
+  %% --- PAGE 35 (Measures 244-248) ---
+  [cite_start]%% Source: [cite: 1725-1764]
+
+  measure 244
+    meta { mark: "16" }
+    
+    [cite_start]%% Flutes f then dim [cite: 1729-1730]
+    fl1: c6:1.f.dim
+    fl2: c6.f.dim
+    
+    vln1: r:1
+    vla:  r:1
+    vc:   c3:1.ppp.arco
+
+  measure 245
+    fl1: g5:1.p
+    vc:   g2:1
+
+  measure 246
+    fl1: e5:1.p
+    vc:   e2:1
+
+  measure 247
+    fl1: c5:1.pp
+    vc:   c2:1
+
+  measure 248
+    fl1: g4:1.pp
+    vc:   g1:1
+
+  %% --- PAGE 36 (Measures 249-259) ---
+  [cite_start]%% Source: [cite: 1765-1829]
+
+  measure 249
+    %% Transition
+    fl1: e4:1.ppp
+    vc:   e1:1.ppp
+
+  measure 250
+    fl1: c4:1
+    vc:   c1:1
+
+  measure 251
+    fl1: r:1
+    vc:   r:1
+
+  measure 252
+    hrp: c4:1.p
+    vc:   r:1
+
+  measure 253
+    hrp: r:1
+    vc:   r:1
+
+  measure 254
+    hrp: r:1
+    vc:   r:1
+
+  measure 255
+    meta { mark: "17" }
+    [cite_start]meta { tempo: "Tempo I" } [cite: 1784]
+    
+    [cite_start]%% Horns muted "gedämpft" [cite: 1784]
+    hn1: c5:1.p.gedämpft
+    hn2: g4.p.gedämpft
+    hn3: e4.p.gedämpft
+    
+    [cite_start]%% Strings "schnell" runs [cite: 1799-1803]
+    vln1: (c6:16 d6 e6 f6 g6 a6 b6 c7):8.ff.text("schnell") c7:2
+    vln2: (g5 a5 b5 c6 d6 e6 f6 g6):8.ff.text("schnell") g6:2
+    vla:  (e5 f5 g5 a5 b5 c6 d6 e6):8.ff.text("schnell") e6:2
+    vc:   (c4 d4 e4 f4 g4 a4 b4 c5):8.ff.text("schnell") c5:2
+    db:   (c3 d3 e3 f3 g3 a3 b3 c4):8.ff.text("schnell") c4:2
+
+  measure 256
+    hn1: c5:1
+    vln1: c7:1.ff
+
+  measure 257
+    hn1: c5:1
+    vln1: c7.dim
+
+  measure 258
+    hn1: c5:1
+    vln1: c7.p
+
+  measure 259
+    hn1: c5:1
+    vln1: c7.pp
+    %% --- PAGE 37 (Measures 260-264) ---
+  [cite_start]%% Source: [cite: 1830-1872]
+
+  measure 260
+    %% Horns/Trumpets still muted ("gedämpft" from previous section)
+    hn1: c5:1.pp
+    hn2: g4.pp
+    tpt1: c5:1.pp
+    tpt2: g4.pp
+    
+    %% Strings pp
+    vln1: c6:1.pp
+    vla:  e5:1.pp
+    vc:   c3:1.pp
+    db:   c2:1.pp
+
+  measure 261
+    ob1: c5:1.pp
+    hn1: c5
+    vln1: c6
+
+  measure 262
+    ob1: g4:1.pp
+    hn1: g4
+    vln1: g5
+
+  measure 263
+    ob1: e4:1.pp
+    hn1: e4
+    vln1: e5
+
+  measure 264
+    ob1: c4:1.pp
+    hn1: c4
+    vln1: c5
+
+  %% --- PAGE 38 (Measures 265-279) ---
+  [cite_start]%% Source: [cite: 1873-1934]
+
+  measure 265
+    meta { text: "Nachlassen im Tempo" } %% Slackening in tempo
+    
+    %% "Dämpfer ab" (Mutes off) indicated for Brass
+    hn1: r:1.text("Dämpfer ab")
+    tpt1: r:1.text("Dämpfer ab")
+    
+    %% Strings: "G-Saite" (G String) indicated
+    vln1: g3:1.pp.text("G-Saite")
+    vla:  c3:1.pp
+    vc:   c2:1.pp
+    
+    %% Bass Clarinet joins
+    bcl: c3:1.pp
+
+  measure 266
+    vln1: g3:1
+    bcl: c3
+
+  measure 267
+    vln1: g3:1
+    bcl: c3
+
+  measure 268
+    vln1: g3:1.dim
+    bcl: c3.dim
+
+  measure 269
+    vln1: g3:1.ppp
+    bcl: c3.ppp
+
+  measure 270
+    vln1: r:1
+    bcl: r:1
+
+  measure 271
+    %% Silence/Breath
+    meta { mark: "Comma" }
+    vln1: r:1
+
+  measure 272
+    meta { text: "morendo" } %% Dying away
+    
+    bcl: c3:1.pp
+    tbn3: c2:1.ppp
+    tba:  c1:1.ppp
+    
+    timp: c2:1.pp.tr
+    
+    vc:   c2:1.ppp
+    db:   c1:1.ppp
+
+  measure 273
+    bcl: g2:1
+    vc:  g1
+
+  measure 274
+    bcl: e2:1.dim
+    vc:  e1.dim
+
+  measure 275
+    bcl: c2:1.pppp
+    vc:  c1.pppp
+
+  measure 276
+    %% Extreme quiet
+    vc: c1:1.ppppp
+    db: c1:1.ppppp
+    timp: c2:1.ppppp.tr
+
+  measure 277
+    vc: c1
+    db: c1
+
+  measure 278
+    vc: c1
+    db: c1
+
+  measure 279
+    vc: c1:1.morendo
+    db: c1.morendo
+
+  %% --- PAGE 39 (Measures 280-289) ---
+  [cite_start]%% Source: [cite: 1935-1966]
+
+  measure 280
+    meta { mark: "18" }
+    meta { tempo: "Sehr mäßig beginnend" } %% Beginning very moderately
+    
+    %% English Horn Solo
+    eh:  c5:4.p.espr d5:8 c5:4 b4:4
+    
+    %% Strings accompaniment
+    vln2: r:1
+    vla:  c4:1.ppp
+    vc:   (c3:8 g2 c3):3.ppp c3:4 (c3 g2 c3):3 c3
+    db:   (c2:8 g1 c2):3.ppp c2:4 (c2 g1 c2):3 c2
+
+  measure 281
+    eh:  c5:1
+    vc:  (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  measure 282
+    eh:  g4:4 a4:8 g4:4 f4:4
+    vc:  (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  measure 283
+    eh:  e4:2 f4:4 g4
+    vc:  (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  measure 284
+    eh:  c5:1
+    vc:  (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  measure 285
+    %% Flutes and Oboes join
+    fl1: c6:1.p
+    ob1: g5:1.p
+    eh:  c5:1
+    
+    %% Trumpet/Trombone background
+    tpt1: c4:1.p
+    tbn1: c3:1.p
+    
+    vln1: c6:1.pp
+    vln2: g5:1.pp
+    vc:   (c3 g2 c3):3.pp c3 (c3 g2 c3):3 c3
+
+  measure 286
+    fl1: g5:1
+    ob1: e5
+    eh:  c5
+    vc:  (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  measure 287
+    fl1: e5:1
+    ob1: c5
+    eh:  g4
+    vc:  (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  measure 288
+    fl1: c5:1
+    ob1: g4
+    eh:  e4
+    vc:  (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  measure 289
+    fl1: g4:1.dim
+    ob1: e4.dim
+    eh:  c4.dim
+    vc:  (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  %% --- PAGE 40 (Measures 290-299) ---
+  [cite_start]%% Source: [cite: 1967-2008]
+
+  measure 290
+    %% Texture thickens with triplets
+    fl1: (c6:8 d6 e6):3.mf f6:4 (e6 d6 c6):3 d6:4
+    ob1: (g5:8 a5 b5):3.mf c6:4 (b5 a5 g5):3 a5:4
+    cl1: (e5:8 f5 g5):3.mf a5:4 (g5 f5 e5):3 f5:4
+    
+    tpt1: c5:1.p
+    tbn1: c4:1.p
+    
+    vln1: c6:1.mf
+    vln2: g5:1.mf
+    vla:  e5:1.mf
+    vc:   c3:1.mf
+    db:   c2:1.mf
+
+  measure 291
+    fl1: e6:1
+    ob1: c6
+    cl1: g5
+    vln1: e6
+
+  measure 292
+    fl1: c6:1
+    ob1: g5
+    cl1: e5
+    vln1: c6
+
+  measure 293
+    fl1: g5:1
+    ob1: e5
+    cl1: c5
+    vln1: g5
+
+  measure 294
+    fl1: e5:1
+    ob1: c5
+    cl1: g4
+    vln1: e5
+
+  measure 295
+    meta { mark: "19" }
+    
+    %% Horns "hervortretend" (bringing out)
+    hn1: c5:1.p.espr.text("hervortretend")
+    hn2: g4.p.espr.text("hervortretend")
+    hn3: e4.p.espr.text("hervortretend")
+    
+    fl1: c6:1.p.a2
+    ob1: g5.p.a2
+    cl1: e5.p.a2
+    
+    vln1: c6:1.p
+    vln2: g5:1.p
+    vla:  e5:1.p.get %% getheilt (divisi)
+    vc:   c3:1.p
+    db:   c2:1.p
+
+  measure 296
+    hn1: g4:1
+    fl1: g5
+    vln1: g5
+
+  measure 297
+    hn1: e4:1
+    fl1: e5
+    vln1: e5
+
+  measure 298
+    hn1: c4:1
+    fl1: c5
+    vln1: c5
+
+  measure 299
+    hn1: g3:1
+    fl1: g4
+    vln1: g4
+    %% --- PAGE 41 (Measures 300-304) ---
+  [cite_start]%% Source: [cite: 2009-2085]
+
+  measure 300
+    %% Woodwinds a2, crescendo
+    fl1: c6:1.mf.cresc.a2
+    ob1: g5.mf.cresc.a2
+    cl1: e5.mf.cresc.a2
+    bn1: c3.mf.cresc.a2
+    
+    %% Horns mf
+    hn1: g4:1.mf
+    
+    %% Strings "poco cresc."
+    vln1: (c6:8 d6 e6):3.mf.poco_cresc f6:4 (e6 d6 c6):3 d6:4
+    vln2: (g5 a5 b5):3.mf.poco_cresc c6 (b5 a5 g5):3 a5
+    vla:  (e5 f5 g5):3.mf.poco_cresc a5 (g5 f5 e5):3 f5
+    vc:   (c4 d4 e4):3.mf.poco_cresc f4 (e4 d4 c4):3 d4
+    db:   (c3 d3 e3):3.mf.poco_cresc f3 (e3 d3 c3):3 d3
+
+  measure 301
+    fl1: g6:1
+    vln1: (e6 f6 g6):3 a6 (g6 f6 e6):3 f6
+
+  measure 302
+    fl1: e6:1
+    vln1: (c6 d6 e6):3 f6 (e6 d6 c6):3 d6
+
+  measure 303
+    fl1: c6:1
+    vln1: (g5 a5 b5):3 c6 (b5 a5 g5):3 a5
+
+  measure 304
+    %% Tutti f
+    fl1: g5:1.f
+    ob1: e5.f
+    
+    %% Trumpets join
+    tpt1: c5:1.f
+    
+    vln1: (e5 f5 g5):3.fff a5 (g5 f5 e5):3 f5
+    vc:   c3:1.fff
+    db:   c2:1.fff
+
+  %% --- PAGE 42 (Measures 305-309) ---
+  [cite_start]%% Source: [cite: 2086-2141]
+
+  measure 305
+    meta { mark: "20" }
+    
+    %% Woodwinds heavy accents
+    fl1: c6:4.ff.a2 r:8 c6:8 c6:4 r:4
+    ob1: g5:4.ff.a2 r:8 g5:8 g5:4 r:4
+    cl1: e5:4.ff.a2 r:8 e5:8 e5:4 r:4
+    bn1: c3:1.ff.a2
+    
+    %% Brass accents
+    hn1: g4:4.ff r:8 g4:8 g4:4 r:4
+    tpt1: c5:4.ff r:8 c5:8 c5:4 r:4
+    tbn1: c4:4.mf r:8 c4:8 c4:4 r:4
+    
+    %% Strings sustain/tremolo
+    vln1: c6:1.ff
+    vln2: g5:1.ff
+    vla:  e5:1.ff
+    vc:   c3:1.ff
+    db:   c2:1.ff
+
+  measure 306
+    fl1: (c6:8 d6 e6):3.ff f6:4 (e6:8 d6 c6):3 d6:4
+    vln1: c6:1.ff
+
+  measure 307
+    fl1: g6:1.ff
+    tpt1: c5:1.mf
+    vln1: c6.ff
+
+  measure 308
+    fl1: e6:1
+    vln1: c6
+
+  measure 309
+    fl1: c6:1
+    vln1: c6
+
+  %% --- PAGE 43 (Measures 310-314) ---
+  [cite_start]%% Source: [cite: 2142-2182]
+
+  measure 310
+    %% Full Tutti sustain
+    fl1: g6:1.ff.a2
+    ob1: c6.ff.a2
+    cl1: g5.ff.a2
+    
+    hn1: c5:1.ff.a2
+    tpt1: e5:1.ff
+    tbn1: g4:1.ff
+    
+    %% Percussion
+    cym: x:1.ff.text("mit Teller")
+    
+    vln1: c6:1.ff
+    vc:   c3:1.ff
+
+  measure 311
+    fl1: g6:1
+    vln1: c6
+
+  measure 312
+    fl1: g6:1
+    vln1: c6
+
+  measure 313
+    fl1: g6:1
+    vln1: c6
+
+  measure 314
+    %% Anticipation of the ritard
+    fl1: g6:1
+    vln1: c6
+
+  %% --- PAGE 44 (Measures 315-319) ---
+  [cite_start]%% Source: [cite: 2183-2240]
+
+  measure 315
+    meta { mark: "21" }
+    meta { text: "molto rit. pesante" } %% Heavy slowing down
+    meta { tempo: [84, 60], curve: linear }
+    
+    %% Massive block chords
+    fl1: g6:2.fff g6:2
+    ob1: e6:2.fff e6:2
+    cl1: c6:2.fff c6:2
+    
+    hn1: c5:2.fff c5:2
+    tpt1: g5:2.fff g5:2
+    tbn1: e5:2.fff e5:2
+    tba:  c2:1.fff
+    
+    %% Percussion hits
+    cym: x:2.fff x:2
+    bd:  x:2.fff x:2
+    
+    vln1: c6:2.fff c6:2
+    vc:   c3:2.fff c3:2
+    db:   c2:2.fff c2:2
+
+  measure 316
+    %% Repetition of chords
+    fl1: g6:2 g6:2
+    vln1: c6:2 c6:2
+
+  measure 317
+    meta { text: "a Tempo" }
+    meta { tempo: 84 }
+    
+    %% Explosion back to tempo with triplets
+    fl1: (c6 d6 e6):3.fff f6 (e6 d6 c6):3 d6
+    ob1: (g5 a5 b5):3.fff c6 (b5 a5 g5):3 a5
+    
+    tpt1: c6:1.ff
+    
+    vln1: (c6 d6 e6):3.fff f6 (e6 d6 c6):3 d6
+    vc:   c3:1.ffff.get %% "get." (divisi)
+    db:   c2:1.ffff
+
+  measure 318
+    fl1: g6:1
+    vln1: (e6 f6 g6):3 a6 (g6 f6 e6):3 f6
+
+  measure 319
+    fl1: e6:1
+    vln1: (c6 d6 e6):3 f6 (e6 d6 c6):3 d6
+
+  %% --- PAGE 45 (Measures 320-324) ---
+  [cite_start]%% Source: [cite: 2241-2283]
+
+  measure 320
+    %% Tutti sustain
+    fl1: c6:1.ff
+    ob1: g5.ff
+    cl1: e5.ff
+    bn1: c3.ff
+    
+    hn1: g4:1.ff
+    tpt1: c5:1.f
+    tbn1: c4:1.f
+    
+    vln1: c6:1.fff
+    vln2: g5:1.fff
+    vla:  e5:1.fff
+    vc:   c3:1.ffff
+    db:   c2:1.ffff
+
+  measure 321
+    fl1: c6:1
+    vln1: c6
+
+  measure 322
+    fl1: c6:1
+    vln1: c6
+
+  measure 323
+    fl1: c6:1
+    vln1: c6
+
+  measure 324
+    %% Percussion ring out
+    cym: x:1.ffff.text("ausklingen lassen")
+    
+    fl1: c6:1
+    vln1: c6
+    %% --- PAGE 46 (Measures 325-329b) ---
+  [cite_start]%% Source: [cite: 2284-2321]
+
+  measure 325
+    %% High winds screeching accents
+    fl1: c7:4.a2^ r:8 c7:8 c7:4 r:4
+    ob1: g6:4^ r:8 g6:8 g6:4 r:4
+    cl1: e6:4^.a2 r:8 e6:8 e6:4 r:4
+    
+    %% Horns/Trumpets accents
+    hn1: g4:4^.a2 r:8 g4:8 g4:4 r:4
+    tpt1: c5:4^ r:8 c5:8 c5:4 r:4
+    
+    %% Strings triplet runs
+    vln1: (c7 b6 a6):3.ff g6:4 (f6 e6 d6):3 c6:4
+    vln2: (g6 f6 e6):3.ff d6 (c6 b5 a5):3 g5
+    vla:  (e5 d5 c5):3.ff b4 (a4 g4 f4):3 e4
+    vc:   c3:1.ff
+    db:   c2:1.ff
+
+  measure 326
+    fl1: c7:1.ff
+    vln1: (c7 b6 a6):3 g6 (f6 e6 d6):3 c6
+
+  measure 327
+    fl1: g6:1
+    vln1: (g6 f6 e6):3 d6 (c6 b5 a5):3 g5
+
+  measure 328
+    fl1: e6:1
+    vln1: (e6 d6 c6):3 b5 (a5 g5 f5):3 e5
+
+  measure 329
+    %% Note: Measure 329a (First measure of the "Vi-de" cut)
+    [cite_start]%% Source [cite: 2319] details alternate notes if cut is taken.
+    meta { text: "[Vi-]" } 
+    
+    fl1: c6:1
+    vln1: c6:1.ff
+    vc:   c3:1.ff
+
+  measure 330
+    %% Note: Measure 329b in some editions, handled here as next sequential measure
+    meta { text: "[-de]" }
+    
+    fl1: c6:1
+    vln1: c6:1
+    vc:   c3:1
+
+  %% --- PAGE 47 (Measures 330-332) ---
+  [cite_start]%% Source: [cite: 2322-2373]
+  %% Note: The measure numbering in the source continues from 330 after the cut bars.
+
+  measure 331
+    meta { mark: "22" }
+    
+    %% Winds sustain
+    fl1: c6:1.ff
+    ob1: g5.ff
+    
+    %% Percussion entry
+    cym: x:1.ppp.text("Becken mit Schwammschl.") %% Sponge mallet
+    
+    %% Strings intense triplets
+    vln1: (c6 d6 e6):3.ff f6 (e6 d6 c6):3 d6
+    vln2: (g5 a5 b5):3.ff c6 (b5 a5 g5):3 a5
+    vc:   c3:1.ff
+    db:   c2:1.ff
+
+  measure 332
+    fl1: c6:1
+    vln1: (c6 d6 e6):3 f6 (e6 d6 c6):3 d6
+
+  measure 333
+    fl1: g5:1
+    vln1: (g5 a5 b5):3 c6 (b5 a5 g5):3 a5
+
+  %% --- PAGE 48 (Measures 333-337) ---
+  [cite_start]%% Source: [cite: 2374-2416]
+
+  measure 334
+    %% Tutti fff
+    fl1: e6:1.fff
+    ob1: c6.fff
+    cl1: g5.fff
+    bn1: c3.fff
+    
+    hn1: g4:1.ff
+    tpt1: c5:1.f
+    tbn1: c4:1.f
+    
+    vln1: e6:1.fff
+    vln2: c6.fff
+    vla:  g5.fff
+    vc:   c3.fff
+    db:   c2.fff
+
+  measure 335
+    fl1: c6:1
+    vln1: c6
+
+  measure 336
+    fl1: g5:1
+    vln1: g5
+
+  measure 337
+    fl1: e5:1
+    vln1: e5
+
+  measure 338
+    fl1: c5:1.dim
+    vln1: c5.dim
+
+  %% --- PAGE 49 (Measures 338-342) ---
+  [cite_start]%% Source: [cite: 2417-2465]
+
+  measure 339
+    meta { mark: "23" }
+    
+    %% Winds soft but active
+    fl1: (c6:8 d6 e6):3.mf f6:4 (e6 d6 c6):3 d6:4
+    ob1: (g5:8 a5 b5):3.mf c6:4 (b5 a5 g5):3 a5:4
+    
+    hn1: g4:1.mf
+    
+    vln1: c6:1.mf
+    vln2: g5:1.mf
+    vla:  e5:1.mf
+    vc:   c3:1.mf
+    db:   c2:1.mf
+
+  measure 340
+    fl1: e6:1
+    ob1: c6
+    vln1: e6
+
+  measure 341
+    fl1: c6:1
+    ob1: g5
+    vln1: c6
+
+  measure 342
+    fl1: g5:1
+    ob1: e5
+    vln1: g5
+
+  measure 343
+    fl1: e5:1.cresc
+    ob1: c5.cresc
+    vln1: e5.cresc
+
+  %% --- PAGE 50 (Measures 343-347) ---
+  [cite_start]%% Source: [cite: 2466-2517]
+
+  measure 344
+    %% Build to fff
+    fl1: c6:1.ff
+    ob1: g5.ff
+    
+    tpt1: c5:1.ff.gedämpft %% Muted
+    tpt2: c5.ff.gedämpft
+    
+    vln1: (c6 d6 e6):3.fff f6 (e6 d6 c6):3 d6
+    vc:   c3:1.fff
+    db:   c2:1.fff
+
+  measure 345
+    fl1: g6:1.fff
+    vln1: g6
+
+  measure 346
+    fl1: e6:1.fff
+    vln1: e6
+
+  measure 347
+    fl1: c6:1.fff
+    vln1: c6
+    
+    %% Percussion
+    cym: x:1.fff
+    bd:  x:1.fff
+    timp: c2:1.fff
+    %% --- PAGE 51 (Measures 348-352) ---
+  [cite_start]%% Source: [cite: 2518-2562]
+
+  measure 348
+    meta { text: "Etwas zurückhaltend" }
+    
+    %% Woodwinds sustained
+    fl1: g6:1.a2
+    fl3: g6.text("kl.Fl.")
+    ob1: e6:1.a2
+    cl1: c6:1.a2
+    
+    %% Horns/Trumpets sustained
+    hn1: g4:1
+    tpt1: c5:1
+    
+    [cite_start]%% Strings ffff [cite: 2549, 2557]
+    vln1: c7:1.ffff
+    vln2: c6:1.ffff
+    vla:  g5:1.ffff
+    vc:   e5:1.ffff
+    db:   c3:1.ffff
+
+  measure 349
+    fl1: g6:1
+    vln1: c7
+
+  measure 350
+    fl1: g6:1
+    vln1: c7
+
+  measure 351
+    fl1: g6:1
+    vln1: c7
+
+  measure 352
+    %% Percussion flam/roll
+    cym: x:1.ff.text("offen")
+    bd:  x:1.ff
+    timp: c2:1.tr.ffff
+    
+    fl1: g6:1
+    vln1: c7
+
+  %% --- PAGE 52 (Measures 353-357) ---
+  [cite_start]%% Source: [cite: 2563-2621]
+
+  measure 353
+    meta { mark: "24" }
+    meta { tempo: "Tempo I" }
+    meta { text: "pesante" } %% Heavy
+    
+    %% Woodwinds heavy accents
+    fl1: c6:4.ff.tr^ r:8 c6:8 c6:4 r:4
+    ob1: g5:4.ff.tr^ r:8 g5:8 g5:4 r:4
+    cl1: e5:4.ff.tr^ r:8 e5:8 e5:4 r:4
+    bn1: c3:1.fff.a2
+    
+    %% Brass pesante triplets
+    hn1: (g4 g4 g4):3.ff.pesante g4:4 (g4 g4 g4):3 g4:4
+    tpt1: (c5 c5 c5):3.ff.pesante c5:4 (c5 c5 c5):3 c5:4
+    tbn1: (c4 c4 c4):3.ff.pesante c4:4 (c4 c4 c4):3 c4:4
+    
+    %% Strings ffff
+    vln1: (c6 d6 e6):3.ffff f6 (e6 d6 c6):3 d6
+    vc:   c3:1.ffff
+    db:   c2:1.ffff
+
+  measure 354
+    fl1: c6:1.ff
+    vln1: c6
+
+  measure 355
+    fl1: c6:1.ff
+    vln1: c6
+
+  measure 356
+    fl1: c6:1.ff
+    vln1: c6
+
+  measure 357
+    fl1: c6:1.ff
+    vln1: c6
+
+  %% --- PAGE 53/56 (Measures 358-362) ---
+  [cite_start]%% Source: [cite: 2622-2637]
+  %% Note: Source page header jumps to 56 here, but measure 358 follows 357.
+
+  measure 358
+    %% Diminuendo begins
+    bn1: c3:1.f.dim
+    hn1: g4:1.p
+    
+    vln1: c6:1.f.dim
+    vla:  e5:1.f.dim
+    vc:   c3:1.f.dim
+    db:   c2:1.f.dim
+
+  measure 359
+    bn1: c3:1.p
+    vc:   c3:1.p
+
+  measure 360
+    bn1: c3:1
+    vc:   c3
+
+  measure 361
+    bn1: c3:1
+    vc:   c3
+
+  measure 362
+    bn1: c3:1
+    vc:   c3
+
+  %% --- PAGE 56 (Measures 363-367) ---
+  [cite_start]%% Source: [cite: 2638-2678]
+
+  measure 363
+    meta { mark: "25" }
+    
+    %% Woodwinds re-enter mf
+    fl1: c6:1.mf
+    fl3: c6.mf
+    ob1: g5:1.mf
+    cl1: e5:1.mf
+    
+    %% Horns syncopated a2
+    hn1: r:8 c5:4.mf c5:4 c5:4.
+    hn3: r:8 g4:4.mf g4:4 g4:4.
+    
+    %% Strings p sempre
+    vln1: c6:1.p.text("sempre")
+    vln2: g5:1.p.text("sempre")
+    vla:  e5:1.p.text("sempre")
+    vc:   (c3:8 g2 c3):3.p.text("sempre") c3:4 (c3 g2 c3):3 c3
+    db:   (c2:8 g1 c2):3.p.text("sempre") c2:4 (c2 g1 c2):3 c2
+
+  measure 364
+    fl1: g5:1
+    ob1: e5
+    cl1: c5
+    hn1: c5:1
+    vc:   (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  measure 365
+    fl1: e5:1
+    ob1: c5
+    hn1: c5
+    vc:   (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  measure 366
+    fl1: c5:1
+    ob1: g4
+    hn1: c5
+    vc:   (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  measure 367
+    fl1: g4:1
+    ob1: e4
+    hn1: c5
+    vc:   (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  %% --- PAGE 57 (Measures 368-372) ---
+  [cite_start]%% Source: [cite: 2679-2713]
+
+  measure 368
+    %% Woodwinds active lines
+    fl1: (c6:8 d6 e6):3.f f6:4 (e6 d6 c6):3 d6:4
+    ob1: (g5:8 a5 b5):3.f c6:4 (b5 a5 g5):3 a5:4
+    
+    %% Trumpets enter p
+    tpt1: c5:1.p
+    
+    vln1: (c6 d6 e6):3.f f6 (e6 d6 c6):3 d6
+    vc:   c3:1.f
+    db:   c2:1.f
+
+  measure 369
+    fl1: e6:1
+    ob1: c6
+    vln1: e6
+
+  measure 370
+    fl1: c6:1
+    ob1: g5
+    vln1: c6
+
+  measure 371
+    fl1: g5:1
+    ob1: e5
+    vln1: g5
+
+  measure 372
+    fl1: e5:1
+    ob1: c5
+    vln1: e5
+
+  %% --- PAGE 58 (Measures 373-377) ---
+  [cite_start]%% Source: [cite: 2714-2762]
+
+  measure 373
+    %% Crescendo begins
+    fl1: c6:1.p.cresc
+    ob1: g5.p.cresc
+    cl1: e5.p.cresc
+    
+    %% Horns support
+    hn1: g4:1.p.cresc
+    
+    vln1: c6:1.cresc
+    vln2: g5:1.cresc
+    vc:   (c3:8 g2 c3):3.cresc c3 (c3 g2 c3):3 c3
+
+  measure 374
+    fl1: g5:1
+    ob1: e5
+    vc:   (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  measure 375
+    fl1: e5:1
+    ob1: c5
+    vc:   (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  measure 376
+    fl1: c5:1
+    ob1: g4
+    vc:   (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  measure 377
+    fl1: g4:1
+    ob1: e4
+    vc:   (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  %% --- PAGE 59 (Measures 378-382) ---
+  [cite_start]%% Source: [cite: 2763-2799]
+
+  measure 378
+    %% Woodwinds increase activity
+    fl1: (c6:8 d6 e6):3.f f6:4 (e6 d6 c6):3 d6:4
+    ob1: (g5:8 a5 b5):3.f c6:4 (b5 a5 g5):3 a5:4
+    cl1: (e5:8 f5 g5):3.f a5:4 (g5 f5 e5):3 f5:4
+    
+    hn1: g4:1.f
+    
+    vln1: (c6 d6 e6):3.f f6 (e6 d6 c6):3 d6
+    vc:   c3:1.f
+    db:   c2:1.f
+
+  measure 379
+    fl1: e6:1
+    ob1: c6
+    vln1: e6
+
+  measure 380
+    fl1: c6:1
+    ob1: g5
+    vln1: c6
+
+  measure 381
+    fl1: g5:1
+    ob1: e5
+    vln1: g5
+
+  measure 382
+    fl1: e5:1
+    ob1: c5
+    vln1: e5
+    %% --- PAGE 60 (Measures 383-387) ---
+  [cite_start]%% Source: [cite: 2800-2856]
+
+  measure 383
+    meta { mark: "26" }
+    
+    %% Woodwinds thematic line
+    fl1: c6:1.ff.espr
+    ob1: g5:1.ff.espr
+    cl1: e5:1.ff.espr
+    
+    %% Horns a2
+    hn1: c5:1.a2
+    
+    %% Strings fff
+    vln1: c6:1.fff
+    vln2: g5:1.fff
+    vla:  e5:1.fff
+    vc:   c3:1.fff
+    db:   c2:1.fff
+
+  measure 384
+    fl1: g6:1.mf
+    ob1: c6.mf
+    cl1: g5.mf
+    
+    vln1: g6:1.pp
+    vln2: c6.pp
+    vla:  g5.pp
+    vc:   c4.pp.f %% Cello solo line emerges f then p
+    db:   c2.pp.f
+
+  measure 385
+    fl1: e6:1
+    ob1: g5
+    
+    vc: g3:1
+
+  measure 386
+    fl1: c6:1.p
+    ob1: e5.pp
+    
+    vc: e3:1
+
+  measure 387
+    fl1: g5:1
+    ob1: c5.ppp
+    
+    vc: c3:1.pp
+
+  %% --- PAGE 61 (Measures 388-392) ---
+  [cite_start]%% Source: [cite: 2857-2919]
+
+  measure 388
+    meta { text: "rit." }
+    
+    %% Echo effect
+    fl1: e5:1.pp
+    fl3: e5.pp
+    
+    %% Muted Horns enter pp
+    hn1: c4:1.pp.gedämpft
+    hn2: g3.pp.gedämpft
+    
+    %% Strings divisi with mutes "con sord."
+    vln1: { v1: c6:1.ppp.con_sord | v2: g5:1.ppp.con_sord }
+    vln2: { v1: e5:1.ppp.con_sord | v2: c5:1.ppp.con_sord }
+    
+    hrp: c4:1.pp
+
+  measure 389
+    fl1: c5:1
+    hn1: c4
+    hrp: c4
+
+  measure 390
+    fl1: g4:1
+    hn1: g3
+    hrp: c4
+
+  measure 391
+    meta { text: "Etwas zurückhaltend" }
+    
+    fl1: e4:1.ppp
+    hrp: c4.ppp
+    
+    %% Cellos/Basses enter softly
+    vc: { v1: c3:1.ppp | v2: g2:1.ppp }
+    db: c2:1.ppp
+
+  measure 392
+    fl1: c4:1
+    hrp: c4
+    vc: { v1: c3 | v2: g2 }
+
+  %% --- PAGE 62 (Measures 393-398) ---
+  [cite_start]%% Source: [cite: 2920-2983]
+
+  measure 393
+    meta { text: "Langsamer" } %% Slower
+    
+    %% Flute Solo "hervortretend"
+    fl1: c6:4.p.espr.text("hervortretend") d6:8 c6:4 b5:4
+    
+    %% Strings accompanying
+    vln1: { v1: c6:1.ppp | v2: g5:1.ppp }
+    vla:  e5:1.ppp.con_sord
+
+  measure 394
+    fl1: c6:1
+    vln1: { v1: c6 | v2: g5 }
+
+  measure 395
+    fl1: g5:1.ppp
+    vln1: { v1: c6 | v2: g5 }
+
+  measure 396
+    meta { text: "Immer noch" } %% Still (slower)
+    
+    %% Horns "offen" (open)
+    hn2: g3:1.pp.text("offen")
+    
+    %% Strings "Sord. ab" (Mutes off) for some
+    vln1: { v1: c6:1.p.espr.text("Sord. ab") | v2: g5:1.ppp }
+    vla:  e5:1.p.espr.text("Sord. ab")
+
+  measure 397
+    hn2: g3
+    vln1: { v1: c6 | v2: g5 }
+
+  measure 398
+    hn2: g3
+    vln1: { v1: c6 | v2: g5 }
+
+  %% --- PAGE 63 (Measures 399-405) ---
+  [cite_start]%% Source: [cite: 2984-3001]
+
+  measure 399
+    meta { text: "zurückhalten!" } %% Hold back!
+    
+    hn1: c4:4.ppp d4:4 eb4:2
+    vln1: { v1: c6:1.pp | v2: g5:1.ppp }
+    vla:  c4:1.p
+
+  measure 400
+    hn1: d4:4 c4:4 b3:2
+    vla:  g3:1.pp.espr
+
+  measure 401
+    hn1: c4:1
+    vla:  eb4:1
+
+  measure 402
+    hn1: g3:1
+    vla:  c4:1
+
+  measure 403
+    hn1: r:1
+    vla:  g3:1
+
+  measure 404
+    hn1: c4:1.ppp
+    vla:  c4:1
+
+  measure 405
+    hn1: g3:1
+    vla:  g3:1
+
+  %% --- PAGE 64 (Measures 406-417) ---
+  [cite_start]%% Source: [cite: 3002-3033]
+
+  measure 406
+    %% Bassoons enter
+    bn1: c3:1.f.p
+    bn2: g2:1.f.p
+    
+    %% Strings "G-Saite" espr
+    vln1: g3:1.espr.text("G-Saite")
+    vla:  c3:1.pp.espr
+    vc:   c2:1.p
+
+  measure 407
+    bn1: c3:1.f.p
+    vln1: g3:1
+
+  measure 408
+    bn1: c3:1.fp
+    vln1: g3:1.p
+
+  measure 409
+    bn1: c3:1.p
+    vln1: g3:1
+
+  measure 410
+    bn1: c3:1.pp
+    vln1: g3:1
+
+  measure 411
+    bn1: c3:1.pp
+    vln1: g3:1
+
+  measure 412
+    meta { mark: "27" }
+    
+    %% Horns a2 dim
+    hn1: c4:1.pp.dim
+    hn3: g3:1.pp.dim
+    
+    vln1: g3:1.ppp
+    vla:  c3:1.ppp
+    vc:   c2:1.ppp
+
+  measure 413
+    hn1: c4
+    vln1: g3
+
+  measure 414
+    hn1: c4
+    vln1: g3
+
+  measure 415
+    hn1: c4
+    vln1: g3
+
+  measure 416
+    hn1: c4
+    vln1: g3
+
+  measure 417
+    hn1: c4:1.ppp
+    vln1: g3.ppp
+    %% --- PAGE 64 (Measures 418-423) ---
+  [cite_start]%% Source: [cite: 3067-3090]
+
+  measure 418
+    meta { mark: "28" }
+    meta { tempo: "Feierlich und langsam" } %% Solemn and slow
+    
+    %% Horns muted "gedämpft"
+    hn1: c5:1.pp.gedämpft
+    hn3: g4.pp.gedämpft
+    
+    %% Trombones soft chords
+    tbn1: c4:1.pp
+    tbn2: g3.pp
+    
+    %% Cymbals with sponge mallet
+    cym: x:1.ppp.text("m. Schwschl.")
+    
+    %% Low Strings syncopated
+    vc: r:2 c3:2.pp
+    db: r:2 c2:2.pp
+
+  measure 419
+    hn1: g4:1
+    tbn1: g3
+    vc:   g2
+    db:   g1
+
+  measure 420
+    hn1: e4:1
+    tbn1: e3
+    vc:   e2
+    db:   e1
+
+  measure 421
+    hn1: c4:1
+    tbn1: c3
+    vc:   c2
+    db:   c1
+
+  measure 422
+    hn1: g3:1
+    tbn1: g2
+    vc:   g1
+    db:   g1
+
+  measure 423
+    hn1: c4:1
+    tbn1: c3
+    vc:   c2
+    db:   c1
+
+  %% --- PAGE 65 (Measures 424-429) ---
+  [cite_start]%% Source: [cite: 3091-3121]
+
+  measure 424
+    %% English Horn & Bass Clarinet sustain
+    eh:  c5:1.pp
+    bcl: c4:1.pp
+    
+    %% Horns continue
+    hn1: c4:1.pp
+    
+    %% Timpani "dumpf" (muffled)
+    timp: c2:1.pp.tr.text("dumpf")
+    
+    %% Strings: pppp sempre
+    vln1: c6:1.pppp.text("sempre")
+    vla:  e5:1.pppp.text("sempre")
+    vc:   (c3:8 g2 c3):3.pppp.text("sempre") c3:4 (c3 g2 c3):3 c3
+    db:   (c2:8 g1 c2):3.pppp.text("sempre") c2:4 (c2 g1 c2):3 c2
+
+  measure 425
+    eh:  c5:1
+    bcl: c4
+    vc:  (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  measure 426
+    eh:  c5:1
+    bcl: c4
+    vc:  (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  measure 427
+    eh:  c5:1
+    bcl: c4
+    vc:  (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  measure 428
+    eh:  c5:1
+    bcl: c4
+    vc:  (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  measure 429
+    eh:  c5:1
+    bcl: c4
+    vc:  (c3 g2 c3):3 c3 (c3 g2 c3):3 c3
+
+  %% --- PAGE 66 (Measures 430-433) ---
+  [cite_start]%% Source: [cite: 3122-3160]
+
+  measure 430
+    meta { mark: "29" }
+    
+    %% Flute 1 solo
+    fl1: c6:4.p r:8 c6:8 c6:4 r:4
+    
+    %% Oboes staccato
+    ob1: g5:8.p g5 g5 g5 g5:4 r:4
+    ob2: e5:8.p e5 e5 e5 e5:4 r:4
+    
+    %% Clarinet Trill
+    cl1: c5:2.pp.tr
+    
+    %% Horns "ohne Dämpfer" (without mute)
+    hn1: c4:1.text("ohne Dpf.")
+    hn3: g3.text("ohne Dpf.")
+    
+    vln1: c6:1.pp
+    vc:   c3:1.pp
+
+  measure 431
+    fl1: g5:4 r:8 g5:8 g5:4 r:4
+    cl1: g4:2.tr
+    vln1: g5:1
+
+  measure 432
+    fl1: e5:4 r:8 e5:8 e5:4 r:4
+    cl1: e4:2.tr
+    vln1: e5:1
+
+  measure 433
+    fl1: c5:4 r:8 c5:8 c5:4 r:4
+    cl1: c4:2.tr
+    vln1: c5:1
+
+  %% --- PAGE 67 (Measures 434-438) ---
+  [cite_start]%% Source: [cite: 3161-3202]
+
+  measure 434
+    %% Flute 3 takes Piccolo
+    fl1: g5:4.mf.cresc r:8 g5:8 g5:4 r:4
+    fl3: r:1.text("nimmt kl.Fl.")
+    
+    ob1: c5:4.mf.cresc r:8 c5:8 c5:4 r:4
+    
+    %% Strings crescendo sempre
+    vln1: (c6:8 d6 e6):3.cresc.text("sempre") f6:4 (e6 d6 c6):3 d6:4
+    vc:   c3:1.cresc
+
+  measure 435
+    fl1: e6:4 r:8 e6:8 e6:4 r:4
+    vln1: (g6 a6 b6):3 c7 (b6 a6 g6):3 a6
+
+  measure 436
+    fl1: c6:4 r:8 c6:8 c6:4 r:4
+    vln1: (c7 d7 e7):3 f7 (e7 d7 c7):3 d7
+
+  measure 437
+    fl1: g6:4 r:8 g6:8 g6:4 r:4
+    vln1: (e7 f7 g7):3 a7 (g7 f7 e7):3 f7
+
+  measure 438
+    fl1: e7:4 r:8 e7:8 e7:4 r:4
+    vln1: g7:1
+
+  %% --- PAGE 68 (Measures 439-443) ---
+  [cite_start]%% Source: [cite: 3203-3242]
+
+  measure 439
+    %% Woodwinds fff sustained
+    fl1: c7:1.fff.a2
+    ob1: g6.fff.a2
+    cl1: e6.fff.a2
+    bn1: c3.fff.a2
+    
+    %% Horns ff then p
+    hn1: c5:1.ff.p
+    tpt1: g5:1.p.cresc
+    
+    vln1: c7:1.p.cresc
+    vc:   c3:1.p.cresc
+
+  measure 440
+    fl1: c7:1
+    vln1: c7.cresc
+
+  measure 441
+    fl1: c7:1
+    vln1: c7.cresc
+
+  measure 442
+    fl1: c7:1
+    vln1: c7.cresc
+
+  measure 443
+    fl1: c7:1
+    vln1: c7.cresc
+
+  %% --- PAGE 69 (Measures 444-448) ---
+  [cite_start]%% Source: [cite: 3243-3309]
+
+  measure 444
+    meta { mark: "30" }
+    
+    %% Winds drop to p
+    fl1: c6:1.p.a2
+    ob1: g5.p.a2
+    cl1: e5.p
+    
+    %% Cymbals "ausklingen lassen" (let ring)
+    cym: x:1.ff.text("ausklingen lassen")
+    timp: c2:1.fff
+    
+    %% Strings fff dim
+    vln1: c6:1.fff.dim
+    vln2: g5:1.fff.dim
+    vla:  e5:1.fff.dim
+    vc:   c3:1.ff
+    db:   c2:1.ff
+
+  measure 445
+    vln1: c6.p
+    vc:   c3.mf
+
+  measure 446
+    vln1: c6.p
+    vc:   c3.p
+
+  measure 447
+    vln1: c6.ppp
+    vc:   c3.pp
+
+  measure 448
+    vln1: c6.ppp
+    vc:   c3.ppp.pizz
+
+  %% --- PAGE 70 (Measures 449-454) ---
+  [cite_start]%% Source: [cite: 3310-3339]
+
+  measure 449
+    meta { text: "Im Tempo nachlassen" } %% Slacken tempo
+    
+    ob1: c5:1.p.espr
+    hrp: c4:1.pp
+    vla: c4:1.p.espr
+
+  measure 450
+    ob1: g4:1
+    vla: g3
+
+  measure 451
+    ob1: e4:1
+    vla: e3
+
+  measure 452
+    ob1: c4:1
+    vla: c3
+
+  measure 453
+    meta { text: "Immer etwas langsamer" }
+    
+    ob1: g3:1.pp
+    hn1: c4:1.ppp
+    vla: g3:1.pp
+
+  measure 454
+    ob1: c4:1
+    hn1: c4
+    vla: c3
+
+  %% --- PAGE 71 (Measures 455-460) ---
+  [cite_start]%% Source: [cite: 3340-3393]
+
+  measure 455
+    meta { text: "Sehr zurückhaltend" } %% Very holding back
+    
+    ob1: c5:1.pp
+    cl1: c4:1.pp
+    
+    hn1: c4:1.p
+    hn3: g3:1.p
+    
+    tpt1: c4:1.pp
+    tbn1: c3:1.ppp
+    
+    timp: c2:1.pp
+    
+    vln1: c6:1.pp
+    vc:   c3:1.pp
+
+  measure 456
+    ob1: c5
+    vln1: c6
+
+  measure 457
+    ob1: c5
+    vln1: c6
+
+  measure 458
+    ob1: c5
+    vln1: c6
+
+  measure 459
+    ob1: c5
+    vln1: c6
+
+  measure 460
+    ob1: c5
+    vln1: c6.ppp
+
+  %% --- PAGE 72 (Measures 461-466) ---
+  [cite_start]%% Source: [cite: 3394-3442]
+
+  measure 461
+    %% Hairpins < >
+    ob1: c5:1.pp.cresc.dim
+    hn1: c4:1.pp.cresc.dim
+    vln1: c6:1.pp
+
+  measure 462
+    ob1: c5
+    hn1: c4
+
+  measure 463
+    ob1: c5.pp
+    hn1: c4.pp
+
+  measure 464
+    ob1: c5.pp
+    hn1: c4.pp
+    
+    %% Tam-tam
+    tam: x:1.pp
+
+  measure 465
+    ob1: c5.pp
+    tpt1: c4.pp.sempre
+    tpt2: g3.pp.fff %% Sudden fff swell indicated in source? "pp<fff"
+    [cite_start]%% Source [cite: 3438] shows pp<fff on trumpet 2 line.
+    
+    vln1: c6.pp
+
+  measure 466
+    ob1: c5.ppp
+    tpt2: g3.p.ppp
+    vln1: c6.ppp
+    %% --- PAGE 70 (Measure 467) ---
+  [cite_start]%% Source: [cite: 3443-3511]
+
+  measure 467
+    meta { mark: "31" } %% Assumed rehearsal mark based on context
+    meta { tempo: "Allegro" }
+    
+    %% Woodwinds: Violent triplet figures fff
+    fl1: (c7:8 b6 a6):3.fff g6:4 (f6 e6 d6):3 c6:4
+    ob1: (c6 b5 a5):3.fff g5:4 (f5 e5 d5):3 c5:4
+    cl1: (g5 f5 e5):3.fff d5:4 (c5 b4 a4):3 g4:4
+    bn1: (c3 d3 e3):3.fff f3:4 (g3 a3 b3):3 c4:4
+    
+    %% Brass: Heavy chords
+    hn1: c5:1.fff
+    tpt1: g5:1.fff
+    tbn1: c4:1.fff
+    tba:  c2:1.fff
+    
+    %% Percussion
+    tam: x:1.fff
+    bd:  x:1.fff
+    timp: c2:1.tr.fff
+    
+    %% Strings: fff triplets
+    vln1: (c7 b6 a6):3.fff g6:4 (f6 e6 d6):3 c6:4
+    vln2: (g6 f6 e6):3.fff d6:4 (c6 b5 a5):3 g5:4
+    vla:  (e5 d5 c5):3.fff b4:4 (a4 g4 f4):3 e4:4
+    vc:   (c4 d4 e4):3.fff f4:4 (g4 a4 b4):3 c5:4
+    db:   (c3 d3 e3):3.fff f3:4 (g3 a3 b3):3 c4:4
+
+  measure 468
+    meta { text: "rit." }
+    
+    %% Sudden cut to p
+    fl1: c6:1.p
+    ob1: g5.p
+    cl1: e5.p
+    bn1: c3.p
+    
+    %% Brass drop out or sustain soft
+    hn1: g4:1.p
+    tpt1: c5:1.p
+    tbn1: c4:1.pp
+    
+    %% Percussion soft
+    timp: c2:1.ppp
+    
+    %% Strings: Pizzicato transition
+    vln1: c6:1.p.pizz
+    vln2: g5:1.p.pizz
+    vla:  e5:1.p.pizz
+    vc:   c4:1.p.pizz
+    db:   c3:1.p.pizz
+    
+    %% End of provided source material
