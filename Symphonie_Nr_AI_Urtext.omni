@@ -1,0 +1,235 @@
+omniscore
+  %% GLOBAL METADATA
+  meta { 
+    title: "Symphonie Nr. AI (The Fever Dream)", 
+    composer: "Gustav Mahler", 
+    tempo: 56, 
+    key: Cm, 
+    time: 4/4,
+    mood: "Existential Terror" 
+  }
+
+  %% ============================================================
+  %% 1. DEFINITIONS (The Physics of the Orchestra)
+  %% ============================================================
+
+  %% I. THE WOODWINDS (NATURE)
+  group "Holzbläser" symbol=bracket {
+    def picc "Piccolo"     style=standard clef=treble patch="Piccolo"
+    def flt  "Flutes"      style=standard clef=treble patch="Flute"
+    def ob   "Oboes"       style=standard clef=treble patch="Oboe"
+    def clar "Eb Clarinet" style=standard clef=treble transpose=+3 patch="Clarinet"
+    def bsn  "Bassoons"    style=standard clef=bass   patch="Bassoon"
+  }
+
+  %% II. THE BRASS (JUDGMENT)
+  group "Blechbläser" symbol=bracket {
+    def hrn "Horns (F)"   style=standard clef=treble transpose=+7 patch="French Horn"
+    def tpt "Trumpets"    style=standard clef=treble transpose=-2 patch="Trumpet"
+    def tbn "Trombones"   style=standard clef=bass   patch="Trombone"
+    def tba "Tuba"        style=standard clef=bass   patch="Tuba"
+  }
+
+  %% III. THE PERCUSSION (FATE)
+  group "Schlagwerk" symbol=line {
+    def timp "Timpani" style=standard clef=bass patch="Timpani"
+    def tam  "Tam-Tam" style=grid     map={ h:5 } 
+    def bdr  "Gr. Trommel" style=grid map={ k:0 }
+  }
+
+  %% IV. THE STRINGS (SUFFERING)
+  group "Streicher" symbol=brace {
+    def vln1 "Violin I"  style=standard clef=treble patch="String Ensemble 1"
+    def vln2 "Violin II" style=standard clef=treble patch="String Ensemble 1"
+    def vla  "Viola"     style=standard clef=alto   patch="String Ensemble 1"
+    def vc   "Cello"     style=standard clef=bass   patch="String Ensemble 1"
+    def db   "Bass"      style=standard clef=bass   patch="String Ensemble 1"
+  }
+
+  %% V. THE DISTANT ORCHESTRA (MEMORY)
+  %% Located off-stage. Quiet volume, washed out reverb.
+  group "Fernorchester" symbol=none {
+    def trp_fern "Distant Tpts" style=standard clef=treble transpose=-2 vol=40 pan=-64
+  }
+
+  %% VI. THE VOICE (SOUL)
+  def alto "Alto Solo" style=standard clef=treble patch="Choir Aahs"
+
+  %% ============================================================
+  %% 2. THE LOGIC (Measures 1-15)
+  %% ============================================================
+
+  %% ------------------------------------------------------------
+  %% SECTION 1: THE FUNERAL MARCH (Reality)
+  %% ------------------------------------------------------------
+  measure 1
+    meta { text: "Schleppend. Wie ein Kondukt. (Dragging. Like a funeral procession.)" }
+    
+    %% The rhythm of death in the basses
+    db: c2:1.pp
+    vc: c2:1.pp
+    timp: c2:4.pp.marc r:4 c2:4 r:4 |
+    
+    %% The melody is absent. Only the march exists.
+    vln1: r:1 |
+    hrn:  r:1 |
+
+  measure 2
+    meta { text: "Schwer (Heavy)" }
+    db: g1:1
+    vc: g1:1
+    timp: g1:4.pp r:4 g1:4 r:4 |
+    
+    %% A low moan in the horns
+    hrn: [c3 eb3 g3]:1.pp.stopped |
+
+  measure 3
+    %% The "Heartbeat" motif appears in the violins (col legno)
+    vln1: r:2 g3:8.pp.mute.col_legno c4:16 g3:8. c4:16 |
+    vln2: r:2 g3:8.pp.mute.col_legno c4:16 g3:8. c4:16 |
+    
+    %% Basses continue the march
+    db: c2:1 |
+
+  measure 4
+    %% The tension builds
+    vln1: eb4:2.pp.sul_pont g3:8. c4:16 g3:8. c4:16 |
+    hrn:  [c3 eb3 g3]:1.cresc |
+    timp: c2:4.mp r:4 c2:4 r:4 |
+
+  %% ------------------------------------------------------------
+  %% SECTION 2: THE BANAL INTERRUPTION (The Bird)
+  %% ------------------------------------------------------------
+  measure 5
+    meta { text: "Plötzlich schneller (Suddenly faster)", tempo: 72 }
+    
+    %% Everything stops except the woodwinds
+    db: r:1
+    timp: r:1
+    vln1: r:1
+    
+    %% The Eb Clarinet mocks the funeral
+    clar: (g5:16.ff e f g):grace c6:4.acc b5:8 c6 g5:2.gliss |
+    picc: c6:1.trill |
+
+  measure 6
+    %% The orchestra tries to restart the funeral, but the bird persists
+    meta { text: "Zeit lassen (Take time)", tempo: 60 }
+    
+    clar: g5:8.stacc r:8 g:8 r g r g:4 |
+    hrn:  [c3 eb3 g3]:2.sfz r:2 |
+    vc:   c2:1.p |
+
+  %% ------------------------------------------------------------
+  %% SECTION 3: THE HAMMER BLOW (Fate)
+  %% ------------------------------------------------------------
+  measure 7
+    meta { text: "Hier ist der Schlag! (Here is the blow!)" }
+    
+    %% TUTTI: The entire orchestra strikes a dissonant chord
+    %% Use sticky duration :1 for everyone
+    tbn: [c2 g2 c3]:1.sffff.marc
+    tba: C1.sffff
+    hrn: [e3 g3 c4].sffff.text("Schalltrichter auf!")
+    tpt: [c4 g4 c5].sffff
+    
+    %% The Percussion impact
+    tam: h:1.sffff.text("Klingen lassen (Let ring)")
+    bdr: k.sffff
+    timp: C2.roll.ff |
+
+  measure 8
+    meta { text: "Ersterbend (Dying away)", tempo: 40 }
+    
+    %% Total silence in winds/brass
+    tbn: r:1
+    hrn: r:1
+    clar: r:1
+    
+    %% The Tam-tam is still ringing physically, but notation is rest
+    tam: r:1
+    
+    %% Strings crumbling away
+    vln1: (c5:8 g4 eb4 c4 g3 eb3):6/4.pp (c3 g2 eb2):3/4.ppp |
+
+  %% ------------------------------------------------------------
+  %% SECTION 4: THE MEMORY (Fernorchester vs Reality)
+  %% ------------------------------------------------------------
+  measure 9
+    meta { text: "Wie aus weiter Ferne (As if from far away)", tempo: 50 }
+    
+    %% The Reality: A low C drone in the basses (Pedal point)
+    db: C1:1.pp
+    vc: C1:1.pp
+    
+    %% The Memory: Off-stage trumpets playing a major fanfare
+    %% They enter softly, indifferent to the C Minor drone
+    trp_fern: c4:4.pp e g c5 |
+
+  measure 10
+    %% Polyrhythm: Distant trumpets speed up (5 notes in 4 beats)
+    db: C1:1
+    trp_fern: (c5:8 g4 e4 c4 g4):5/4.p |
+
+  measure 11
+    %% The Main Orchestra gets annoyed by the memory
+    meta { text: "Unruhig (Restless)" }
+    vln1: [c4 d4 eb4]:1.tremolo.pp
+    trp_fern: (e4:8 g4 c5 e5 c5):5/4.mp |
+
+  measure 12
+    %% The Collision
+    meta { text: "Mit Wut (With rage)" }
+    
+    %% The Horns scream a C Minor chord
+    hrn: [c3 eb3 g3]:2.ff r:2
+    
+    %% The Distant Trumpets ignore them, playing C Major
+    trp_fern: c5:1.f |
+
+  %% ------------------------------------------------------------
+  %% SECTION 5: THE SCREAM (The Cluster)
+  %% ------------------------------------------------------------
+  measure 13
+    meta { text: "Der Aufschrei (The Outcry)", tempo: 60 }
+    
+    %% THE CLUSTER: Every instrument plays a different note
+    vln1: [b4 c5 d5]:1.tremolo.fff
+    vln2: [f4 g4 a4]:1.tremolo.fff
+    vla:  [c4 d4 e4]:1.tremolo.fff
+    
+    %% High woodwinds scream
+    picc: c7:1.sffff.trill
+    clar: g6.sffff.trill
+    
+    %% Brass plays the "Fate" rhythm under the scream
+    tbn: c2:8.sffz c2:16 c2:8. c2:16 c2:2 |
+
+  measure 14
+    meta { text: "Lange Pause (Long pause)" }
+    
+    %% The sound cuts off instantly.
+    %% "Generalpause"
+    vln1: r:1.fermata
+    picc: r:1.fermata
+    tbn:  r:1.fermata
+    db:   r:1.fermata |
+
+  %% ------------------------------------------------------------
+  %% SECTION 6: URLICHT (Primal Light)
+  %% ------------------------------------------------------------
+  measure 15
+    meta { text: "Sehr feierlich, aber schlicht (Solemn, but simple)", tempo: 45 }
+    
+    %% Total stillness. 
+    %% The Alto Solo enters. Pure C Major.
+    
+    alto: e4:2.pp.dolce r:4 d4:4 |
+    alto.lyric: "O Rösch- en rot! _"
+    
+    %% Accompanied only by quiet trombones (Chorale)
+    tbn: [c3 g3 c4]:1.ppp.mute |
+    
+    %% The rest of the orchestra watches in silence.
+    vln1: r:1 |
+    hrn: r:1 |
