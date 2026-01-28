@@ -832,6 +832,111 @@ omniscore
     gtr: 12-2:2.bu(full) 12-2.bd(0) |
     
     %% DRUMS: Fill
+OmniScore Addendum A: Modular Orchestration Standards
+Version: 1.0 (Extension to Spec 1.1.0) Status: Normative Topic: Project Structure, Import Logic, and Asynchronous Collaboration
+
+29. The Additive Compilation Model
+To support large ensembles without monolithic files, OmniScore adopts an Additive Merge Strategy.
+
+29.1 The "Open Measure" Principle
+In standard imperative programming, redefining a function overwrites it. In OmniScore, measure blocks are additive.
+
+Rule: If measure 1 is defined in violin.omni and also in cello.omni, the compiler merges the content into a single time-slice.
+
+Constraint: The meta data for the measure (Time Signature, Tempo) must be consistent across all files. If violin.omni claims Measure 1 is 4/4 and cello.omni claims 3/4, the compiler throws a TIME_SIG_MISMATCH error.
+
+29.2 The Master Linker Pattern
+A large-scale work defines a root file (the "Linker") that contains no musical data, only structural pointers.
+
+File: symphony_no1_root.omni
+
+Code snippet
+omniscore
+  meta { title: "Symphony No. 1", composer: "A. Omni" }
+
+  %% Global Definitions (Physics)
+  import "setup/orchestra_def.omni"
+
+  %% Content Injection (The Merge)
+  import "woodwinds/flutes.omni"
+  import "woodwinds/oboes.omni"
+  import "brass/horns.omni"
+  import "strings/section_violins.omni"
+30. Scope & Namespaces
+When importing independent modules, managing variable collisions is critical.
+
+30.1 Global vs. Local Defs
+Global Defs: Instruments defined in the root or a shared setup file are visible to all imported modules. This is the recommended practice for Orchestras (defining the "Physics" once).
+
+Local Macros: Macros defined inside a module (e.g., $ViolinRun) are private to that file unless explicitly exported.
+
+30.2 The export Keyword
+To share a musical motif between sections (e.g., a "Leitmotif"), use the export keyword.
+
+Code snippet
+%% In horns.omni
+export macro HeroTheme = { c4:4.ff e g c5 }
+
+%% In violins.omni
+vln: $HeroTheme |
+31. Directory Structure Standard (The "Repo" Layout)
+For interoperability, the following directory structure is the mandated standard for Orchestral Projects.
+
+Plaintext
+/Project_Root
+  /build           (Output artifacts: PDF, MIDI, WAV)
+  /src
+    /meta
+      globals.omni    (Tempo maps, Key sigs, Rehearsal marks)
+      defs.omni       (Instrument definitions)
+    /sections
+      /ww             (Woodwinds)
+      /br             (Brass)
+      /perc           (Percussion)
+      /str            (Strings)
+    master.omni       (The Root Linker)
+  omni.config         (Compiler settings)
+32. Build Targets & Conditional Views
+The compiler should support "View filtering" at the command line, allowing different stakeholders to generate different artifacts from the same source.
+
+32.1 The --target Flag
+The if (target) syntax in the core spec is expanded to support arbitrary tags.
+
+Command: omnic -i master.omni --view=conductor Command: omnic -i master.omni --view=percussion_section
+
+32.2 View Definitions
+Views can be defined in the config to auto-filter staves.
+
+Code snippet
+%% In omni.config
+view "rhythm_section" {
+  include: [gtr, bass, drums, keys]
+  hide_others: true
+}
+33. Best Practices: Version Control (Git) Integration
+OmniScore is text. It should be versioned like code.
+
+33.1 Branching Strategy
+main: The stable, rehearsal-ready score.
+
+feature/movement-2: Composition in progress.
+
+fix/measure-42-range: Correction for a specific player.
+
+33.2 Conflict Resolution
+Because OmniScore is line-based, "Merge Conflicts" are readable.
+
+Scenario: Composer A changes the violin rhythm. Composer B changes the violin pitch.
+
+Result: A standard Git merge conflict block appears.
+
+Code snippet
+<<<<<<< HEAD
+vln: c4:4 e4 g4
+=======
+vln: c4:8 d e f g a b c
+>>>>>>> feature/fast-run
+Resolution: The composer chooses the correct version in the text editor.
     drm: s:16 s s s t1 t1 t2 t2 c:1 |
 
 
