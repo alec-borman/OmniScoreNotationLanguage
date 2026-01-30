@@ -1,7 +1,3 @@
-Here is the merged document. It retains the comprehensive depth of the Language Specification (the "Physics" and "Logic") while framing the entire system through the "DevOps/Mermaid" philosophy, specifically rewriting the **Introduction**, **File Organization**, and **Implementation** sections to reflect the collaborative repository structure.
-
-***
-
 # **OmniScore: The Universal Music Language**
 
 **Maintainer:** The OmniScore Working Group  
