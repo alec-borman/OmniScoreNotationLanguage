@@ -1,4 +1,3 @@
-```markdown
 # 🗺️ OmniScore Project Roadmap
 
 > **Current Status:** 🏗️ Phase 1: Core Engine & CLI  
