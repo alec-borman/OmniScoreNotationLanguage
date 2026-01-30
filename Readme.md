@@ -2,7 +2,7 @@
 
 **Maintainer:** The OmniScore Working Group  
 **License:** MIT  
-**Current Version:** 1.0.0 (Draft)
+**Current Version:** 1.0.0
 
 > **OmniScore is to music what Mermaid is to charts.**  
 > It moves music composition from the "Save As" era to the Modern DevOps era, treating music as structured, version-controllable code.
