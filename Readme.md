@@ -100,6 +100,3 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 
 **Created and maintained by [Alec Borman](https://github.com/alec-borman).**
 ```
-You can simply copy this text, create a new file named `README.md` in your repository's root folder, and paste it in. This will give your project an immediate, professional presence on GitHub.
-
-If you have a logo or a more detailed build/install process, we can easily add those sections as well.
