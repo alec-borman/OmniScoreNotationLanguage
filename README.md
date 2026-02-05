@@ -92,7 +92,6 @@ tenuto {
 ```bash
 ./tenutoc --input composition.ten --output composition.mid
 ```
-*[Source: 669]*
 
 ### 3. Output
 The compiler creates a Standard MIDI File (SMF) with:
