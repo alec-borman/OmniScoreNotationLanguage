@@ -86,7 +86,6 @@ tenuto {
     }
 }
 ```
-*[Source: 656, 671]*
 
 ### 2. Compile to MIDI
 ```bash
